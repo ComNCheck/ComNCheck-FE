@@ -11,7 +11,7 @@ const MobileSizeWapper = styled.div`
   min-height: 100vh;
   //   background-color: #f5f5f5;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  width: 25rem;
+  width: 390px;
 `;
 
 export default function Container({ children }: { children: React.ReactNode }) {
