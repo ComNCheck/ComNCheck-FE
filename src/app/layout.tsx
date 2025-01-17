@@ -3,6 +3,7 @@ import StyledComponentsRegistry from "../lib/registry";
 import Container from "../components/Container";
 import MobileWapper from "../components/MobileWapper";
 import ThemeProviderWrapper from "./ThemeProviderWrapper";
+import BottomNavbar from "@/components/BottomNavbar";
 
 export const metadata: Metadata = {
   title: "ComNCheck",
@@ -25,6 +26,7 @@ export default function RootLayout({
           <ThemeProviderWrapper>
             <Container>
               <MobileWapper>{children}</MobileWapper>
+              <BottomNavbar />
             </Container>
           </ThemeProviderWrapper>
         </StyledComponentsRegistry>
