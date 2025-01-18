@@ -25,8 +25,10 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
             <Container>
-              <MobileWapper>{children}</MobileWapper>
-              <BottomNavbar />
+              <MobileWapper>
+                {children}
+                <BottomNavbar />
+              </MobileWapper>
             </Container>
           </ThemeProviderWrapper>
         </StyledComponentsRegistry>
