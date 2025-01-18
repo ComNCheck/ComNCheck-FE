@@ -3,7 +3,7 @@ import StyledComponentsRegistry from "../lib/registry";
 import Container from "../components/Container";
 import MobileWapper from "../components/MobileWapper";
 import ThemeProviderWrapper from "./ThemeProviderWrapper";
-import BottomNavbar from "@/components/BottomNavbar";
+import BottomNavbar from "../components/BottomNavbar";
 
 export const metadata: Metadata = {
   title: "ComNCheck",
