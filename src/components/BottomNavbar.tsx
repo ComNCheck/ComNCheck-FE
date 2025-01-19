@@ -12,6 +12,7 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-around;
   // padding: 0.8rem 2.5rem;
+  padding: 0.8rem 0rem;
 `;
 
 const NavItem = styled.div<{ isActive: boolean }>`
@@ -28,6 +29,10 @@ const NavItem = styled.div<{ isActive: boolean }>`
 const IconWrapper = styled.div<{ isActive: boolean }>`
   color: ${(props) =>
     props.isActive ? theme.colors.primary : theme.colors.mutedText};
+  img {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 const getIcon = (path: string, isActive: boolean) => {
