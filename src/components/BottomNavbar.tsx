@@ -1,6 +1,6 @@
 "use client";
 
-import { theme } from "@/app/theme";
+import { theme } from "@/app/styles/theme";
 import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -13,7 +13,7 @@ const NavbarContainer = styled.div`
   background-color: white;
   display: flex;
   justify-content: space-around;
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 1rem 0.8rem 1.5rem;
   z-index: 10;
 `;
 
