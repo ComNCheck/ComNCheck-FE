@@ -7,7 +7,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10rem;
 `;
 const Logo = styled.img`
   width: 7.8125rem;
@@ -23,6 +22,9 @@ const AlertContainer = styled.div`
 const Alert = styled.div`
   color: ${theme.colors.text};
   font-weight: 500;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1rem;
 `;
 const GoogleBtn = styled.div`
   width: 21rem;
@@ -33,6 +35,10 @@ const GoogleBtn = styled.div`
   font-size: 1.25rem;
   font-weight: 500;
   gap: 0.625rem;
+  font-family: Inter;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+
   margin-top: 4rem;
   display: inline-flex;
   align-items: center;
@@ -48,11 +54,13 @@ const AnsAccount = styled.div`
   color: ${theme.colors.mutedText};
   font-size: 1rem;
   font-weight: 500;
+  font-family: Inter;
 `;
 const AskManager = styled.div`
   color: ${theme.colors.text};
   font-size: 0.875rem;
   font-weight: 700;
+  font-family: Inter;
 `;
 
 export default function Login() {
