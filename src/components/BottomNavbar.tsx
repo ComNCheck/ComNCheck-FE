@@ -7,12 +7,14 @@ import styled from "styled-components";
 const NavbarContainer = styled.div`
   position: fixed;
   bottom: 0;
-  width: 390px;
+  width: 100%;
+  max-width: 31rem;
+  height: 5rem;
   background-color: white;
   display: flex;
   justify-content: space-around;
-  // padding: 0.8rem 2.5rem;
-  padding: 0.8rem 0rem;
+  padding: 0.8rem 1rem;
+  z-index: 10;
 `;
 
 const NavItem = styled.div<{ isActive: boolean }>`
