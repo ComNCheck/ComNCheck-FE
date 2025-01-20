@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const hideNavbarPaths = ["/login"]; // 네비바 숨길 경로 배열
+  const hideNavbarPaths = ["/login", "/login/first", "/signup"]; // 네비바 숨길 경로 배열
   const shouldHideNavbar = hideNavbarPaths.includes(pathname);
   return (
     <html lang="en">
