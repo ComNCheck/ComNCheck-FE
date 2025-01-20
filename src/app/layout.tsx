@@ -3,7 +3,8 @@ import StyledComponentsRegistry from "../lib/registry";
 import Container from "../components/Container";
 import MobileWapper from "../components/MobileWapper";
 import ThemeProviderWrapper from "./ThemeProviderWrapper";
-import BottomNavbar from "@/components/BottomNavbar";
+import BottomNavbar from "../components/BottomNavbar";
+import GlobalStyle from "./globalStyle";
 
 export const metadata: Metadata = {
   title: "ComNCheck",
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <GlobalStyle />
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
             <Container>
