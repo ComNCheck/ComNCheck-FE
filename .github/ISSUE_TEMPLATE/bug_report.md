@@ -7,14 +7,7 @@ assignees: ''
 
 ---
 
----
-name: Fix & Bug Report
-about: 오류 이슈 템플릿
-title: ''
-labels: ''
-assignees: ''
 
----
 
 ## 🐛 어떤 오류인가요?
 
