@@ -1,3 +1,76 @@
-export default function Home() {
-  return <div>로그인 화면</div>;
+"use client";
+
+import styled from "styled-components";
+import { theme } from "../styles/theme";
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10rem;
+`;
+const Logo = styled.img`
+  width: 7.8125rem;
+  height: 7.8125rem;
+  margin: 1.38rem;
+`;
+const AlertContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+`;
+const Alert = styled.div`
+  color: ${theme.colors.text};
+  font-weight: 500;
+`;
+const GoogleBtn = styled.div`
+  width: 21rem;
+  height: 3.82rem;
+  padding: 1.1875rem 3.25rem;
+  border-radius: 3.125rem;
+  border: 1px solid #b6b6b6;
+  font-size: 1.25rem;
+  font-weight: 500;
+  gap: 0.625rem;
+  margin-top: 4rem;
+  display: inline-flex;
+  align-items: center;
+`;
+const StatusContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.44rem;
+  margin: 1rem;
+`;
+const AnsAccount = styled.div`
+  color: ${theme.colors.mutedText};
+  font-size: 1rem;
+  font-weight: 500;
+`;
+const AskManager = styled.div`
+  color: ${theme.colors.text};
+  font-size: 0.875rem;
+  font-weight: 700;
+`;
+
+export default function Login() {
+  return (
+    <Wrapper>
+      <Logo src={`/logo.png`} alt="로고" />
+      <AlertContainer>
+        <Alert>한국외국어대학교</Alert>
+        <Alert>학교 계정으로 로그인해주세요!</Alert>
+      </AlertContainer>
+      <GoogleBtn>
+        <img src="/GoogleLogo.svg" />
+        Sign up with Google
+      </GoogleBtn>
+      <StatusContainer>
+        <AnsAccount>아직 학교 계정이 없으신가요?</AnsAccount>
+        <AskManager>관리자에게 문의하기</AskManager>
+      </StatusContainer>
+    </Wrapper>
+  );
 }
