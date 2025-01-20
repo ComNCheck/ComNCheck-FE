@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import StyledComponentsRegistry from "../lib/registry";
 import Container from "../components/Container";
 import MobileWapper from "../components/MobileWapper";
-import ThemeProviderWrapper from "./ThemeProviderWrapper";
+import ThemeProviderWrapper from "./styles/ThemeProviderWrapper";
 import BottomNavbar from "../components/BottomNavbar";
-import GlobalStyle from "./globalStyle";
+import GlobalStyle from "./styles/globalStyle";
 
 export const metadata: Metadata = {
   title: "ComNCheck",
