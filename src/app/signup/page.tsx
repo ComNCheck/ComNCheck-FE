@@ -1,14 +1,12 @@
 "use client";
 
 import styled from "styled-components";
-import {
-  BsFillArrowRightCircleFill,
-  BsFillQuestionCircleFill,
-} from "react-icons/bs";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { theme } from "../styles/theme";
 import { MdCameraEnhance } from "react-icons/md";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import NextBtn from "@/components/button/nextBtn";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -76,22 +74,6 @@ const PictureSpace = styled.div<PictureSpaceProps>`
   align-items: center;
   justify-content: center;
 `;
-const NextBtn = styled.button`
-  width: 20.5625rem;
-  height: 3.125rem;
-  border-radius: 0.5rem;
-  background-color: #2a63fb;
-  color: ${theme.button.primary.text};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 1.375rem;
-  font-weight: 700;
-  gap: 0.81rem;
-  margin-top: 4rem;
-`;
 
 export default function Signup() {
   const [isActive, setIsActive] = useState(false);
@@ -117,9 +99,7 @@ export default function Signup() {
       <PictureSpace isActive={isActive} onClick={handleClick}>
         <MdCameraEnhance color={isActive ? theme.colors.primary : "#d9d9d9"} />
       </PictureSpace>
-      <NextBtn>
-        다음 단계로 <BsFillArrowRightCircleFill />
-      </NextBtn>
+      <NextBtn />
     </Wrapper>
   );
 }
