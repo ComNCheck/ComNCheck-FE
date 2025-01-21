@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { theme } from "../styles/theme";
 import { MdCameraEnhance } from "react-icons/md";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
 
@@ -65,21 +65,35 @@ const SubButton = styled.div`
   width: 0.9375rem;
   height: 0.9375rem;
 `;
-const PictureSpace = styled.div<PictureSpaceProps>`
+const PictureSpace = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<PictureSpaceProps>`
   width: 22.25rem;
-  height: 16.8125rem;
-  border: ${(props) =>
-    props.isActive ? `3px solid ${theme.colors.primary}` : "1px solid#d9d9d9"};
+  //height: 16.8125rem;
+  height: 22rem;
+  border: ${(props) => (props.isActive ? "none" : "1px solid#d9d9d9")};
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-
+const HiddenInput = styled.input`
+  display: none;
+`;
 export default function Signup() {
   const [isActive, setIsActive] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
-  const handleClick = () => {
-    setIsActive(!isActive);
+
+  const handlePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setIsActive(true);
+    }
   };
   return (
     <Wrapper>
@@ -96,9 +110,25 @@ export default function Signup() {
           <BsFillQuestionCircleFill />
         </SubButton>
       </SubTitleContainer>
-      <PictureSpace isActive={isActive} onClick={handleClick}>
-        <MdCameraEnhance color={isActive ? theme.colors.primary : "#d9d9d9"} />
+      <PictureSpace isActive={isActive} onClick={handlePictureClick}>
+        {selectedFile ? (
+          <img
+            src={URL.createObjectURL(selectedFile)}
+            alt="선택된 이미지"
+            style={{ width: "100%", height: "90%", objectFit: "contain" }}
+          />
+        ) : (
+          <MdCameraEnhance
+            color={isActive ? theme.colors.primary : "#d9d9d9"}
+          />
+        )}
       </PictureSpace>
+      <HiddenInput
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
       <NextBtn />
     </Wrapper>
   );
