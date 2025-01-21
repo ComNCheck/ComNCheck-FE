@@ -5,6 +5,7 @@ import MobileWapper from "../components/MobileWapper";
 import ThemeProviderWrapper from "./styles/ThemeProviderWrapper";
 import BottomNavbar from "../components/BottomNavbar";
 import GlobalStyle from "./styles/globalStyle";
+import HeaderNavbar from "@/components/HeaderNavbar";
 
 export const metadata: Metadata = {
   title: "ComNCheck",
@@ -27,6 +28,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
             <Container>
+              <HeaderNavbar />
               <MobileWapper>{children}</MobileWapper>
               <BottomNavbar />
             </Container>
