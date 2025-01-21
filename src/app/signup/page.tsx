@@ -65,7 +65,9 @@ const SubButton = styled.div`
   width: 0.9375rem;
   height: 0.9375rem;
 `;
-const PictureSpace = styled.div<PictureSpaceProps>`
+const PictureSpace = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<PictureSpaceProps>`
   width: 22.25rem;
   height: 16.8125rem;
   border: ${(props) =>
