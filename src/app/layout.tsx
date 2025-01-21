@@ -5,6 +5,7 @@ import MobileWapper from "../components/MobileWapper";
 import ThemeProviderWrapper from "./styles/ThemeProviderWrapper";
 import BottomNavbar from "../components/BottomNavbar";
 import GlobalStyle from "./styles/globalStyle";
+import HeaderNavbar from "@/components/HeaderNavbar";
 import { usePathname } from "next/navigation";
 
 export default function RootLayout({
@@ -28,6 +29,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
             <Container>
+              <HeaderNavbar />
               <MobileWapper>{children}</MobileWapper>
               {!shouldHideNavbar && <BottomNavbar />}
             </Container>
