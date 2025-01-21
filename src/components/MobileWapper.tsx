@@ -12,7 +12,6 @@ const MobileSizeWapper = styled.div`
   width: 100%;
   max-width: 31rem;
   margin: 0 auto;
-  padding-bottom: 5rem;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 `;
 

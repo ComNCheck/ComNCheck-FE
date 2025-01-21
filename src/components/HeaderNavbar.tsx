@@ -6,8 +6,11 @@ import styled from "styled-components";
 
 const NavbarContainer = styled.div`
   position: fixed;
-  top: 47px;
-  left: 33px;
+  top: 40px;
+  padding: 0rem 0rem 0rem 2rem;
+  width: 100%;
+  max-width: 31rem;
+  height: 5rem;
   display: flex;
   align-items: center;
   z-index: 10;
