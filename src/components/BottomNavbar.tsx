@@ -18,9 +18,7 @@ const NavbarContainer = styled.div`
   z-index: 10;
 `;
 
-const NavItem = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>`
+const NavItem = styled.div<{ isActive: boolean }>`
   font-weight: 700;
   font-size: 0.75rem;
   color: ${(props) =>
@@ -31,9 +29,7 @@ const NavItem = styled.div.withConfig({
   justify-content: center;
 `;
 
-const IconWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "isActive",
-})<{ isActive: boolean }>`
+const IconWrapper = styled.div<{ isActive: boolean }>`
   color: ${(props) =>
     props.isActive ? theme.colors.primary : theme.colors.mutedText};
   img {
@@ -42,37 +38,46 @@ const IconWrapper = styled.div.withConfig({
   }
 `;
 
-const getIcon = (path: string, isActive: boolean) => {
-  switch (path) {
-    case "/faq":
-      return isActive ? (
-        <img src="/icons/comment-quote-full.svg" alt="faq icon" />
-      ) : (
-        <img src="/icons/comment-quote-outline.svg" alt="faq icon" />
-      );
-    case "/notice":
-      return isActive ? (
-        <img src="/icons/announce-full.svg" alt="notice icon" />
-      ) : (
-        <img src="/icons/announce-outline.svg" alt="notice icon" />
-      );
-    case "/seminarRoom":
-      return isActive ? (
-        <img src="/icons/seminar-full.svg" alt="seminar icon" />
-      ) : (
-        <img src="/icons/seminar-outline.svg" alt="seminar icon" />
-      );
-    case "/my":
-      return isActive ? (
-        <img src="/icons/account-circle-full.svg" alt="my icon" />
-      ) : (
-        <img src="/icons/account-circle-outline.svg" alt="my icon" />
-      );
-    default:
-      return null;
-  }
-};
-export default function BottomNavbar() {
+const navItems = [
+  {
+    path: "/faq",
+    label: "FAQ",
+    icons: {
+      active: "/icons/comment-quote-full.svg",
+      inactive: "/icons/comment-quote-outline.svg",
+      alt: "faq icon",
+    },
+  },
+  {
+    path: "/notice",
+    label: "공지",
+    icons: {
+      active: "/icons/announce-full.svg",
+      inactive: "/icons/announce-outline.svg",
+      alt: "notice icon",
+    },
+  },
+  {
+    path: "/seminarRoom",
+    label: "세미나실 예약",
+    icons: {
+      active: "/icons/seminar-full.svg",
+      inactive: "/icons/seminar-outline.svg",
+      alt: "seminar icon",
+    },
+  },
+  {
+    path: "/my",
+    label: "MY",
+    icons: {
+      active: "/icons/account-circle-full.svg",
+      inactive: "/icons/account-circle-outline.svg",
+      alt: "my icon",
+    },
+  },
+];
+
+const BottomNavbar = () => {
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -80,6 +85,7 @@ export default function BottomNavbar() {
   const handleClick = (url: string) => {
     router.push(url);
   };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -88,39 +94,26 @@ export default function BottomNavbar() {
 
   return (
     <NavbarContainer>
-      <NavItem
-        isActive={pathname === "/faq"}
-        onClick={() => handleClick("/faq")}
-      >
-        <IconWrapper isActive={pathname === "/faq"}>
-          {getIcon("/faq", pathname === "/faq")}
-        </IconWrapper>
-        FAQ
-      </NavItem>
-      <NavItem
-        isActive={pathname === "/notice"}
-        onClick={() => handleClick("/notice")}
-      >
-        <IconWrapper isActive={pathname === "/notice"}>
-          {getIcon("/notice", pathname === "/notice")}
-        </IconWrapper>
-        공지
-      </NavItem>
-      <NavItem
-        isActive={pathname === "/seminarRoom"}
-        onClick={() => handleClick("/seminarRoom")}
-      >
-        <IconWrapper isActive={pathname === "/seminarRoom"}>
-          {getIcon("/seminarRoom", pathname === "/seminarRoom")}
-        </IconWrapper>
-        세미나실 예약
-      </NavItem>
-      <NavItem isActive={pathname === "/my"} onClick={() => handleClick("/my")}>
-        <IconWrapper isActive={pathname === "/my"}>
-          {getIcon("/my", pathname === "/my")}
-        </IconWrapper>
-        MY
-      </NavItem>
+      {navItems.map(({ path, label, icons }) => {
+        const isActive = pathname.startsWith(path);
+        return (
+          <NavItem
+            key={path}
+            isActive={isActive}
+            onClick={() => handleClick(path)}
+          >
+            <IconWrapper isActive={isActive}>
+              <img
+                src={isActive ? icons.active : icons.inactive}
+                alt={icons.alt}
+              />
+            </IconWrapper>
+            {label}
+          </NavItem>
+        );
+      })}
     </NavbarContainer>
   );
-}
+};
+
+export default BottomNavbar;

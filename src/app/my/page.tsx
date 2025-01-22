@@ -6,8 +6,10 @@ import { FaRegAddressCard } from "react-icons/fa6";
 import { BiSolidQuoteLeft, BiSolidQuoteRight } from "react-icons/bi";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbSquaresFilled } from "react-icons/tb";
+import { useRouter } from "next/navigation";
 
 export default function My() {
+  const router = useRouter();
   return (
     <Container>
       <ProfileIcon>
@@ -17,19 +19,19 @@ export default function My() {
       <Name>이예림</Name>
       <ID>202302351</ID>
       <ButtonContainer>
-        <Button>
+        <Button onClick={() => router.push("/my/question")}>
           <span>
             <BiSolidQuoteLeft />
           </span>
           질문하기
         </Button>
-        <Button>
+        <Button onClick={() => router.push("/my/answer")}>
           <span>
             <BiSolidQuoteRight />
           </span>
           답변하기
         </Button>
-        <Button>
+        <Button onClick={() => router.push("/my/seminar")}>
           <span>
             <TbSquaresFilled />
           </span>
@@ -37,7 +39,7 @@ export default function My() {
           <br />
           예약 현황
         </Button>
-        <Button>
+        <Button onClick={() => router.push("/my/writingCheck")}>
           <span>
             <FaCheckCircle />
           </span>
