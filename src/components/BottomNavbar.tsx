@@ -2,6 +2,7 @@
 
 import { theme } from "@/app/styles/theme";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const NavbarContainer = styled.div`
@@ -17,7 +18,9 @@ const NavbarContainer = styled.div`
   z-index: 10;
 `;
 
-const NavItem = styled.div<{ isActive: boolean }>`
+const NavItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>`
   font-weight: 700;
   font-size: 0.75rem;
   color: ${(props) =>
@@ -28,7 +31,9 @@ const NavItem = styled.div<{ isActive: boolean }>`
   justify-content: center;
 `;
 
-const IconWrapper = styled.div<{ isActive: boolean }>`
+const IconWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>`
   color: ${(props) =>
     props.isActive ? theme.colors.primary : theme.colors.mutedText};
   img {
@@ -47,33 +52,39 @@ const getIcon = (path: string, isActive: boolean) => {
       );
     case "/notice":
       return isActive ? (
-        <img src="icons/announce-full.svg" alt="notice icon" />
+        <img src="/icons/announce-full.svg" alt="notice icon" />
       ) : (
-        <img src="icons/announce-outline.svg" alt="notice icon" />
+        <img src="/icons/announce-outline.svg" alt="notice icon" />
       );
     case "/seminarRoom":
       return isActive ? (
-        <img src="icons/seminar-full.svg" alt="seminar icon" />
+        <img src="/icons/seminar-full.svg" alt="seminar icon" />
       ) : (
-        <img src="icons/seminar-outline.svg" alt="seminar icon" />
+        <img src="/icons/seminar-outline.svg" alt="seminar icon" />
       );
     case "/my":
       return isActive ? (
-        <img src="icons/account-circle-full.svg" alt="my icon" />
+        <img src="/icons/account-circle-full.svg" alt="my icon" />
       ) : (
-        <img src="icons/account-circle-outline.svg" alt="my icon" />
+        <img src="/icons/account-circle-outline.svg" alt="my icon" />
       );
     default:
       return null;
   }
 };
 export default function BottomNavbar() {
+  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   const handleClick = (url: string) => {
     router.push(url);
   };
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null; // 클라이언트가 완전히 로드되기 전까지 렌더링하지 않음
 
   return (
     <NavbarContainer>
