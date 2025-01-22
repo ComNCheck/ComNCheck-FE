@@ -45,7 +45,7 @@ interface ModalProps {
   onClose: () => void;
 }
 export default function ExampleImg({ onClose }: ModalProps) {
-  return ReactDOM.createPortal(
+  return (
     <ModalOverlay>
       <ModalContent>
         <Button onClick={onClose}>
@@ -53,7 +53,6 @@ export default function ExampleImg({ onClose }: ModalProps) {
         </Button>
         <Img src="/example.svg" />
       </ModalContent>
-    </ModalOverlay>,
-    document.body
+    </ModalOverlay>
   );
 }
