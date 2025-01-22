@@ -26,18 +26,19 @@ export default function HeaderNavbar() {
   const pathname = usePathname();
 
   const getTitle = (path: string) => {
-    switch (path) {
-      case "/faq":
-        return "FAQ";
-      case "/notice":
-        return "공지";
-      case "/seminarRoom":
-        return "세미나실 예약";
-      case "/my":
-        return "MY";
-      default:
-        return "";
+    if (path.startsWith("/faq")) {
+      return "FAQ";
     }
+    if (path.startsWith("/notice")) {
+      return "공지";
+    }
+    if (path.startsWith("/seminarRoom")) {
+      return "세미나실 예약";
+    }
+    if (path.startsWith("/my")) {
+      return "MY";
+    }
+    return "";
   };
 
   return (
