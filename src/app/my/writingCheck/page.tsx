@@ -103,19 +103,21 @@ export default function WritingCheck() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
-  position: relative;
-  top: 12rem;
+  //width: 90%;
+  //position: relative;
+  padding-top: 3rem;
 `;
 
 const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 `;
 const Form = styled.div`
-  width: 95%;
-  height: 25rem;
+  //width: 95%;
+
+  max-height: 55vh;
   padding: 20px;
   background-color: white;
   border-radius: 10px;
