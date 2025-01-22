@@ -19,5 +19,9 @@ export const theme = {
       background: "#DAEBFF",
       text: "#3A3A3A",
     },
+    submit: {
+      background: "#3A3A3A",
+      text: "#FFFFFF",
+    },
   },
 };
