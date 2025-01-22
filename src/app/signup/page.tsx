@@ -100,6 +100,13 @@ export default function Signup() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+  const handleNextClick = () => {
+    if (selectedFile) {
+      router.push("/signup/complete");
+    } else {
+      alert("이미지를 업로드 해주세요.");
+    }
+  };
   return (
     <Wrapper>
       <Header>
@@ -134,7 +141,7 @@ export default function Signup() {
         accept="image/*"
         onChange={handleFileChange}
       />
-      <NextBtn />
+      <NextBtn onClick={handleNextClick} disabled={!selectedFile} />
       {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );
