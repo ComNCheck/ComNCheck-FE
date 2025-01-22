@@ -35,7 +35,7 @@ export default function RootLayout({
             ) : (
               <Container>
                 {!shouldHide && <HeaderNavbar />}
-                <MobileWapper>{children}</MobileWapper>
+                {children}
                 {!shouldHide && <BottomNavbar />}
               </Container>
             )}
