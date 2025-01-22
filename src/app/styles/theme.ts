@@ -9,6 +9,8 @@ export const theme = {
     contrast: "#FFFFFF",
     mutedText: "#B6B6B6",
     danger: "#EE4D47",
+    success: "#3A3A3A",
+    warning: "#B6B6B6",
   },
   button: {
     primary: {
@@ -18,6 +20,10 @@ export const theme = {
     secondary: {
       background: "#DAEBFF",
       text: "#3A3A3A",
+    },
+    submit: {
+      background: "#3A3A3A",
+      text: "#FFFFFF",
     },
   },
 };
