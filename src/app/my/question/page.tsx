@@ -50,15 +50,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
-  max-width: 31rem;
   position: relative;
+  top: 11rem;
 `;
 
 const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 3rem;
 `;
 const Form = styled.div`
   width: 95%;

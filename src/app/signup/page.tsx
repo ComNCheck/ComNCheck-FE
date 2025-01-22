@@ -17,6 +17,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
 `;
 const Header = styled.div`
   height: 4rem;
@@ -42,7 +44,7 @@ const Logo = styled.img`
   height: 1.99269rem;
 `;
 const Title = styled.div`
-  margin: 7rem 0 2.56rem 0;
+  margin: 3.5rem 0 2.56rem 0;
   color: ${theme.colors.text};
   font-family: Inter;
   font-size: 1.25rem;

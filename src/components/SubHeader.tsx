@@ -20,7 +20,6 @@ export default function SubHeader({ title, description }: SubHeaderProps) {
 
 const Header = styled.div`
   position: fixed;
-  height: 3rem;
   top: 6.5rem;
   width: calc(100% - 4rem);
   max-width: 27rem;
