@@ -15,13 +15,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const hideNavbarPaths = [
-    "/login",
-    "/login/first",
-    "/signup",
-    "/signup/complete",
-  ]; // 네비바 숨길 경로 배열
-  const shouldHideNavbar = hideNavbarPaths.includes(pathname);
+  const hidePaths = ["/login", "/login/first", "/signup", "/signup/complete"]; // 네비바 숨길 경로 배열
+  const shouldHide = hidePaths.includes(pathname);
   return (
     <html lang="en">
       <body>
@@ -29,9 +24,9 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
             <Container>
-              <HeaderNavbar />
+              {!shouldHide && <HeaderNavbar />}
               <MobileWapper>{children}</MobileWapper>
-              {!shouldHideNavbar && <BottomNavbar />}
+              {!shouldHide && <BottomNavbar />}
             </Container>
           </ThemeProviderWrapper>
         </StyledComponentsRegistry>
