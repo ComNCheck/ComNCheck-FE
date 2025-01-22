@@ -18,7 +18,9 @@ const NavbarContainer = styled.div`
   z-index: 10;
 `;
 
-const NavItem = styled.div<{ isActive: boolean }>`
+const NavItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>`
   font-weight: 700;
   font-size: 0.75rem;
   color: ${(props) =>
@@ -29,7 +31,9 @@ const NavItem = styled.div<{ isActive: boolean }>`
   justify-content: center;
 `;
 
-const IconWrapper = styled.div<{ isActive: boolean }>`
+const IconWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive: boolean }>`
   color: ${(props) =>
     props.isActive ? theme.colors.primary : theme.colors.mutedText};
   img {
@@ -38,46 +42,39 @@ const IconWrapper = styled.div<{ isActive: boolean }>`
   }
 `;
 
-const navItems = [
-  {
-    path: "/faq",
-    label: "FAQ",
-    icons: {
-      active: "/icons/comment-quote-full.svg",
-      inactive: "/icons/comment-quote-outline.svg",
-      alt: "faq icon",
-    },
-  },
-  {
-    path: "/notice",
-    label: "공지",
-    icons: {
-      active: "/icons/announce-full.svg",
-      inactive: "/icons/announce-outline.svg",
-      alt: "notice icon",
-    },
-  },
-  {
-    path: "/seminarRoom",
-    label: "세미나실 예약",
-    icons: {
-      active: "/icons/seminar-full.svg",
-      inactive: "/icons/seminar-outline.svg",
-      alt: "seminar icon",
-    },
-  },
-  {
-    path: "/my",
-    label: "MY",
-    icons: {
-      active: "/icons/account-circle-full.svg",
-      inactive: "/icons/account-circle-outline.svg",
-      alt: "my icon",
-    },
-  },
-];
+const getIcon = (path: string, isActive: boolean) => {
+  if (path.startsWith("/faq")) {
+    return isActive ? (
+      <img src="/icons/comment-quote-full.svg" alt="faq icon" />
+    ) : (
+      <img src="/icons/comment-quote-outline.svg" alt="faq icon" />
+    );
+  }
+  if (path.startsWith("/notice")) {
+    return isActive ? (
+      <img src="/icons/announce-full.svg" alt="notice icon" />
+    ) : (
+      <img src="/icons/announce-outline.svg" alt="notice icon" />
+    );
+  }
+  if (path.startsWith("/seminarRoom")) {
+    return isActive ? (
+      <img src="/icons/seminar-full.svg" alt="seminar icon" />
+    ) : (
+      <img src="/icons/seminar-outline.svg" alt="seminar icon" />
+    );
+  }
+  if (path.startsWith("/my")) {
+    return isActive ? (
+      <img src="/icons/account-circle-full.svg" alt="my icon" />
+    ) : (
+      <img src="/icons/account-circle-outline.svg" alt="my icon" />
+    );
+  }
+  return "";
+};
 
-const BottomNavbar = () => {
+export default function BottomNavbar() {
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -85,7 +82,6 @@ const BottomNavbar = () => {
   const handleClick = (url: string) => {
     router.push(url);
   };
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -94,26 +90,42 @@ const BottomNavbar = () => {
 
   return (
     <NavbarContainer>
-      {navItems.map(({ path, label, icons }) => {
-        const isActive = pathname.startsWith(path);
-        return (
-          <NavItem
-            key={path}
-            isActive={isActive}
-            onClick={() => handleClick(path)}
-          >
-            <IconWrapper isActive={isActive}>
-              <img
-                src={isActive ? icons.active : icons.inactive}
-                alt={icons.alt}
-              />
-            </IconWrapper>
-            {label}
-          </NavItem>
-        );
-      })}
+      <NavItem
+        isActive={pathname.startsWith("/faq")}
+        onClick={() => handleClick("/faq")}
+      >
+        <IconWrapper isActive={pathname.startsWith("/faq")}>
+          {getIcon("/faq", pathname.startsWith("/faq"))}
+        </IconWrapper>
+        FAQ
+      </NavItem>
+      <NavItem
+        isActive={pathname.startsWith("/notice")}
+        onClick={() => handleClick("/notice")}
+      >
+        <IconWrapper isActive={pathname.startsWith("/notice")}>
+          {getIcon("/notice", pathname.startsWith("/notice"))}
+        </IconWrapper>
+        공지
+      </NavItem>
+      <NavItem
+        isActive={pathname.startsWith("/seminarRoom")}
+        onClick={() => handleClick("/seminarRoom")}
+      >
+        <IconWrapper isActive={pathname.startsWith("/seminarRoom")}>
+          {getIcon("/seminarRoom", pathname.startsWith("/seminarRoom"))}
+        </IconWrapper>
+        세미나실 예약
+      </NavItem>
+      <NavItem
+        isActive={pathname.startsWith("/my")}
+        onClick={() => handleClick("/my")}
+      >
+        <IconWrapper isActive={pathname.startsWith("/my")}>
+          {getIcon("/my", pathname.startsWith("/my"))}
+        </IconWrapper>
+        MY
+      </NavItem>
     </NavbarContainer>
   );
-};
-
-export default BottomNavbar;
+}
