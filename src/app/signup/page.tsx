@@ -7,6 +7,7 @@ import { MdCameraEnhance } from "react-icons/md";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
+import ExampleImg from "@/components/modal/exampleImg";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -83,6 +84,7 @@ export default function Signup() {
   const [isActive, setIsActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   const handlePictureClick = () => {
@@ -95,6 +97,9 @@ export default function Signup() {
       setIsActive(true);
     }
   };
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <Wrapper>
       <Header>
@@ -106,7 +111,7 @@ export default function Signup() {
         <SubTitle>
           한국외국어대학교 모바일 ID 화면을 캡쳐 후 업로드 해주세요
         </SubTitle>
-        <SubButton>
+        <SubButton onClick={toggleModal}>
           <BsFillQuestionCircleFill />
         </SubButton>
       </SubTitleContainer>
@@ -130,6 +135,7 @@ export default function Signup() {
         onChange={handleFileChange}
       />
       <NextBtn />
+      {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );
 }
