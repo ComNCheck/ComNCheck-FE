@@ -1,0 +1,135 @@
+"use client";
+
+import styled from "styled-components";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
+import { theme } from "../styles/theme";
+import { MdCameraEnhance } from "react-icons/md";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import NextBtn from "@/components/button/nextBtn";
+
+interface PictureSpaceProps {
+  isActive: boolean;
+}
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const Header = styled.div`
+  height: 4rem;
+  width: 100%;
+  max-width: 31rem;
+
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+
+  color: ${theme.colors.text};
+  text-align: right;
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-weight: 900;
+`;
+const Logo = styled.img`
+  width: 3.50138rem;
+  height: 1.99269rem;
+`;
+const Title = styled.div`
+  margin: 7rem 0 2.56rem 0;
+  color: ${theme.colors.text};
+  font-family: Inter;
+  font-size: 1.25rem;
+  font-weight: 900;
+`;
+const SubTitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+  color: ${theme.colors.mutedText};
+`;
+const SubTitle = styled.div`
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-weight: 900;
+`;
+const SubButton = styled.div`
+  width: 0.9375rem;
+  height: 0.9375rem;
+`;
+const PictureSpace = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<PictureSpaceProps>`
+  width: 22.25rem;
+  //height: 16.8125rem;
+  height: 22rem;
+  border: ${(props) => (props.isActive ? "none" : "1px solid#d9d9d9")};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const HiddenInput = styled.input`
+  display: none;
+`;
+export default function Signup() {
+  const [isActive, setIsActive] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const router = useRouter();
+
+  const handlePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setIsActive(true);
+    }
+  };
+  return (
+    <Wrapper>
+      <Header>
+        <Logo src="/logo.png" alt="로고" />
+        <div onClick={() => router.push("/login")}>로그인</div>
+      </Header>
+      <Title>회원가입</Title>
+      <SubTitleContainer>
+        <SubTitle>
+          한국외국어대학교 모바일 ID 화면을 캡쳐 후 업로드 해주세요
+        </SubTitle>
+        <SubButton>
+          <BsFillQuestionCircleFill />
+        </SubButton>
+      </SubTitleContainer>
+      <PictureSpace isActive={isActive} onClick={handlePictureClick}>
+        {selectedFile ? (
+          <img
+            src={URL.createObjectURL(selectedFile)}
+            alt="선택된 이미지"
+            style={{ width: "100%", height: "90%", objectFit: "contain" }}
+          />
+        ) : (
+          <MdCameraEnhance
+            color={isActive ? theme.colors.primary : "#d9d9d9"}
+          />
+        )}
+      </PictureSpace>
+      <HiddenInput
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+      <NextBtn />
+    </Wrapper>
+  );
+}
