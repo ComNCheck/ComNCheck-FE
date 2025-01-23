@@ -6,19 +6,30 @@ import { theme } from "@/app/styles/theme";
 
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
 import SubHeader from "@/components/SubHeader";
+import { useRouter } from "next/navigation";
 
-export default function Question() {
+export default function Edit() {
   const [isToggleOn, setIsToggleOn] = useState(true);
+  const router = useRouter();
 
   const toggleHandler = () => {
     setIsToggleOn(!isToggleOn);
+  };
+  const handleSubmit = () => {
+    router.back();
   };
 
   return (
     <Container>
       <SubHeader
-        title="질문하기"
-        description="학과와 관련된 궁금한 점을 마음껏 질문해주세요!"
+        title="내가 쓴 글 수정하기"
+        description={
+          <>
+            내가 작성한 질문들을 한눈에 모아봤어요
+            <br />
+            답변이 완료된 질문을 수정할 수 없어요.
+          </>
+        }
       />
       <FormWrapper>
         <Form>
@@ -39,7 +50,9 @@ export default function Question() {
             rows={4}
             placeholder="궁금한 점을 적어주세요!"
           ></Textarea>
-          <SubmitButton type="submit">질문</SubmitButton>
+          <SubmitButton type="button" onClick={handleSubmit}>
+            수정
+          </SubmitButton>
         </Form>
       </FormWrapper>
     </Container>
@@ -51,7 +64,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 90%;
   position: relative;
-  top: 11rem;
+  top: 12rem;
 `;
 
 const FormWrapper = styled.div`
