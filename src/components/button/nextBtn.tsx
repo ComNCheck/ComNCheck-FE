@@ -20,7 +20,7 @@ const Button = styled.button`
 `;
 interface NextBtnProps {
   onClick: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 }
 const NextBtn: React.FC<NextBtnProps> = ({ onClick, disabled }) => (
   <Button onClick={onClick} disabled={disabled}>
