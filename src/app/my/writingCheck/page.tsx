@@ -3,79 +3,42 @@
 import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
-import QuestionCard from "./QuestionCard";
 import SubHeader from "@/components/SubHeader";
+import QuestionCard from "./QuestionCard";
 
 export default function WritingCheck() {
-  const questions = [
-    {
-      id: 1,
-      title: "어쩌고 저쩌고 이건 ?",
-      date: "2025.01.10",
-      isAnswered: true,
-    },
-    {
-      id: 2,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 3,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 4,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 5,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
+  const [questions, setQuestions] = React.useState(
+    [
+      {
+        id: 1,
+        title: "어쩌고 저쩌고 이건 ?",
+        date: "2025.01.10",
+        answere:
+          "저번 구글폼 을 통해 참여자를 받았었는데,예산문제로 더이상 추가 모집은 없습니다. 감사합니다.",
+      },
+      {
+        id: 2,
+        title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
+        date: "2025.01.10",
+        answere: "",
+      },
+      {
+        id: 3,
+        title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
+        date: "2025.01.10",
+        answere: "",
+      },
+    ].map((question) => ({
+      ...question,
+      isAnswered: !!question.answere,
+    }))
+  );
 
-    {
-      id: 6,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 7,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 8,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 9,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 10,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-    {
-      id: 11,
-      title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-      date: "2025.01.10",
-      isAnswered: false,
-    },
-  ];
+  const handleDelete = (id: number) => {
+    if (window.confirm("삭제하시겠습니까?")) {
+      setQuestions((prev) => prev.filter((q) => q.id !== id));
+    }
+  };
 
   return (
     <Container>
@@ -91,8 +54,13 @@ export default function WritingCheck() {
       />
       <FormWrapper>
         <Form>
-          {questions.map((question) => (
-            <QuestionCard key={question.id} question={question} />
+          {questions.map((question, index) => (
+            <QuestionCard
+              key={question.id}
+              question={question}
+              index={index}
+              onDelete={handleDelete}
+            />
           ))}
         </Form>
       </FormWrapper>
@@ -113,6 +81,7 @@ const FormWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const Form = styled.div`
   width: 95%;
   height: 25rem;
@@ -125,6 +94,6 @@ const Form = styled.div`
     display: none;
   }
   @media only screen and (min-width: 200px) and (max-width: 480px) {
-    height: 40rem;
+    height: 35rem;
   }
 `;

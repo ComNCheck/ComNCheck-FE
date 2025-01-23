@@ -6,22 +6,34 @@ import { theme } from "@/app/styles/theme";
 
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
 import SubHeader from "@/components/SubHeader";
+import { useRouter } from "next/navigation";
 
-export default function Question() {
+export default function check() {
   const [isToggleOn, setIsToggleOn] = useState(true);
+  const router = useRouter();
 
   const toggleHandler = () => {
     setIsToggleOn(!isToggleOn);
   };
 
+  const handleSubmit = () => {
+    router.back();
+  };
+
   return (
     <Container>
       <SubHeader
-        title="질문하기"
-        description="학과와 관련된 궁금한 점을 마음껏 질문해주세요!"
+        title="내가 쓴 글 확인하기"
+        description={
+          <>
+            내가 작성한 질문들을 한눈에 모아봤어요.
+            <br />
+            답변이 완료된 질문을 수정할 수 없어요.
+          </>
+        }
       />
-      <FormWrapper>
-        <Form>
+      <ContentWrapper>
+        <Content>
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
             <ToggleWrapper onClick={toggleHandler}>
@@ -32,16 +44,25 @@ export default function Question() {
               )}
             </ToggleWrapper>
           </LabelWrapper>
-          <Input type="text" id="title" placeholder="이예림" defaultValue="" />
+          <ContentTitle>질문 제목</ContentTitle>
           <Label htmlFor="question">궁금한 점</Label>
-          <Textarea
-            id="question"
-            rows={4}
-            placeholder="궁금한 점을 적어주세요!"
-          ></Textarea>
-          <SubmitButton type="submit">질문</SubmitButton>
-        </Form>
-      </FormWrapper>
+          <ContentDetail id="question">
+            상세 궁금한 점으로 들어있던 원래 질문내용.
+          </ContentDetail>
+        </Content>
+        <Content>
+          <LabelWrapper>
+            <Label htmlFor="title">답변</Label>
+          </LabelWrapper>
+          <ContentAnswer id="question">
+            상세 궁금한 점으로 들어있던 원래 질문내용.
+          </ContentAnswer>
+
+          <SubmitButton type="button" onClick={handleSubmit}>
+            확인
+          </SubmitButton>
+        </Content>
+      </ContentWrapper>
     </Container>
   );
 }
@@ -51,21 +72,25 @@ const Container = styled.div`
   flex-direction: column;
   width: 90%;
   position: relative;
-  top: 11rem;
+  top: 12rem;
 `;
 
-const FormWrapper = styled.div`
+const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-const Form = styled.div`
+const Content = styled.div`
   width: 95%;
   height: 25rem;
   padding: 20px;
+  margin: 20px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0px 10px ${theme.colors.mutedText};
+  @media only screen and (min-width: 200px) and (max-width: 480px) {
+    height: 15rem;
+  }
 `;
 
 const LabelWrapper = styled.div`
@@ -90,7 +115,7 @@ const ToggleWrapper = styled.div`
   height: 30px;
 `;
 
-const Input = styled.input`
+const ContentTitle = styled.div`
   width: 100%;
   margin: 8px 0px 16px 0px;
   padding: 8px 12px;
@@ -99,16 +124,30 @@ const Input = styled.input`
   font-size: 0.9rem;
   color: ${theme.colors.text};
   font-family: "Pretendard", sans-serif;
+`;
+const ContentDetail = styled.div`
+  width: 100%;
+  height: 5rem;
+  margin: 8px 0px;
+  padding: 8px 12px;
+  border: 1px solid ${theme.colors.mutedText};
+  border-radius: 7px;
+  font-size: 0.9rem;
+  color: ${theme.colors.text};
+  resize: none;
+  font-family: "Pretendard", sans-serif;
   &:focus {
     outline: none;
     border-color: ${theme.button.primary.background};
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
   }
+  &:focus {
+    height: 150px;
+  }
 `;
-
-const Textarea = styled.textarea`
+const ContentAnswer = styled.div`
   width: 100%;
-  height: 100px;
+  height: 8rem;
   margin: 8px 0px;
   padding: 8px 12px;
   border: 1px solid ${theme.colors.mutedText};
@@ -129,7 +168,7 @@ const Textarea = styled.textarea`
 
 const SubmitButton = styled.button`
   position: absolute;
-  bottom: 15px;
+  bottom: 34px;
   right: 25px;
   padding: 10px 16px;
   background-color: ${theme.button.submit.background};
