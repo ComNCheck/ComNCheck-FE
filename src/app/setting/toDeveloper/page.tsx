@@ -3,7 +3,7 @@ import { theme } from "@/app/styles/theme";
 import SettingHeader from "@/components/settingHeader";
 import { useState } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -99,7 +99,11 @@ export default function ToDeveloper() {
 
         <InputContainer>
           <Icon>
-            <FaPlusCircle />
+            {text.length > 0 ? (
+              <FaCheckCircle color="#4CAF50" />
+            ) : (
+              <FaPlusCircle />
+            )}
           </Icon>
           <Input
             value={text}
