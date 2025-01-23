@@ -20,7 +20,9 @@ const Icon = styled.div`
 interface inputProps {
   hasText: boolean;
 }
-const Input = styled.textarea<inputProps>`
+const Input = styled.textarea.withConfig({
+  shouldForwardProp: (props) => props !== "hasText",
+})<inputProps>`
   width: 100%;
   height: 5.25rem;
   border-radius: 0rem 0.625rem 0.625rem 0.625rem;
