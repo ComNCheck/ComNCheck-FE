@@ -2,29 +2,15 @@
 
 import styled from "styled-components";
 import { theme } from "../styles/theme";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { IoChevronForward } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import SettingHeader from "@/components/settingHeader";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 31rem;
-`;
-const Header = styled.div`
-  top: 0;
-  height: 4.75rem;
-  display: flex;
-  align-items: center;
-  padding: 1.5rem 1rem;
-  gap: 0.5rem;
-  background-color: ${theme.colors.secondary};
-  color: ${theme.colors.text};
-  font-family: Pretendard;
-  font-size: 1.25rem;
-  font-style: normal;
-  font-weight: 800;
-  line-height: normal;
 `;
 const ItemContainer = styled.div`
   display: flex;
@@ -60,10 +46,7 @@ export default function Setting() {
   };
   return (
     <Wrapper>
-      <Header>
-        <IoChevronBack fontSize="2rem" />
-        설정
-      </Header>
+      <SettingHeader />
       <ItemContainer>
         <Content onClick={() => handleClick("/setting/toDeveloper")}>
           <Items>개발자에게 하고싶은 말!</Items>
