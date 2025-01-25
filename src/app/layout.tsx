@@ -22,8 +22,8 @@ export default function RootLayout({
     return () => clearTimeout(timer);
   }, []);
 
-  const hidePaths = ["/login", "/login/first", "/signup", "/signup/complete"]; // 네비바 숨길 경로 배열
-  const shouldHide = hidePaths.includes(pathname);
+  const hidePaths = ["/login", "/signup", "/setting"]; // 네비바 숨길 경로 배열
+  const shouldHide = hidePaths.some((path) => pathname.startsWith(path));
   return (
     <html lang="en">
       <body>
