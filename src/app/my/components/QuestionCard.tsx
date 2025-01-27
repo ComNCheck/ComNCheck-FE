@@ -11,6 +11,7 @@ const QuestionCard = ({
   question,
   index,
   onDelete,
+  onCardClick,
 }: {
   question: {
     id: number;
@@ -21,6 +22,7 @@ const QuestionCard = ({
   };
   index: number;
   onDelete: (id: number) => void;
+  onCardClick: (id: number, isAnswered: boolean) => void;
 }) => {
   const [isSwiped, setIsSwiped] = React.useState(false);
   const [showAnswerBox, setShowAnswerBox] = React.useState(false);
@@ -39,10 +41,7 @@ const QuestionCard = ({
   });
 
   const handleCardClick = () => {
-    const targetPage = question.isAnswered
-      ? "/my/writingCheck/check"
-      : "/my/writingCheck/edit";
-    router.push(targetPage);
+    onCardClick(question.id, question.isAnswered);
   };
 
   return (
@@ -78,17 +77,6 @@ const QuestionCard = ({
     </Card>
   );
 };
-
-const slideOut = keyframes`
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-`;
 
 const Card = styled.div`
   position: relative;

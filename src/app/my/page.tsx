@@ -7,9 +7,15 @@ import { BiSolidQuoteLeft, BiSolidQuoteRight } from "react-icons/bi";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbSquaresFilled } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import SeminarAlert from "./components/modal/seminarAlert";
 
 export default function My() {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   return (
     <Container>
       <ProfileIcon>
@@ -31,7 +37,8 @@ export default function My() {
           </span>
           답변하기
         </Button>
-        <Button onClick={() => router.push("/my/seminar")}>
+        {/* <Button onClick={() => router.push("/my/seminar")}> */}
+        <Button onClick={openModal}>
           <span>
             <TbSquaresFilled />
           </span>
@@ -46,6 +53,9 @@ export default function My() {
           내가 쓴 글
         </Button>
       </ButtonContainer>
+      {isModalOpen && (
+        <SeminarAlert isOpen={isModalOpen} closeModal={closeModal} />
+      )}
     </Container>
   );
 }

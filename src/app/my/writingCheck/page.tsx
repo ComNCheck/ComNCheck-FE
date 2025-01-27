@@ -2,11 +2,12 @@
 
 import React from "react";
 import styled from "styled-components";
-import { theme } from "@/app/styles/theme";
 import SubHeader from "@/components/SubHeader";
-import QuestionCard from "./QuestionCard";
+import CommonQuestionList from "../components/CommonQuestionList";
+import { useRouter } from "next/navigation";
 
 export default function WritingCheck() {
+  const router = useRouter();
   const [questions, setQuestions] = React.useState(
     [
       {
@@ -39,6 +40,13 @@ export default function WritingCheck() {
       setQuestions((prev) => prev.filter((q) => q.id !== id));
     }
   };
+  const handleCardClick = (id: number, isAnswered: boolean) => {
+    if (isAnswered) {
+      router.push(`/my/writingCheck/check?id=${id}`);
+    } else {
+      router.push(`/my/writingCheck/edit?id=${id}`);
+    }
+  };
 
   return (
     <Container>
@@ -52,18 +60,11 @@ export default function WritingCheck() {
           </>
         }
       />
-      <FormWrapper>
-        <Form>
-          {questions.map((question, index) => (
-            <QuestionCard
-              key={question.id}
-              question={question}
-              index={index}
-              onDelete={handleDelete}
-            />
-          ))}
-        </Form>
-      </FormWrapper>
+      <CommonQuestionList
+        questions={questions}
+        onDelete={handleDelete}
+        onCardClick={handleCardClick}
+      />
     </Container>
   );
 }
@@ -74,26 +75,4 @@ const Container = styled.div`
   width: 90%;
   position: relative;
   top: 12rem;
-`;
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Form = styled.div`
-  width: 95%;
-  height: 25rem;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 0px 10px ${theme.colors.mutedText};
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  @media only screen and (min-width: 200px) and (max-width: 480px) {
-    height: 35rem;
-  }
 `;
