@@ -26,4 +26,14 @@ export const theme = {
       text: "#FFFFFF",
     },
   },
+  toggle: {
+    primary: {
+      background: "#0077FF",
+      text: "#FFFFFF",
+    },
+    secondary: {
+      background: "#F0F0F5",
+      text: "#898C9C",
+    },
+  },
 };

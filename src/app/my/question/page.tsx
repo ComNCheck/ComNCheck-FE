@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import SubHeader from "@/components/SubHeader";
 import AddQuestionCard from "../components/AddQuestionCard";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 export default function Question() {
-  const router = useRouter();
+  // const router = useRouter();
   const handleSubmit = () => {
-    router.back();
+    // router.back();
   };
 
   return (
