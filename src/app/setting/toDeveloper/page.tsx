@@ -43,15 +43,19 @@ const Highlight = styled.div`
   font-weight: 800;
   line-height: normal;
 `;
-
+interface InputProps {
+  id: string;
+  text: string;
+  isSubmitted: boolean;
+}
 export default function ToDeveloper() {
-  const [inputs, setInputs] = useState<{ id: string; text: string }[]>([]);
+  const [inputs, setInputs] = useState<InputProps[]>([]);
   const [toastVisible, setToastVisible] = useState(false);
   const [message, setMessage] = useState("");
 
   const addInputContainer = () => {
     //생성된 input 컴포넌트의 고유 id생성
-    const newInput = { id: uuidv4(), text: "" };
+    const newInput = { id: uuidv4(), text: "", isSubmitted: false };
     setInputs([...inputs, newInput]);
   };
   const handleTextChange = (id: string, text: string) => {
@@ -60,12 +64,14 @@ export default function ToDeveloper() {
     );
   };
   const handleSubmit = (id: string, text: string) => {
-    const input = inputs.find((input) => input.id === id);
-    if (input) {
-      console.log("제출된 데이터: ", text);
-      setMessage("제출되었습니다. 의견 감사합니다.");
-      setToastVisible(true);
-    }
+    setInputs((prev) =>
+      prev.map((input) =>
+        input.id === id ? { ...input, isSubmitted: true } : input
+      )
+    );
+    console.log("제출된 데이터: ", { id, text });
+    setMessage("제출되었습니다. 의견 감사합니다.");
+    setToastVisible(true);
   };
   const removeInputContainer = (id: string) => {
     setInputs((prev) => prev.filter((input) => input.id !== id));
@@ -91,6 +97,7 @@ export default function ToDeveloper() {
             key={input.id}
             id={input.id}
             value={input.text}
+            isSubmitted={input.isSubmitted}
             onSubmit={(text) => handleSubmit(input.id, text)}
             onRemove={() => removeInputContainer(input.id)}
             onChange={(text) => handleTextChange(input.id, text)}

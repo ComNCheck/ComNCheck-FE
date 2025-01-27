@@ -56,6 +56,7 @@ const CharCount = styled.div`
 interface SettingInputProps {
   id: string;
   value: string;
+  isSubmitted: boolean;
   onRemove: () => void;
   onSubmit: (text: string) => void;
   onChange: (text: string) => void;
@@ -63,16 +64,19 @@ interface SettingInputProps {
 export default function SettingInput({
   id,
   value,
+  isSubmitted,
   onSubmit,
   onRemove,
   onChange,
 }: SettingInputProps) {
   const [text, setText] = useState("");
-  const [status, setStatus] = useState<"add" | "submit" | "remove">("add");
+  const [status, setStatus] = useState<"add" | "submit" | "remove">(
+    value ? "submit" : "add"
+  );
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value.slice(0, 100);
     setText(newText);
-
+    onChange(newText);
     if (newText.length > 0 && status === "add") {
       setStatus("submit");
     } else if (newText.length === 0 && status === "submit") {
@@ -102,6 +106,7 @@ export default function SettingInput({
         onChange={handleTextChange}
         hasText={text.length > 0}
         placeholder="개발자에게 원하는 점을 적어주세요"
+        disabled={isSubmitted} //제출되면 비활성화
       />
       <CharCount>{text.length}/100</CharCount>
     </InputContainer>
