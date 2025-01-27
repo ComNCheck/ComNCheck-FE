@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import SubHeader from "@/components/SubHeader";
-import QuestionCard from "./QuestionCard";
+import QuestionCard from "./check/QuestionCard";
 
 export default function WritingCheck() {
   const [questions, setQuestions] = React.useState(
