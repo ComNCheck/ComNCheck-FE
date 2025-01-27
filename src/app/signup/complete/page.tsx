@@ -8,7 +8,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  height: 100vh;
 `;
 const Header = styled.div`
   height: 4rem;
@@ -51,7 +52,7 @@ export default function Complete() {
       <Logo src="/logo.png"></Logo>
       <Message>회원가입이 완료되었습니다</Message>
       <Message>학부 소식을 빠르게 받아보세요!</Message>
-      <NextBtn />
+      <NextBtn onClick={() => router.push("/")} />
     </Wrapper>
   );
 }

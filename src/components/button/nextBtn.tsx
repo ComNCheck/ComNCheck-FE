@@ -18,11 +18,13 @@ const Button = styled.button`
   gap: 0.81rem;
   margin-top: 4rem;
 `;
-
-export default function NextBtn() {
-  return (
-    <Button>
-      다음 단계로 <BsFillArrowRightCircleFill />
-    </Button>
-  );
+interface NextBtnProps {
+  onClick: () => void;
+  disabled?: boolean;
 }
+const NextBtn: React.FC<NextBtnProps> = ({ onClick, disabled }) => (
+  <Button onClick={onClick} disabled={disabled}>
+    다음 단계로 <BsFillArrowRightCircleFill />
+  </Button>
+);
+export default NextBtn;
