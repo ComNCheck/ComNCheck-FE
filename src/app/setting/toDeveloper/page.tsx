@@ -1,5 +1,6 @@
 "use client";
 import { theme } from "@/app/styles/theme";
+import Toast from "@/components/modal/toast";
 import SettingHeader from "@/components/settingHeader";
 import SettingInput from "@/components/settingInput";
 import { useState } from "react";
@@ -45,16 +46,37 @@ const Highlight = styled.div`
 
 export default function ToDeveloper() {
   const [inputs, setInputs] = useState<{ id: string; text: string }[]>([]);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [message, setMessage] = useState("");
+
   const addInputContainer = () => {
     //생성된 input 컴포넌트의 고유 id생성
     const newInput = { id: uuidv4(), text: "" };
     setInputs([...inputs, newInput]);
   };
+  const handleTextChange = (id: string, text: string) => {
+    setInputs((prevInputs) =>
+      prevInputs.map((input) => (input.id === id ? { ...input, text } : input))
+    );
+  };
+  const handleSubmit = (id: string, text: string) => {
+    const input = inputs.find((input) => input.id === id);
+    if (input) {
+      console.log("제출된 데이터: ", text);
+      setMessage("제출되었습니다. 의견 감사합니다.");
+      setToastVisible(true);
+    }
+  };
   const removeInputContainer = (id: string) => {
     setInputs((prev) => prev.filter((input) => input.id !== id));
+    setMessage("의견이 삭제되었습니다.");
+    setToastVisible(true);
   };
   return (
     <Wrapper>
+      {toastVisible && (
+        <Toast message={message} setToastVisible={setToastVisible} />
+      )}
       <SettingHeader />
       <Container>
         <Title>To. 개발자</Title>
@@ -69,7 +91,9 @@ export default function ToDeveloper() {
             key={input.id}
             id={input.id}
             value={input.text}
+            onSubmit={(text) => handleSubmit(input.id, text)}
             onRemove={() => removeInputContainer(input.id)}
+            onChange={(text) => handleTextChange(input.id, text)}
           />
         ))}
       </Container>

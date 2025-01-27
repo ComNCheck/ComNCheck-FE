@@ -57,19 +57,34 @@ interface SettingInputProps {
   id: string;
   value: string;
   onRemove: () => void;
+  onSubmit: (text: string) => void;
+  onChange: (text: string) => void;
 }
 export default function SettingInput({
   id,
   value,
+  onSubmit,
   onRemove,
+  onChange,
 }: SettingInputProps) {
   const [text, setText] = useState("");
   const [status, setStatus] = useState<"add" | "submit" | "remove">("add");
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value.slice(0, 100);
+    setText(newText);
 
-  const handleSubmit = async () => {
+    if (newText.length > 0 && status === "add") {
+      setStatus("submit");
+    } else if (newText.length === 0 && status === "submit") {
+      setStatus("add");
+    }
+  };
+
+  const handleSubmit = () => {
     if (text.trim() === "") return;
-    console.log("데이터: ", text);
     setStatus("remove");
+    console.log(status);
+    onSubmit(text);
   };
   return (
     <InputContainer>
@@ -84,15 +99,7 @@ export default function SettingInput({
       </Icon>
       <Input
         value={text}
-        onChange={(e) => {
-          const newText = e.target.value.slice(0, 100);
-          setText(newText);
-          if (newText.length > 0 && status === "add") {
-            setStatus("submit");
-          } else if (newText.length === 0) {
-            setStatus("add");
-          }
-        }}
+        onChange={handleTextChange}
         hasText={text.length > 0}
         placeholder="개발자에게 원하는 점을 적어주세요"
       />
