@@ -5,6 +5,7 @@ import SettingInput from "@/components/settingInput";
 import { useState } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,9 +44,14 @@ const Highlight = styled.div`
 `;
 
 export default function ToDeveloper() {
-  const [inputs, setInputs] = useState([{ text: "" }]);
+  const [inputs, setInputs] = useState<{ id: string; text: string }[]>([]);
   const addInputContainer = () => {
-    setInputs([...inputs, { text: "" }]);
+    //생성된 input 컴포넌트의 고유 id생성
+    const newInput = { id: uuidv4(), text: "" };
+    setInputs([...inputs, newInput]);
+  };
+  const removeInputContainer = (id: string) => {
+    setInputs((prev) => prev.filter((input) => input.id !== id));
   };
   return (
     <Wrapper>
@@ -58,7 +64,14 @@ export default function ToDeveloper() {
           </Title>
           <BiMessageSquareEdit fontSize="2rem" onClick={addInputContainer} />
         </TitleContent>
-        <SettingInput />
+        {inputs.map((input) => (
+          <SettingInput
+            key={input.id}
+            id={input.id}
+            value={input.text}
+            onRemove={() => removeInputContainer(input.id)}
+          />
+        ))}
       </Container>
     </Wrapper>
   );

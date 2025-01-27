@@ -1,7 +1,12 @@
 "use client";
 import { theme } from "@/app/styles/theme";
 import { useState } from "react";
-import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaPlusCircle,
+  FaRegTimesCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 import styled from "styled-components";
 
 const InputContainer = styled.div`
@@ -47,16 +52,47 @@ const CharCount = styled.div`
   font-style: normal;
   font-weight: 300;
 `;
-export default function SettingInput() {
+
+interface SettingInputProps {
+  id: string;
+  value: string;
+  onRemove: () => void;
+}
+export default function SettingInput({
+  id,
+  value,
+  onRemove,
+}: SettingInputProps) {
   const [text, setText] = useState("");
+  const [status, setStatus] = useState<"add" | "submit" | "remove">("add");
+
+  const handleSubmit = async () => {
+    if (text.trim() === "") return;
+    console.log("데이터: ", text);
+    setStatus("remove");
+  };
   return (
     <InputContainer>
       <Icon>
-        {text.length > 0 ? <FaCheckCircle color="#4CAF50" /> : <FaPlusCircle />}
+        {status === "add" && <FaPlusCircle />}
+        {status === "submit" && (
+          <FaCheckCircle color="#4CAF50" onClick={handleSubmit} />
+        )}
+        {status === "remove" && (
+          <FaTimesCircle fill="#F24822" onClick={onRemove} />
+        )}
       </Icon>
       <Input
         value={text}
-        onChange={(e) => setText(e.target.value.slice(0, 100))}
+        onChange={(e) => {
+          const newText = e.target.value.slice(0, 100);
+          setText(newText);
+          if (newText.length > 0 && status === "add") {
+            setStatus("submit");
+          } else if (newText.length === 0) {
+            setStatus("add");
+          }
+        }}
         hasText={text.length > 0}
         placeholder="개발자에게 원하는 점을 적어주세요"
       />
