@@ -1,5 +1,6 @@
 "use client";
 import { theme } from "@/app/styles/theme";
+import DeleteAlert from "@/components/modal/deleteAlert";
 import Toast from "@/components/modal/toast";
 import SettingHeader from "@/components/settingHeader";
 import SettingInput from "@/components/settingInput";
@@ -52,6 +53,8 @@ export default function ToDeveloper() {
   const [inputs, setInputs] = useState<InputProps[]>([]);
   const [toastVisible, setToastVisible] = useState(false);
   const [message, setMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const addInputContainer = () => {
     //생성된 input 컴포넌트의 고유 id생성
@@ -73,10 +76,21 @@ export default function ToDeveloper() {
     setMessage("제출되었습니다. 의견 감사합니다.");
     setToastVisible(true);
   };
-  const removeInputContainer = (id: string) => {
-    setInputs((prev) => prev.filter((input) => input.id !== id));
-    setMessage("의견이 삭제되었습니다.");
-    setToastVisible(true);
+  const removeInputContainer = () => {
+    if (deleteId) {
+      setInputs((prev) => prev.filter((input) => input.id !== deleteId));
+      setMessage("의견이 삭제되었습니다.");
+      setToastVisible(true);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleRemove = (id: string) => {
+    setDeleteId(id);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   return (
     <Wrapper>
@@ -99,11 +113,14 @@ export default function ToDeveloper() {
             value={input.text}
             isSubmitted={input.isSubmitted}
             onSubmit={(text) => handleSubmit(input.id, text)}
-            onRemove={() => removeInputContainer(input.id)}
+            onRemove={() => handleRemove(input.id)}
             onChange={(text) => handleTextChange(input.id, text)}
           />
         ))}
       </Container>
+      {isModalOpen && deleteId && (
+        <DeleteAlert onClose={closeModal} onDelete={removeInputContainer} />
+      )}
     </Wrapper>
   );
 }
