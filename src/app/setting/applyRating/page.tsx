@@ -5,6 +5,7 @@ import Toast from "@/components/modal/toast";
 import SettingHeader from "@/components/Header/settingHeader";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import TitleContainer from "@/components/setting/TitleContainer";
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,31 +19,6 @@ const SettingContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-const TitleContainer = styled.div`
-  padding: 1rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-`;
-const Title = styled.div`
-  color: ${theme.colors.text};
-  font-family: Pretendard;
-  font-size: 1.125rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: -0.03375rem;
-`;
-const Description = styled.div`
-  color: ${theme.colors.mutedText};
-  font-family: Pretendard;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -0.03rem;
 `;
 const FormContainer = styled.div`
   width: 85vw;
@@ -154,10 +130,10 @@ export default function ApplyRating() {
     <Wrapper>
       <SettingHeader />
       <SettingContainer>
-        <TitleContainer>
-          <Title>학생회 등급신청</Title>
-          <Description>학생회 부원 및 과회장만 신청이 가능합니다</Description>
-        </TitleContainer>
+        <TitleContainer
+          title="학생회 등급신청"
+          description="학생회 부원 및 과회장만 신청이 가능합니다"
+        />
         <FormContainer>
           <FormWrapper>
             <Label>📍이름</Label>

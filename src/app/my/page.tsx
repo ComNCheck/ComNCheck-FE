@@ -8,7 +8,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { TbSquaresFilled } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import SeminarAlert from "./components/modal/seminarAlert";
+import SeminarAlert from "../../components/modal/seminarAlert";
 
 export default function My() {
   const router = useRouter();
@@ -93,7 +93,7 @@ const ID = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  lex-direction: row;
+  flex-direction: row;
   background-color: ${theme.colors.primary};
   border-radius: 1rem;
   margin: 0rem 3rem;
