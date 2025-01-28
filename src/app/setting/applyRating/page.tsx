@@ -75,13 +75,14 @@ const Label = styled.label`
 `;
 
 const Form = styled.textarea.withConfig({
-  shouldForwardProp: (prop) => prop !== "hasPlaceholder",
-})<{ hasPlaceholder?: boolean }>`
+  shouldForwardProp: (prop) => prop !== "hasPlaceholder" && prop !== "isFilled",
+})<{ hasPlaceholder?: boolean; isFilled: boolean }>`
   width: 20.625rem;
   max-width: 80vw;
   height: ${(props) => (props.hasPlaceholder ? "4.3125rem" : "3.4375rem")};
   border-radius: 0.625rem;
-  color: #b6b6b6;
+  color: ${(props) =>
+    props.isFilled ? theme.colors.text : theme.colors.mutedText};
   font-family: Pretendard;
   font-size: 1rem;
   font-style: normal;
@@ -131,7 +132,6 @@ export default function ApplyRating() {
     field: string
   ) => {
     const textarea = e.target;
-
     setValues({ ...values, [field]: textarea.value });
   };
 
@@ -168,6 +168,7 @@ export default function ApplyRating() {
               }
               value={values.name}
               hasPlaceholder={false}
+              isFilled={values.name.length > 0}
             ></Form>
           </FormWrapper>
 
@@ -180,6 +181,7 @@ export default function ApplyRating() {
               }
               value={values.id}
               hasPlaceholder={false}
+              isFilled={values.id.length > 0}
             ></Form>
           </FormWrapper>
           <FormWrapper>
@@ -191,6 +193,7 @@ export default function ApplyRating() {
               }
               value={values.unit}
               hasPlaceholder={true}
+              isFilled={values.unit.length > 0}
             ></Form>
           </FormWrapper>
           <FormWrapper>
@@ -205,6 +208,7 @@ export default function ApplyRating() {
               }
               value={values.position}
               hasPlaceholder={true}
+              isFilled={values.position.length > 0}
             ></Form>
           </FormWrapper>
           <ButtonContainer>
