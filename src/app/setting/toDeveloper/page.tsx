@@ -1,10 +1,13 @@
 "use client";
 import { theme } from "@/app/styles/theme";
+import DeleteAlert from "@/components/modal/deleteAlert";
+import Toast from "@/components/modal/toast";
 import SettingHeader from "@/components/settingHeader";
 import SettingInput from "@/components/settingInput";
 import { useState } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,14 +44,59 @@ const Highlight = styled.div`
   font-weight: 800;
   line-height: normal;
 `;
-
+interface InputProps {
+  id: string;
+  text: string;
+  isSubmitted: boolean;
+}
 export default function ToDeveloper() {
-  const [inputs, setInputs] = useState([{ text: "" }]);
+  const [inputs, setInputs] = useState<InputProps[]>([]);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
   const addInputContainer = () => {
-    setInputs([...inputs, { text: "" }]);
+    //생성된 input 컴포넌트의 고유 id생성
+    const newInput = { id: uuidv4(), text: "", isSubmitted: false };
+    setInputs([...inputs, newInput]);
+  };
+  const handleTextChange = (id: string, text: string) => {
+    setInputs((prevInputs) =>
+      prevInputs.map((input) => (input.id === id ? { ...input, text } : input))
+    );
+  };
+  const handleSubmit = (id: string, text: string) => {
+    setInputs((prev) =>
+      prev.map((input) =>
+        input.id === id ? { ...input, isSubmitted: true } : input
+      )
+    );
+    console.log("제출된 데이터: ", { id, text });
+    setMessage("제출되었습니다. 의견 감사합니다.");
+    setToastVisible(true);
+  };
+  const removeInputContainer = () => {
+    if (deleteId) {
+      setInputs((prev) => prev.filter((input) => input.id !== deleteId));
+      setMessage("의견이 삭제되었습니다.");
+      setToastVisible(true);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleRemove = (id: string) => {
+    setDeleteId(id);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   return (
     <Wrapper>
+      {toastVisible && (
+        <Toast message={message} setToastVisible={setToastVisible} />
+      )}
       <SettingHeader />
       <Container>
         <Title>To. 개발자</Title>
@@ -58,8 +106,21 @@ export default function ToDeveloper() {
           </Title>
           <BiMessageSquareEdit fontSize="2rem" onClick={addInputContainer} />
         </TitleContent>
-        <SettingInput />
+        {inputs.map((input) => (
+          <SettingInput
+            key={input.id}
+            id={input.id}
+            value={input.text}
+            isSubmitted={input.isSubmitted}
+            onSubmit={(text) => handleSubmit(input.id, text)}
+            onRemove={() => handleRemove(input.id)}
+            onChange={(text) => handleTextChange(input.id, text)}
+          />
+        ))}
       </Container>
+      {isModalOpen && deleteId && (
+        <DeleteAlert onClose={closeModal} onDelete={removeInputContainer} />
+      )}
     </Wrapper>
   );
 }

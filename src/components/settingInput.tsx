@@ -1,7 +1,12 @@
 "use client";
 import { theme } from "@/app/styles/theme";
 import { useState } from "react";
-import { FaCheckCircle, FaPlusCircle } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaPlusCircle,
+  FaRegTimesCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 import styled from "styled-components";
 
 const InputContainer = styled.div`
@@ -47,18 +52,61 @@ const CharCount = styled.div`
   font-style: normal;
   font-weight: 300;
 `;
-export default function SettingInput() {
+
+interface SettingInputProps {
+  id: string;
+  value: string;
+  isSubmitted: boolean;
+  onRemove: () => void;
+  onSubmit: (text: string) => void;
+  onChange: (text: string) => void;
+}
+export default function SettingInput({
+  id,
+  value,
+  isSubmitted,
+  onSubmit,
+  onRemove,
+  onChange,
+}: SettingInputProps) {
   const [text, setText] = useState("");
+  const [status, setStatus] = useState<"add" | "submit" | "remove">(
+    value ? "submit" : "add"
+  );
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value.slice(0, 100);
+    setText(newText);
+    onChange(newText);
+    if (newText.length > 0 && status === "add") {
+      setStatus("submit");
+    } else if (newText.length === 0 && status === "submit") {
+      setStatus("add");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (text.trim() === "") return;
+    setStatus("remove");
+    console.log(status);
+    onSubmit(text);
+  };
   return (
     <InputContainer>
       <Icon>
-        {text.length > 0 ? <FaCheckCircle color="#4CAF50" /> : <FaPlusCircle />}
+        {status === "add" && <FaPlusCircle />}
+        {status === "submit" && (
+          <FaCheckCircle color="#4CAF50" onClick={handleSubmit} />
+        )}
+        {status === "remove" && (
+          <FaTimesCircle fill="#F24822" onClick={onRemove} />
+        )}
       </Icon>
       <Input
         value={text}
-        onChange={(e) => setText(e.target.value.slice(0, 100))}
+        onChange={handleTextChange}
         hasText={text.length > 0}
         placeholder="개발자에게 원하는 점을 적어주세요"
+        disabled={isSubmitted} //제출되면 비활성화
       />
       <CharCount>{text.length}/100</CharCount>
     </InputContainer>
