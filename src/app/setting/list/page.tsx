@@ -3,7 +3,7 @@
 import { theme } from "@/app/styles/theme";
 import ContainerBox from "@/components/setting/ContainerBox";
 import TitleContainer from "@/components/setting/TitleContainer";
-import SettingHeader from "@/components/settingHeader";
+import SettingHeader from "@/components/Header/settingHeader";
 import styled from "styled-components";
 
 const Wrapper = styled.div`

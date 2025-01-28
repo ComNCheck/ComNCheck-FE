@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
-import SubHeader from "@/components/SubHeader";
+import SubHeader from "@/components/Header/SubHeader";
 import { useRouter } from "next/navigation";
 import AddQuestionCard from "../../components/AddQuestionCard";
 

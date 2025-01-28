@@ -2,7 +2,7 @@
 
 import { theme } from "@/app/styles/theme";
 import Toast from "@/components/modal/toast";
-import SettingHeader from "@/components/settingHeader";
+import SettingHeader from "@/components/Header/settingHeader";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
-import SubHeader from "@/components/SubHeader";
+import SubHeader from "@/components/Header/SubHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function WriteAnswer() {

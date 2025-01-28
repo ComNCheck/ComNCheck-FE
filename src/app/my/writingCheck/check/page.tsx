@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
-import SubHeader from "@/components/SubHeader";
+import SubHeader from "@/components/Header/SubHeader";
 import { useRouter } from "next/navigation";
 import CommonContent from "../../components/CommonContent";
 
