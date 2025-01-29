@@ -2,8 +2,8 @@
 import { theme } from "@/app/styles/theme";
 import DeleteAlert from "@/components/modal/deleteAlert";
 import Toast from "@/components/modal/toast";
-import SettingHeader from "@/components/settingHeader";
-import SettingInput from "@/components/settingInput";
+import SettingHeader from "@/components/Header/settingHeader";
+import SettingInput from "@/components/setting/settingInput";
 import { useState } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import styled from "styled-components";

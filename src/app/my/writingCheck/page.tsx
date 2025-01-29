@@ -2,7 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
-import SubHeader from "@/components/SubHeader";
+import SubHeader from "@/components/Header/SubHeader";
 import CommonQuestionList from "../components/CommonQuestionList";
 import { useRouter } from "next/navigation";
 

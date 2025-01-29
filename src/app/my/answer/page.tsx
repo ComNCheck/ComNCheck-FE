@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import SubHeader from "@/components/SubHeader";
+import SubHeader from "@/components/Header/SubHeader";
 import styled from "styled-components";
 import IsAnswerToggle from "../components/IsAnswerToggle";
 import CommonQuestionList from "../components/CommonQuestionList";
