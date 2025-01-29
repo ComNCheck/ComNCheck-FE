@@ -2,9 +2,11 @@
 
 import React from "react";
 import styled from "styled-components";
-import SubHeader from "@/components/SubHeader";
-import CommonQuestionList from "../components/CommonQuestionList";
+import SubHeader from "@/components/Header/SubHeader";
+import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
+import ContainerWrapper from "@/components/container/ContainerWrapper";
+import TitleContainer from "@/components/setting/TitleContainer";
 
 export default function WritingCheck() {
   const router = useRouter();
@@ -49,8 +51,8 @@ export default function WritingCheck() {
   };
 
   return (
-    <Container>
-      <SubHeader
+    <ContainerWrapper>
+      <TitleContainer
         title="내가 쓴 글"
         description={
           <>
@@ -65,14 +67,6 @@ export default function WritingCheck() {
         onDelete={handleDelete}
         onCardClick={handleCardClick}
       />
-    </Container>
+    </ContainerWrapper>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  position: relative;
-  top: 12rem;
-`;

@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
-import SubHeader from "@/components/SubHeader";
+import SubHeader from "@/components/Header/SubHeader";
 import { useRouter } from "next/navigation";
-import AddQuestionCard from "../../components/AddQuestionCard";
+import AddQuestionCard from "../../myComponents/AddQuestionCard";
+import ContainerWrapper from "@/components/container/ContainerWrapper";
+import TitleContainer from "@/components/setting/TitleContainer";
 
 export default function Edit() {
   const router = useRouter();
@@ -14,8 +16,8 @@ export default function Edit() {
   };
 
   return (
-    <Container>
-      <SubHeader
+    <ContainerWrapper>
+      <TitleContainer
         title="내가 쓴 글 수정하기"
         description={
           <>
@@ -26,14 +28,6 @@ export default function Edit() {
         }
       />
       <AddQuestionCard onSubmit={handleSubmit} submitButtonText="수정" />
-    </Container>
+    </ContainerWrapper>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  position: relative;
-  top: 12rem;
-`;

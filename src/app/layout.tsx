@@ -5,7 +5,7 @@ import MobileWapper from "../components/MobileWapper";
 import ThemeProviderWrapper from "./styles/ThemeProviderWrapper";
 import BottomNavbar from "../components/BottomNavbar";
 import GlobalStyle from "./styles/globalStyle";
-import HeaderNavbar from "@/components/HeaderNavbar";
+import HeaderNavbar from "@/components/Header/HeaderNavbar";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "./loading/page";

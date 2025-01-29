@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 import { IoChevronForward } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import SettingHeader from "@/components/settingHeader";
+import SettingHeader from "@/components/Header/settingHeader";
 
 const Wrapper = styled.div`
   display: flex;
