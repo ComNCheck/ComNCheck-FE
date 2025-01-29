@@ -3,6 +3,7 @@
 import styled from "styled-components";
 import { IoChevronBack } from "react-icons/io5";
 import { theme } from "@/app/styles/theme";
+import { useRouter } from "next/navigation";
 
 const Header = styled.div`
   top: 0;
@@ -20,9 +21,22 @@ const Header = styled.div`
   line-height: normal;
 `;
 export default function SettingHeader() {
+  const router = useRouter();
+
+  const clickBackButton = () => {
+    const pathname = window.location.pathname;
+
+    if (pathname.includes("/setting/curriculum")) {
+      router.push("/setting");
+    } else if (pathname === "/setting") {
+      router.push("/");
+    } else {
+      router.back();
+    }
+  };
   return (
     <Header>
-      <IoChevronBack fontSize="2rem" />
+      <IoChevronBack fontSize="2rem" onClick={clickBackButton} />
       설정
     </Header>
   );
