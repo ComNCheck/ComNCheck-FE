@@ -17,12 +17,13 @@ interface CommonRoleListProps {
   roles: Role[];
   onDelete: (id: number) => void;
   onCardClick: (id: number, isApply: boolean) => void;
+  onUpdate: (updatedRole: Role) => void;
 }
 
 const CommonRoleList: React.FC<CommonRoleListProps> = ({
   roles,
   onDelete,
-  onCardClick,
+  onUpdate,
 }) => {
   return (
     <ContainerWrapper>
@@ -33,7 +34,7 @@ const CommonRoleList: React.FC<CommonRoleListProps> = ({
             role={role}
             index={index}
             onDelete={onDelete}
-            onCardClick={onCardClick}
+            onUpdate={onUpdate}
           />
         ))}
       </FormWrapper>
