@@ -51,7 +51,7 @@ export default function FAQ() {
   return (
     <ContainerWrapper>
       <TitleContainer
-        title="컴퓨터공학부 FAQ "
+        title="컴퓨터공학부 FAQ"
         description={
           <>
             답변 완료된 질문들이에요
