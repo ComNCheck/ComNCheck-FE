@@ -9,6 +9,8 @@ import { TbSquaresFilled } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SeminarAlert from "../../components/modal/seminarAlert";
+import { IoSettings } from "react-icons/io5";
+import { FaSignOutAlt } from "react-icons/fa";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -161,6 +163,17 @@ export default function My() {
 
   return (
     <Container>
+      <Header>
+        <IconContainer>
+          <IconButton onClick={() => router.push("/setting")}>
+            <IoSettings />
+          </IconButton>
+          <IconButton onClick={() => console.log("Logout clicked")}>
+            <FaSignOutAlt />
+          </IconButton>
+        </IconContainer>
+      </Header>
+
       <ProfileIcon>
         <FaRegAddressCard />
       </ProfileIcon>
@@ -185,11 +198,36 @@ const Container = styled.div`
   background-color: ${theme.colors.background};
   padding-bottom: 15rem;
 `;
-
 const ProfileIcon = styled.div`
   font-size: 3rem;
 `;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  position: absolute;
+  top: 3rem;
+  z-index: 100;
+  justify-content: flex-end;
+  margin-left: 16rem;
+`;
+const IconContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
 
+const IconButton = styled.button`
+  color: ${theme.colors.mutedText};
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+
+  &:hover {
+    color: ${theme.colors.primary};
+  }
+`;
 const Role = styled.div`
   font-size: 1.2rem;
   color: ${theme.colors.mutedText};
