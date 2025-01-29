@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { useSwipeable } from "react-swipeable";
 import { useRouter } from "next/navigation";

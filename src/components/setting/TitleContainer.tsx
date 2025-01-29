@@ -28,10 +28,11 @@ const Description = styled.div`
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.03rem;
+  white-space: pre-wrap;
 `;
 interface TitleProps {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
 }
 export default function TitleContainer({ title, description }: TitleProps) {
   return (
