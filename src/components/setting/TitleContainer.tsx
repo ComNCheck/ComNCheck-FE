@@ -32,7 +32,7 @@ const Description = styled.div`
 `;
 interface TitleProps {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
 }
 export default function TitleContainer({ title, description }: TitleProps) {
   return (
