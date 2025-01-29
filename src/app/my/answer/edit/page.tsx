@@ -6,6 +6,9 @@ import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
 import SubHeader from "@/components/Header/SubHeader";
 import { useRouter, useSearchParams } from "next/navigation";
+import ContainerWrapper from "@/components/container/ContainerWrapper";
+import TitleContainer from "@/components/setting/TitleContainer";
+import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 
 export default function EditAnswer() {
   const [isToggleOn, setIsToggleOn] = useState(true);
@@ -29,8 +32,8 @@ export default function EditAnswer() {
   };
 
   return (
-    <Container>
-      <SubHeader
+    <ContainerWrapper>
+      <TitleContainer
         title="답변하기"
         description={
           <>
@@ -41,7 +44,7 @@ export default function EditAnswer() {
         }
       />
       <ContentWrapper>
-        <Content>
+        <ContentBoxSmall>
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
             <ToggleWrapper onClick={toggleHandler}>
@@ -52,11 +55,11 @@ export default function EditAnswer() {
               )}
             </ToggleWrapper>
           </LabelWrapper>
-          <ContentTitle>{question.title}</ContentTitle>
+          <ContentTitle>{question.title}수정할 카드의 제목</ContentTitle>
           <Label htmlFor="question">궁금한 점</Label>
           <ContentDetail id="question">{question.content}</ContentDetail>
-        </Content>
-        <Content>
+        </ContentBoxSmall>
+        <ContentBoxSmall>
           <LabelWrapper>
             <Label htmlFor="title">답변</Label>
           </LabelWrapper>
@@ -67,39 +70,22 @@ export default function EditAnswer() {
             onChange={(e) => setAnswer(e.target.value)}
           ></ContentAnswer>
 
-          <SubmitButton type="button" onClick={handleSubmit}>
-            수정
-          </SubmitButton>
-        </Content>
+          <ButtonWapper>
+            <SubmitButton type="button" onClick={handleSubmit}>
+              수정
+            </SubmitButton>
+          </ButtonWapper>
+        </ContentBoxSmall>
       </ContentWrapper>
-    </Container>
+    </ContainerWrapper>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  position: relative;
-  top: 12rem;
-`;
 
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-const Content = styled.div`
-  width: 95%;
-  height: 25rem;
-  padding: 20px;
-  margin: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 0px 10px ${theme.colors.mutedText};
-  @media only screen and (min-width: 200px) and (max-width: 480px) {
-    height: 15rem;
-  }
+  width: 90%;
 `;
 
 const LabelWrapper = styled.div`
@@ -150,9 +136,6 @@ const ContentDetail = styled.div`
     border-color: ${theme.button.primary.background};
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
   }
-  &:focus {
-    height: 150px;
-  }
 `;
 const ContentAnswer = styled.textarea`
   width: 100%;
@@ -170,15 +153,14 @@ const ContentAnswer = styled.textarea`
     border-color: ${theme.button.primary.background};
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
   }
-  &:focus {
-    height: 150px;
-  }
+`;
+const ButtonWapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const SubmitButton = styled.button`
-  position: absolute;
-  bottom: 34px;
-  right: 25px;
+  display: flex;
   padding: 10px 16px;
   background-color: ${theme.button.submit.background};
   color: ${theme.button.submit.text};

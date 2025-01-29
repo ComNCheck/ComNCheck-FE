@@ -5,15 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
 const NavbarContainer = styled.div`
-  position: fixed;
-  top: 40px;
-  padding: 0rem 0rem 0rem 2rem;
+  padding: 4rem 0rem 0rem 2rem;
   width: 100%;
   max-width: 31rem;
-  height: 5rem;
   display: flex;
   align-items: center;
   z-index: 10;
+  background-color: ${theme.colors.background};
 `;
 
 const NavItem = styled.div`

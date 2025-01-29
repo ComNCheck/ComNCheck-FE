@@ -67,6 +67,7 @@ const Container = styled.div`
   height: 100vh;
   width: 100%;
   background-color: ${theme.colors.background};
+  padding-bottom: 15rem;
 `;
 
 const ProfileIcon = styled.div`

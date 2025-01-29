@@ -9,6 +9,7 @@ const MobileSizeWapper = styled.div`
   // justify-content: center;
   gap: 5rem;
   min-height: 100vh;
+  height: 100vh;
   width: 100%;
   max-width: 31rem;
   margin: 0 auto;
