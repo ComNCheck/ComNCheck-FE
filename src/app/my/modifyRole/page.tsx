@@ -6,6 +6,7 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import IsAnswerToggle from "../myComponents/IsAnswerToggle";
 import CommonRoleList from "../myComponents/CommonRoleList";
+import RoleCheckModal from "@/components/modal/RoleCheckModal";
 
 interface Role {
   id: number;
@@ -17,9 +18,14 @@ interface Role {
   isApply: boolean;
 }
 
+interface RoleCheckModalProps {
+  role: Role;
+  onClose: () => void;
+  onUpdate: (updatedRole: Role) => void;
+}
+
 export default function ModifyRole() {
-  const [isApply, setIsApply] = useState(false);
-  const router = useRouter();
+  const [isApply, setIsApply] = useState<boolean>(false);
   const [roles, setRoles] = useState<Role[]>([
     {
       id: 1,
@@ -28,7 +34,7 @@ export default function ModifyRole() {
       unit: "컴퓨터공학부",
       position: "학술부장",
       role: "학생회",
-      isApply: true,
+      isApply: false,
     },
     {
       id: 2,
@@ -49,23 +55,36 @@ export default function ModifyRole() {
       isApply: false,
     },
   ]);
-
-  const handleCardClick = (id: number) => {
-    // 카드 클릭 시 처리 로직
-  };
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
   const filteredRoles = useMemo(() => {
     return roles.filter((role) => role.isApply === isApply);
   }, [roles, isApply]);
 
   const handleToggle = () => {
-    setIsApply(!isApply);
+    setIsApply((prev) => !prev);
   };
 
   const handleDelete = (id: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
       setRoles((prevRoles) => prevRoles.filter((role) => role.id !== id));
     }
+  };
+
+  const handleCardClick = (id: number) => {
+    const role = roles.find((r) => r.id === id);
+    if (role) {
+      setSelectedRole(role);
+    }
+  };
+
+  const handleRoleUpdate = (updatedRole: Role) => {
+    setRoles((prevRoles) =>
+      prevRoles.map((role) =>
+        role.id === updatedRole.id ? { ...updatedRole, isApply: true } : role
+      )
+    );
+    setSelectedRole(null);
   };
 
   return (
@@ -90,7 +109,16 @@ export default function ModifyRole() {
         roles={filteredRoles}
         onDelete={handleDelete}
         onCardClick={handleCardClick}
+        onUpdate={handleRoleUpdate}
       />
+
+      {selectedRole && (
+        <RoleCheckModal
+          role={selectedRole}
+          onClose={() => setSelectedRole(null)}
+          onUpdate={handleRoleUpdate}
+        />
+      )}
     </ContainerWrapper>
   );
 }

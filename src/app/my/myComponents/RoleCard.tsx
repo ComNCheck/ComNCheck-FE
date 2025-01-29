@@ -1,8 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
+import { useSwipeable } from "react-swipeable";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import RoleCheckModal from "@/components/modal/RoleCheckModal";
 
 interface Role {
   id: number;
@@ -18,45 +21,77 @@ interface RoleCardProps {
   role: Role;
   index: number;
   onDelete?: (id: number) => void;
-  onCardClick?: (id: number, isApply: boolean) => void;
+  onUpdate: (updatedRole: Role) => void;
 }
 
 const RoleCard: React.FC<RoleCardProps> = ({
   role,
   index,
   onDelete,
-  onCardClick,
+  onUpdate,
 }) => {
-  const handleClick = () => {
-    onCardClick?.(role.id, role.isApply);
+  const [isSwiped, setIsSwiped] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => setIsSwiped(true),
+    onSwipedRight: () => setIsSwiped(false),
+  });
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(role.id);
+    }
   };
 
   return (
-    <Card onClick={handleClick}>
-      <MainContent>
-        <NumberCircle>{index + 1}</NumberCircle>
-        <RoleInfo>
-          <RoleName>{role.name}</RoleName>
-          <RoleStatus>{role.role}</RoleStatus>
-        </RoleInfo>
-        <OpenButton>열람</OpenButton>
-      </MainContent>
-    </Card>
+    <>
+      <CardWrapper {...handlers}>
+        <Card isSwiped={isSwiped}>
+          <MainContent>
+            <NumberCircle>{index + 1}</NumberCircle>
+            <RoleInfo>
+              <RoleName>{role.name}</RoleName>
+              <RoleStatus>{role.role}</RoleStatus>
+            </RoleInfo>
+            <OpenButton onClick={() => setIsModalOpen(true)}>열람</OpenButton>
+          </MainContent>
+        </Card>
+        <DeleteButton isSwiped={isSwiped} onClick={handleDelete}>
+          <RiDeleteBin6Fill />
+        </DeleteButton>
+      </CardWrapper>
+
+      {isModalOpen && (
+        <RoleCheckModal
+          role={role}
+          onClose={() => setIsModalOpen(false)}
+          onUpdate={onUpdate}
+        />
+      )}
+    </>
   );
 };
 
-const Card = styled.div`
+const CardWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+`;
+
+const Card = styled.div<{ isSwiped: boolean }>`
   display: flex;
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid ${theme.colors.mutedText};
   background-color: white;
   cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: ${theme.colors.background};
-  }
+  transition: transform 0.3s ease;
+  flex: 1;
+  ${({ isSwiped }) => isSwiped && `transform: translateX(-3rem);`}
 `;
 
 const MainContent = styled.div`
@@ -98,6 +133,7 @@ const RoleStatus = styled.span`
   font-size: 0.9rem;
   color: gray;
 `;
+
 const OpenButton = styled.button`
   padding: 0.8rem 1.5rem;
   background-color: #eee;
@@ -105,6 +141,25 @@ const OpenButton = styled.button`
   border-radius: 5px;
   font-size: 0.9rem;
   cursor: pointer;
+`;
+
+const DeleteButton = styled.button<{ isSwiped: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${theme.colors.danger};
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  opacity: ${({ isSwiped }) => (isSwiped ? 1 : 0)};
+  pointer-events: ${({ isSwiped }) => (isSwiped ? "auto" : "none")};
 `;
 
 export default RoleCard;
