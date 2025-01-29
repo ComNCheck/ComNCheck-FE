@@ -40,9 +40,14 @@ export default function AddQuestionCard({
           rows={4}
           placeholder="궁금한 점을 적어주세요!"
         ></Textarea>
-        <SubmitButton type="button" onClick={onSubmit}>
+        {/* <SubmitButton type="button" onClick={onSubmit}>
           {submitButtonText}
-        </SubmitButton>
+        </SubmitButton> */}
+        <ButtonWapper>
+          <SubmitButton type="button" onClick={onSubmit}>
+            {submitButtonText}
+          </SubmitButton>
+        </ButtonWapper>
       </Form>
     </FormWrapper>
   );
@@ -86,6 +91,7 @@ const ToggleWrapper = styled.div`
 
 const Input = styled.input`
   width: 100%;
+  height: 3rem;
   margin: 8px 0px 16px 0px;
   padding: 8px 12px;
   border: 1px solid ${theme.colors.mutedText};
@@ -102,7 +108,7 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
   width: 100%;
-  height: 100px;
+  height: 11.5rem;
   margin: 8px 0px;
   padding: 8px 12px;
   border: 1px solid ${theme.colors.mutedText};
@@ -116,15 +122,14 @@ const Textarea = styled.textarea`
     border-color: ${theme.button.primary.background};
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
   }
-  &:focus {
-    height: 150px;
-  }
+`;
+const ButtonWapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const SubmitButton = styled.button`
-  position: absolute;
-  bottom: 15px;
-  right: 25px;
+  display: flex;
   padding: 10px 16px;
   background-color: ${theme.button.submit.background};
   color: ${theme.button.submit.text};

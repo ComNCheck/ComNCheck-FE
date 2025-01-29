@@ -3,9 +3,11 @@
 import React, { useState, useMemo } from "react";
 import SubHeader from "@/components/Header/SubHeader";
 import styled from "styled-components";
-import IsAnswerToggle from "../components/IsAnswerToggle";
-import CommonQuestionList from "../components/CommonQuestionList";
+import IsAnswerToggle from "../myComponents/IsAnswerToggle";
+import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
+import ContainerWrapper from "@/components/container/ContainerWrapper";
+import TitleContainer from "@/components/setting/TitleContainer";
 
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);
@@ -60,8 +62,8 @@ export default function Answer() {
   };
 
   return (
-    <Container>
-      <SubHeader
+    <ContainerWrapper>
+      <TitleContainer
         title="답변하기"
         description={
           <>
@@ -82,14 +84,6 @@ export default function Answer() {
         onDelete={handleDelete}
         onCardClick={handleCardClick}
       />
-    </Container>
+    </ContainerWrapper>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  position: relative;
-  top: 12rem;
-`;
