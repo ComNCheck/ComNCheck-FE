@@ -36,4 +36,31 @@ export const theme = {
       text: "#898C9C",
     },
   },
+  track: {
+    first: {
+      //전공필수
+      background: "#FBF3DB",
+      border: "#FDECC8",
+    },
+    second: {
+      //전공교양
+      background: "#F4EEEE",
+      border: "#EEE0DA",
+    },
+    third: {
+      //전공선택 일반
+      background: "#E7F3F8",
+      border: "#D3E5EF",
+    },
+    fourth: {
+      //전공선택 컴퓨터
+      background: "#FAF1F5",
+      border: "#F5E0E9",
+    },
+    fifth: {
+      //전공선택 전자
+      background: "#EDF3EC",
+      border: "#DBEDDB",
+    },
+  },
 };

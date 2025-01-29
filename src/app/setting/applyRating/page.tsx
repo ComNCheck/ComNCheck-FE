@@ -115,6 +115,13 @@ export default function ApplyRating() {
     if (!isFormValid) return;
     console.log(values);
     setToastVisible(true);
+    // 폼 내용 초기화
+    setValues({
+      name: "",
+      id: "",
+      unit: "",
+      position: "",
+    });
   };
 
   useEffect(() => {
