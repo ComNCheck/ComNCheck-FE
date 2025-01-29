@@ -28,6 +28,7 @@ const Description = styled.div`
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.03rem;
+  white-space: pre-line;
 `;
 interface TitleProps {
   title: string;

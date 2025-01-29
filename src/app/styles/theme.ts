@@ -36,4 +36,26 @@ export const theme = {
       text: "#898C9C",
     },
   },
+  track: {
+    first: {
+      background: "#FBF3DB",
+      border: "#FDECC8",
+    },
+    second: {
+      background: "#F4EEEE",
+      border: "#EEE0DA",
+    },
+    third: {
+      background: "#E7F3F8",
+      border: "#D3E5EF",
+    },
+    fourth: {
+      background: "#FAF1F5",
+      border: "#F5E0E9",
+    },
+    fifth: {
+      background: "#EDF3EC",
+      border: "#DBEDDB",
+    },
+  },
 };
