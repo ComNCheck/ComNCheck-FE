@@ -2,63 +2,179 @@
 
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
-import { FaRegAddressCard } from "react-icons/fa6";
-import { BiSolidQuoteLeft, BiSolidQuoteRight } from "react-icons/bi";
+import { FaRegAddressCard, FaClipboardUser } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
+import { BiSolidQuoteLeft, BiSolidQuoteRight } from "react-icons/bi";
 import { TbSquaresFilled } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SeminarAlert from "../../components/modal/seminarAlert";
 
+type UserRole =
+  | "ROLE_ADMIN"
+  | "ROLE_MAJOR_PRESIDENT"
+  | "ROLE_STUDENT_COUNCIL"
+  | "ROLE_STUDENT"
+  | "ROLE_GRADUATE_STUDENT";
+
+interface ButtonConfig {
+  role: UserRole[];
+  icon: React.ElementType;
+  text: string;
+  route?: string;
+  action?: "openModal";
+}
+
+const roleLabels: Record<UserRole, string> = {
+  ROLE_ADMIN: "관리자",
+  ROLE_MAJOR_PRESIDENT: "과회장",
+  ROLE_STUDENT_COUNCIL: "학생회",
+  ROLE_STUDENT: "학생",
+  ROLE_GRADUATE_STUDENT: "졸업생",
+};
+
 export default function My() {
+  const role: UserRole = "ROLE_ADMIN";
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const buttonConfig: ButtonConfig[] = [
+    {
+      role: [
+        "ROLE_ADMIN",
+        "ROLE_STUDENT_COUNCIL",
+        "ROLE_STUDENT",
+        "ROLE_GRADUATE_STUDENT",
+      ],
+      icon: BiSolidQuoteLeft,
+      text: "질문하기",
+      route: "/my/question",
+    },
+    {
+      role: ["ROLE_ADMIN", "ROLE_MAJOR_PRESIDENT"],
+      icon: FaClipboardUser,
+      text: "등급수정하기",
+      route: "/my/modifyRole",
+    },
+    {
+      role: ["ROLE_ADMIN", "ROLE_MAJOR_PRESIDENT", "ROLE_STUDENT_COUNCIL"],
+      icon: BiSolidQuoteRight,
+      text: "답변하기",
+      route: "/my/answer",
+    },
+    {
+      role: [
+        "ROLE_ADMIN",
+        "ROLE_MAJOR_PRESIDENT",
+        "ROLE_STUDENT_COUNCIL",
+        "ROLE_STUDENT",
+        "ROLE_GRADUATE_STUDENT",
+      ],
+      icon: TbSquaresFilled,
+      text: "세미나실\n예약 현황",
+      action: "openModal",
+    },
+    {
+      role: [
+        "ROLE_ADMIN",
+        "ROLE_STUDENT_COUNCIL",
+        "ROLE_STUDENT",
+        "ROLE_GRADUATE_STUDENT",
+      ],
+      icon: FaCheckCircle,
+      text: "내가 쓴 글",
+      route: "/my/writingCheck",
+    },
+  ];
+
+  const filteredButtons = buttonConfig.filter((btn) => btn.role.includes(role));
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const renderButtons = () => {
+    if (filteredButtons.length <= 3) {
+      return (
+        <ButtonRow>
+          {filteredButtons.map(({ icon: Icon, text, route, action }, index) => (
+            <Button
+              key={index}
+              onClick={
+                action === "openModal" ? openModal : () => router.push(route!)
+              }
+              total={filteredButtons.length}
+            >
+              <span>
+                <Icon />
+              </span>
+              {text}
+            </Button>
+          ))}
+        </ButtonRow>
+      );
+    } else {
+      const firstRow = filteredButtons.slice(
+        0,
+        Math.ceil(filteredButtons.length / 2)
+      );
+      const secondRow = filteredButtons.slice(
+        Math.ceil(filteredButtons.length / 2)
+      );
+
+      return (
+        <>
+          <ButtonRow>
+            {firstRow.map(({ icon: Icon, text, route, action }, index) => (
+              <Button
+                key={index}
+                onClick={
+                  action === "openModal" ? openModal : () => router.push(route!)
+                }
+                total={firstRow.length}
+              >
+                <span>
+                  <Icon />
+                </span>
+                {text}
+              </Button>
+            ))}
+          </ButtonRow>
+          <ButtonRow>
+            {secondRow.map(({ icon: Icon, text, route, action }, index) => (
+              <Button
+                key={index}
+                onClick={
+                  action === "openModal" ? openModal : () => router.push(route!)
+                }
+                total={secondRow.length}
+              >
+                <span>
+                  <Icon />
+                </span>
+                {text}
+              </Button>
+            ))}
+          </ButtonRow>
+        </>
+      );
+    }
+  };
+
   return (
     <Container>
       <ProfileIcon>
         <FaRegAddressCard />
       </ProfileIcon>
-      <Role>학생</Role>
+      <Role>{roleLabels[role]}</Role>
       <Name>이예림</Name>
       <ID>202302351</ID>
-      <ButtonContainer>
-        <Button onClick={() => router.push("/my/question")}>
-          <span>
-            <BiSolidQuoteLeft />
-          </span>
-          질문하기
-        </Button>
-        <Button onClick={() => router.push("/my/answer")}>
-          <span>
-            <BiSolidQuoteRight />
-          </span>
-          답변하기
-        </Button>
-        {/* <Button onClick={() => router.push("/my/seminar")}> */}
-        <Button onClick={openModal}>
-          <span>
-            <TbSquaresFilled />
-          </span>
-          세미나실
-          <br />
-          예약 현황
-        </Button>
-        <Button onClick={() => router.push("/my/writingCheck")}>
-          <span>
-            <FaCheckCircle />
-          </span>
-          내가 쓴 글
-        </Button>
-      </ButtonContainer>
+      <ButtonContainer>{renderButtons()}</ButtonContainer>
       {isModalOpen && (
         <SeminarAlert isOpen={isModalOpen} closeModal={closeModal} />
       )}
     </Container>
   );
 }
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -94,13 +210,23 @@ const ID = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  background-color: ${theme.colors.primary};
-  border-radius: 1rem;
+  flex-direction: column;
+  // gap: 1rem;
   margin: 0rem 3rem;
 `;
 
-const Button = styled.button`
+const ButtonRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: ${theme.colors.primary};
+  border-radius: 1rem;
+`;
+
+interface ButtonProps {
+  total: number;
+}
+
+const Button = styled.button<ButtonProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,9 +235,9 @@ const Button = styled.button`
   background-color: ${theme.colors.primary};
   color: white;
   border-radius: 1rem;
-  width: 5rem;
+  width: ${(props) => (props.total <= 3 ? "5.5rem" : "8rem")};
   height: 5rem;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   position: relative;
 
   &:not(:last-child)::after {

@@ -87,11 +87,3 @@ export default function Answer() {
     </ContainerWrapper>
   );
 }
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  position: relative;
-  top: 12rem;
-`;
