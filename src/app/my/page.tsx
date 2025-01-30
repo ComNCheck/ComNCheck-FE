@@ -36,7 +36,7 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 export default function My() {
-  const role: UserRole = "ROLE_ADMIN";
+  const role: UserRole = "ROLE_STUDENT_COUNCIL";
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -94,7 +94,7 @@ export default function My() {
   const closeModal = () => setIsModalOpen(false);
 
   const renderButtons = () => {
-    if (filteredButtons.length <= 3) {
+    if (filteredButtons.length <= 4) {
       return (
         <ButtonRow>
           {filteredButtons.map(({ icon: Icon, text, route, action }, index) => (
@@ -269,11 +269,11 @@ const Button = styled.button<ButtonProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
+  // padding: 0.5rem;
   background-color: ${theme.colors.primary};
   color: white;
   border-radius: 1rem;
-  width: ${(props) => (props.total <= 3 ? "5.5rem" : "8rem")};
+  width: ${(props) => (props.total <= 3 ? "5.5rem" : "6rem")};
   height: 5rem;
   font-size: 0.7rem;
   position: relative;
