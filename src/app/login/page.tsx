@@ -2,6 +2,8 @@
 
 import styled from "styled-components";
 import { theme } from "../styles/theme";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,15 +68,38 @@ const AskManager = styled.div`
 `;
 
 export default function Login() {
+  const [loginError, setLoginError] = useState(false);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // URL에서 로그인 에러 체크
+    if (searchParams.get("error")) {
+      console.error("로그인 실패");
+      setLoginError(true);
+    } else {
+      console.log("로그인 페이지 로드됨.");
+    }
+  }, [searchParams]);
+
+  const handleLogin = () => {
+    console.log("Google 로그인 시도 중...");
+    window.location.href = "http://localhost:8080/oauth2/authorize/google";
+  };
+
   return (
     <Wrapper>
       <Logo src={`/logo.png`} alt="로고" />
       <AlertContainer>
         <Alert>한국외국어대학교</Alert>
         <Alert>학교 계정으로 로그인해주세요!</Alert>
+        {loginError && (
+          <Alert style={{ color: "red" }}>
+            로그인에 실패했습니다. 다시 시도해주세요.
+          </Alert>
+        )}
       </AlertContainer>
-      <GoogleBtn>
-        <img src="/GoogleLogo.svg" />
+      <GoogleBtn onClick={handleLogin}>
+        <img src="/GoogleLogo.svg" alt="구글 로고" />
         Sign up with Google
       </GoogleBtn>
       <StatusContainer>
