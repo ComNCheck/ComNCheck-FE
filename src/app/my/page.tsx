@@ -9,6 +9,8 @@ import { TbSquaresFilled } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SeminarAlert from "../../components/modal/seminarAlert";
+import { IoSettings } from "react-icons/io5";
+import { FaSignOutAlt } from "react-icons/fa";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -34,7 +36,7 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 export default function My() {
-  const role: UserRole = "ROLE_ADMIN";
+  const role: UserRole = "ROLE_STUDENT_COUNCIL";
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -92,7 +94,7 @@ export default function My() {
   const closeModal = () => setIsModalOpen(false);
 
   const renderButtons = () => {
-    if (filteredButtons.length <= 3) {
+    if (filteredButtons.length <= 4) {
       return (
         <ButtonRow>
           {filteredButtons.map(({ icon: Icon, text, route, action }, index) => (
@@ -161,6 +163,17 @@ export default function My() {
 
   return (
     <Container>
+      <Header>
+        <IconContainer>
+          <IconButton onClick={() => router.push("/setting")}>
+            <IoSettings />
+          </IconButton>
+          <IconButton onClick={() => console.log("Logout clicked")}>
+            <FaSignOutAlt />
+          </IconButton>
+        </IconContainer>
+      </Header>
+
       <ProfileIcon>
         <FaRegAddressCard />
       </ProfileIcon>
@@ -185,11 +198,36 @@ const Container = styled.div`
   background-color: ${theme.colors.background};
   padding-bottom: 15rem;
 `;
-
 const ProfileIcon = styled.div`
   font-size: 3rem;
 `;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  position: absolute;
+  top: 3rem;
+  z-index: 100;
+  justify-content: flex-end;
+  margin-left: 16rem;
+`;
+const IconContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
 
+const IconButton = styled.button`
+  color: ${theme.colors.mutedText};
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+
+  &:hover {
+    color: ${theme.colors.primary};
+  }
+`;
 const Role = styled.div`
   font-size: 1.2rem;
   color: ${theme.colors.mutedText};
@@ -231,11 +269,11 @@ const Button = styled.button<ButtonProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
+  // padding: 0.5rem;
   background-color: ${theme.colors.primary};
   color: white;
   border-radius: 1rem;
-  width: ${(props) => (props.total <= 3 ? "5.5rem" : "8rem")};
+  width: ${(props) => (props.total <= 3 ? "5.5rem" : "6rem")};
   height: 5rem;
   font-size: 0.7rem;
   position: relative;

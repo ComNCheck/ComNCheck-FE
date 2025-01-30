@@ -59,7 +59,7 @@ export default function ToDeveloper() {
   const addInputContainer = () => {
     //생성된 input 컴포넌트의 고유 id생성
     const newInput = { id: uuidv4(), text: "", isSubmitted: false };
-    setInputs([...inputs, newInput]);
+    setInputs([newInput, ...inputs]);
   };
   const handleTextChange = (id: string, text: string) => {
     setInputs((prevInputs) =>
