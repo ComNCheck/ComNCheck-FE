@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
+import axios from "axios";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -92,18 +93,44 @@ export default function Signup() {
   const handlePictureClick = () => {
     fileInputRef.current?.click();
   };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
       setIsActive(true);
+
+      //formData 생성
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/1/student/number",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log("서버 응답:", response.data);
+        alert("이미지 업로드 성공!");
+        setIsUploadSuccess(true);
+      } catch (error) {
+        console.error("업로드 에러:", error);
+        alert("이미지 업로드 실패");
+        setIsUploadSuccess(false);
+      }
     }
   };
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
   const handleNextClick = () => {
-    if (selectedFile) {
+    if (selectedFile && isUploadSuccess) {
       router.push("/signup/complete");
     } else {
       alert("이미지를 업로드 해주세요.");
@@ -143,7 +170,10 @@ export default function Signup() {
         accept="image/*"
         onChange={handleFileChange}
       />
-      <NextBtn onClick={handleNextClick} disabled={!selectedFile} />
+      <NextBtn
+        onClick={handleNextClick}
+        disabled={!selectedFile || !isUploadSuccess}
+      />
       {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );
