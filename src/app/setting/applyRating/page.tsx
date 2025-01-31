@@ -6,6 +6,7 @@ import SettingHeader from "@/components/Header/settingHeader";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TitleContainer from "@/components/setting/TitleContainer";
+import { IoIosArrowDown } from "react-icons/io";
 
 const Wrapper = styled.div`
   display: flex;
@@ -88,11 +89,61 @@ const Button = styled.button`
   font-family: Pretendard;
   font-style: normal;
 `;
+
+const DropdownContainer = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+const SelectContainer = styled.div`
+  width: 100%;
+  height: 3.4375rem;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 2px solid ${theme.colors.background};
+  cursor: pointer;
+`;
+
+const SelectedValue = styled.div`
+  flex: 1;
+`;
+
+const ArrowIcon = styled(IoIosArrowDown)<{ open: boolean }>`
+  transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0)")};
+  transition: transform 0.2s ease-in-out;
+`;
+
+const DropdownList = styled.ul`
+  position: absolute;
+  width: 100%;
+  top: 110%;
+  background: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.625rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+`;
+
+const DropdownItem = styled.li`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background: ${theme.colors.background};
+    color: ${theme.colors.text};
+  }
+`;
+
 interface FormValues {
   name: string;
   id: string;
   unit: string;
   position: string;
+  role: string;
 }
 export default function ApplyRating() {
   const [values, setValues] = useState<FormValues>({
@@ -100,9 +151,16 @@ export default function ApplyRating() {
     id: "",
     unit: "",
     position: "",
+    role: "",
   });
   const [toastVisible, setToastVisible] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string>("학생");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const handleRoleChange = (role: string) => {
+    setSelectedRole(role);
+    setIsDropdownOpen(false);
+  };
   const handleInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
     field: string
@@ -121,6 +179,7 @@ export default function ApplyRating() {
       id: "",
       unit: "",
       position: "",
+      role: "학생",
     });
   };
 
@@ -128,7 +187,7 @@ export default function ApplyRating() {
     setIsFormValid(
       values.name !== "" &&
         values.id !== "" &&
-        values.id.length == 9 &&
+        values.id.length === 9 &&
         values.unit !== "" &&
         values.position !== ""
     );
@@ -193,6 +252,27 @@ export default function ApplyRating() {
               hasPlaceholder={true}
               isFilled={values.position.length > 0}
             ></Form>
+            <Label>📍등급</Label>
+            <DropdownContainer>
+              <SelectContainer
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <SelectedValue>{selectedRole}</SelectedValue>
+                <ArrowIcon open={isDropdownOpen} />
+              </SelectContainer>
+              {isDropdownOpen && (
+                <DropdownList>
+                  {["학생", "학생회", "과회장"].map((option) => (
+                    <DropdownItem
+                      key={option}
+                      onClick={() => handleRoleChange(option)}
+                    >
+                      {option}
+                    </DropdownItem>
+                  ))}
+                </DropdownList>
+              )}
+            </DropdownContainer>
           </FormWrapper>
           <ButtonContainer>
             <Button disabled={!isFormValid} onClick={handleSubmit}>

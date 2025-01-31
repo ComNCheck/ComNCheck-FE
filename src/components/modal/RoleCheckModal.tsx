@@ -201,8 +201,8 @@ const DropdownList = styled.ul`
 const DropdownItem = styled.li`
   padding: 10px;
   cursor: pointer;
-    &:hover {
-      background: ${theme.colors.background}
-      color: ${theme.colors.text}
-    }
+  &:hover {
+    background: ${theme.colors.background};
+    color: ${theme.colors.text};
+  }
 `;
