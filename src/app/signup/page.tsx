@@ -5,7 +5,7 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { theme } from "../styles/theme";
 import { MdCameraEnhance } from "react-icons/md";
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
 import axios from "axios";
@@ -93,21 +93,23 @@ export default function Signup() {
   const handlePictureClick = () => {
     fileInputRef.current?.click();
   };
-
+  const searchParams = useSearchParams();
+  const memberId = searchParams.get("id");
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log(file);
     if (file) {
       setSelectedFile(file);
       setIsActive(true);
 
       //formData 생성
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("studentCardImage", file);
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/v1/1/student/number",
+          `http://localhost:8080/api/v1/member/${memberId}/student/number`,
           formData,
           {
             headers: {

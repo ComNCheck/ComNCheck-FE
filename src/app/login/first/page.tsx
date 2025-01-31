@@ -1,6 +1,8 @@
 "use client";
 import { theme } from "@/app/styles/theme";
+import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -45,10 +47,25 @@ const RadioInput = styled.input`
   margin-right: 0.5rem;
 `;
 export default function FirstLogin() {
-  const name = "000";
+  const [memberId, setMemberId] = useState<number | null>(null);
+  const [name, setName] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/v1/member");
+        const { memberId, name } = response.data;
+        setMemberId(memberId);
+        setName(name);
+      } catch (error) {
+        console.error("회원정보 불러오기 실패: ", error);
+      }
+    };
+    fetchMemberData();
+  }, []);
   const handleClick = (url: string) => {
-    router.push(url);
+    router.push(`${url}?id=${memberId}`);
   };
   return (
     <Wrapper>
@@ -67,6 +84,7 @@ export default function FirstLogin() {
             type="radio"
             name="hasNumber"
             onClick={() => handleClick("/signup")}
+            disabled={!memberId}
           />
           학번이 있어요 ⭕
         </HasNumberLabel>
