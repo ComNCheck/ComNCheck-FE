@@ -115,6 +115,7 @@ export default function Signup() {
             headers: {
               "Content-Type": "multipart/form-data",
             },
+            withCredentials: true, //쿠키 허용
           }
         );
 
