@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TitleContainer from "@/components/setting/TitleContainer";
 import { IoIosArrowDown } from "react-icons/io";
+import Form from "@/components/setting/form";
 
 const Wrapper = styled.div`
   display: flex;
@@ -51,26 +52,6 @@ const Label = styled.label`
   width: 100%;
 `;
 
-const Form = styled.textarea.withConfig({
-  shouldForwardProp: (prop) => prop !== "hasPlaceholder" && prop !== "isFilled",
-})<{ hasPlaceholder?: boolean; isFilled: boolean }>`
-  width: 20.625rem;
-  max-width: 80vw;
-  height: ${(props) => (props.hasPlaceholder ? "4.3125rem" : "3.4375rem")};
-  border-radius: 0.625rem;
-  color: ${(props) =>
-    props.isFilled ? theme.colors.text : theme.colors.mutedText};
-  font-family: Pretendard;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  padding: 1rem;
-  border: 2px solid ${theme.colors.background};
-  resize: none;
-  overflow: hidden;
-  white-space: pre-wrap;
-`;
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: right;
@@ -93,6 +74,7 @@ const Button = styled.button`
 const DropdownContainer = styled.div`
   width: 100%;
   position: relative;
+  font-family: "Pretendard";
 `;
 
 const SelectContainer = styled.div`
@@ -159,6 +141,7 @@ export default function ApplyRating() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleRoleChange = (role: string) => {
     setSelectedRole(role);
+    setValues((prevValues) => ({ ...prevValues, role }));
     setIsDropdownOpen(false);
   };
   const handleInput = (
@@ -192,6 +175,7 @@ export default function ApplyRating() {
         values.position !== ""
     );
   }, [values]);
+
   return (
     <Wrapper>
       <SettingHeader />
@@ -205,9 +189,7 @@ export default function ApplyRating() {
             <Label>📍이름</Label>
             <Form
               placeholder="이름을 입력해주세요"
-              onInput={(e) =>
-                handleInput(e as React.ChangeEvent<HTMLTextAreaElement>, "name")
-              }
+              onChange={(e) => handleInput(e, "name")}
               value={values.name}
               hasPlaceholder={false}
               isFilled={values.name.length > 0}
@@ -218,9 +200,7 @@ export default function ApplyRating() {
             <Label>📍학번</Label>
             <Form
               placeholder="학번을 입력해주세요"
-              onInput={(e) =>
-                handleInput(e as React.ChangeEvent<HTMLTextAreaElement>, "id")
-              }
+              onChange={(e) => handleInput(e, "id")}
               value={values.id}
               hasPlaceholder={false}
               isFilled={values.id.length > 0}
@@ -230,9 +210,7 @@ export default function ApplyRating() {
             <Label>📍소속 단위</Label>
             <Form
               placeholder={`학생회 단위를 입력해주세요\n(ex: 학과, 단과대학)`}
-              onInput={(e) =>
-                handleInput(e as React.ChangeEvent<HTMLTextAreaElement>, "unit")
-              }
+              onChange={(e) => handleInput(e, "unit")}
               value={values.unit}
               hasPlaceholder={true}
               isFilled={values.unit.length > 0}
@@ -242,12 +220,7 @@ export default function ApplyRating() {
             <Label>📍직책</Label>
             <Form
               placeholder={`직책을 입력해주세요\n(ex: 집행국장)`}
-              onInput={(e) =>
-                handleInput(
-                  e as React.ChangeEvent<HTMLTextAreaElement>,
-                  "position"
-                )
-              }
+              onChange={(e) => handleInput(e, "position")}
               value={values.position}
               hasPlaceholder={true}
               isFilled={values.position.length > 0}
