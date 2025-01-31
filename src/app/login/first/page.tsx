@@ -58,6 +58,10 @@ export default function FirstLogin() {
         const { memberId, name } = response.data;
         setMemberId(memberId);
         setName(name);
+
+        //로컬스토리지 저장
+        localStorage.setItem("memberId", memberId.toString()); //숫자를 문자열로 변환환
+        localStorage.setItem("name", name);
       } catch (error) {
         console.error("회원정보 불러오기 실패: ", error);
       }
