@@ -6,6 +6,8 @@ import SettingHeader from "@/components/Header/settingHeader";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TitleContainer from "@/components/setting/TitleContainer";
+import { IoIosArrowDown } from "react-icons/io";
+import Form from "@/components/setting/form";
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,26 +52,6 @@ const Label = styled.label`
   width: 100%;
 `;
 
-const Form = styled.textarea.withConfig({
-  shouldForwardProp: (prop) => prop !== "hasPlaceholder" && prop !== "isFilled",
-})<{ hasPlaceholder?: boolean; isFilled: boolean }>`
-  width: 20.625rem;
-  max-width: 80vw;
-  height: ${(props) => (props.hasPlaceholder ? "4.3125rem" : "3.4375rem")};
-  border-radius: 0.625rem;
-  color: ${(props) =>
-    props.isFilled ? theme.colors.text : theme.colors.mutedText};
-  font-family: Pretendard;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  padding: 1rem;
-  border: 2px solid ${theme.colors.background};
-  resize: none;
-  overflow: hidden;
-  white-space: pre-wrap;
-`;
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: right;
@@ -88,11 +70,62 @@ const Button = styled.button`
   font-family: Pretendard;
   font-style: normal;
 `;
+
+const DropdownContainer = styled.div`
+  width: 100%;
+  position: relative;
+  font-family: "Pretendard";
+`;
+
+const SelectContainer = styled.div`
+  width: 100%;
+  height: 3.4375rem;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 2px solid ${theme.colors.background};
+  cursor: pointer;
+`;
+
+const SelectedValue = styled.div`
+  flex: 1;
+`;
+
+const ArrowIcon = styled(IoIosArrowDown)<{ open: boolean }>`
+  transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0)")};
+  transition: transform 0.2s ease-in-out;
+`;
+
+const DropdownList = styled.ul`
+  position: absolute;
+  width: 100%;
+  top: 110%;
+  background: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.625rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+`;
+
+const DropdownItem = styled.li`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background: ${theme.colors.background};
+    color: ${theme.colors.text};
+  }
+`;
+
 interface FormValues {
   name: string;
   id: string;
   unit: string;
   position: string;
+  role: string;
 }
 export default function ApplyRating() {
   const [values, setValues] = useState<FormValues>({
@@ -100,9 +133,17 @@ export default function ApplyRating() {
     id: "",
     unit: "",
     position: "",
+    role: "",
   });
   const [toastVisible, setToastVisible] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string>("학생");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const handleRoleChange = (role: string) => {
+    setSelectedRole(role);
+    setValues((prevValues) => ({ ...prevValues, role }));
+    setIsDropdownOpen(false);
+  };
   const handleInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
     field: string
@@ -121,6 +162,7 @@ export default function ApplyRating() {
       id: "",
       unit: "",
       position: "",
+      role: "학생",
     });
   };
 
@@ -128,11 +170,12 @@ export default function ApplyRating() {
     setIsFormValid(
       values.name !== "" &&
         values.id !== "" &&
-        values.id.length == 9 &&
+        values.id.length === 9 &&
         values.unit !== "" &&
         values.position !== ""
     );
   }, [values]);
+
   return (
     <Wrapper>
       <SettingHeader />
@@ -146,9 +189,7 @@ export default function ApplyRating() {
             <Label>📍이름</Label>
             <Form
               placeholder="이름을 입력해주세요"
-              onInput={(e) =>
-                handleInput(e as React.ChangeEvent<HTMLTextAreaElement>, "name")
-              }
+              onChange={(e) => handleInput(e, "name")}
               value={values.name}
               hasPlaceholder={false}
               isFilled={values.name.length > 0}
@@ -159,9 +200,7 @@ export default function ApplyRating() {
             <Label>📍학번</Label>
             <Form
               placeholder="학번을 입력해주세요"
-              onInput={(e) =>
-                handleInput(e as React.ChangeEvent<HTMLTextAreaElement>, "id")
-              }
+              onChange={(e) => handleInput(e, "id")}
               value={values.id}
               hasPlaceholder={false}
               isFilled={values.id.length > 0}
@@ -171,9 +210,7 @@ export default function ApplyRating() {
             <Label>📍소속 단위</Label>
             <Form
               placeholder={`학생회 단위를 입력해주세요\n(ex: 학과, 단과대학)`}
-              onInput={(e) =>
-                handleInput(e as React.ChangeEvent<HTMLTextAreaElement>, "unit")
-              }
+              onChange={(e) => handleInput(e, "unit")}
               value={values.unit}
               hasPlaceholder={true}
               isFilled={values.unit.length > 0}
@@ -183,16 +220,32 @@ export default function ApplyRating() {
             <Label>📍직책</Label>
             <Form
               placeholder={`직책을 입력해주세요\n(ex: 집행국장)`}
-              onInput={(e) =>
-                handleInput(
-                  e as React.ChangeEvent<HTMLTextAreaElement>,
-                  "position"
-                )
-              }
+              onChange={(e) => handleInput(e, "position")}
               value={values.position}
               hasPlaceholder={true}
               isFilled={values.position.length > 0}
             ></Form>
+            <Label>📍등급</Label>
+            <DropdownContainer>
+              <SelectContainer
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <SelectedValue>{selectedRole}</SelectedValue>
+                <ArrowIcon open={isDropdownOpen} />
+              </SelectContainer>
+              {isDropdownOpen && (
+                <DropdownList>
+                  {["학생", "학생회", "과회장"].map((option) => (
+                    <DropdownItem
+                      key={option}
+                      onClick={() => handleRoleChange(option)}
+                    >
+                      {option}
+                    </DropdownItem>
+                  ))}
+                </DropdownList>
+              )}
+            </DropdownContainer>
           </FormWrapper>
           <ButtonContainer>
             <Button disabled={!isFormValid} onClick={handleSubmit}>
