@@ -4,11 +4,11 @@ import DeleteAlert from "@/components/modal/deleteAlert";
 import Toast from "@/components/modal/toast";
 import SettingHeader from "@/components/Header/settingHeader";
 import SettingInput from "@/components/setting/settingInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { postQuestion } from "@/apis/developerQuestion";
+import { getAllQuestion, postQuestion } from "@/apis/developerQuestion";
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,6 +57,23 @@ export default function ToDeveloper() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  //기존에 제출한 의견 불러오기
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const questions = await getAllQuestion();
+        const formattedQuestions = questions.map((q) => ({
+          id: q.id.toString(),
+          text: q.content,
+          isSubmitted: true,
+        }));
+        setInputs(formattedQuestions);
+      } catch (error) {
+        console.error("의견 불러오는 중 에러발생", error);
+      }
+    };
+    fetchQuestions();
+  }, []);
   const addInputContainer = () => {
     //생성된 input 컴포넌트의 고유 id생성
     const newInput = { id: uuidv4(), text: "", isSubmitted: false };
