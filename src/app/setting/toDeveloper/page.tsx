@@ -69,7 +69,7 @@ export default function ToDeveloper() {
   };
   const handleSubmit = async (id: string, text: string) => {
     try {
-      await postQuestion({ content: text, writerId: 1 });
+      await postQuestion({ content: text });
       setInputs((prev) =>
         prev.map((input) =>
           input.id === id ? { ...input, isSubmitted: true } : input
