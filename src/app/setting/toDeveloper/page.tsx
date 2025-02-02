@@ -8,6 +8,7 @@ import { useState } from "react";
 import { BiMessageSquareEdit } from "react-icons/bi";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+import { postQuestion } from "@/apis/developerQuestion";
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,15 +67,19 @@ export default function ToDeveloper() {
       prevInputs.map((input) => (input.id === id ? { ...input, text } : input))
     );
   };
-  const handleSubmit = (id: string, text: string) => {
-    setInputs((prev) =>
-      prev.map((input) =>
-        input.id === id ? { ...input, isSubmitted: true } : input
-      )
-    );
-    console.log("제출된 데이터: ", { id, text });
-    setMessage("제출되었습니다. 의견 감사합니다.");
-    setToastVisible(true);
+  const handleSubmit = async (id: string, text: string) => {
+    try {
+      await postQuestion({ content: text, writerId: 1 });
+      setInputs((prev) =>
+        prev.map((input) =>
+          input.id === id ? { ...input, isSubmitted: true } : input
+        )
+      );
+    } catch (error) {
+      console.log("제출된 데이터: ", { id, text });
+      setMessage("제출되었습니다. 의견 감사합니다.");
+      setToastVisible(true);
+    }
   };
   const removeInputContainer = () => {
     if (deleteId) {
