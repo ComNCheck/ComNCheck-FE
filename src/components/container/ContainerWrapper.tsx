@@ -12,6 +12,10 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: flex-start;
   background-color: ${theme.colors.background};
+  // overflow-y: auto;
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
 `;
 
 export default function ContainerWrapper({

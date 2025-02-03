@@ -36,7 +36,7 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 export default function My() {
-  const role: UserRole = "ROLE_STUDENT_COUNCIL";
+  const role: UserRole = "ROLE_ADMIN";
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,7 +44,7 @@ export default function My() {
     {
       role: [
         "ROLE_ADMIN",
-        "ROLE_STUDENT_COUNCIL",
+        // "ROLE_STUDENT_COUNCIL",
         "ROLE_STUDENT",
         "ROLE_GRADUATE_STUDENT",
       ],
@@ -79,13 +79,19 @@ export default function My() {
     {
       role: [
         "ROLE_ADMIN",
-        "ROLE_STUDENT_COUNCIL",
+        // "ROLE_STUDENT_COUNCIL",
         "ROLE_STUDENT",
         "ROLE_GRADUATE_STUDENT",
       ],
       icon: FaCheckCircle,
       text: "내가 쓴 글",
       route: "/my/writingCheck",
+    },
+    {
+      role: ["ROLE_ADMIN", "ROLE_STUDENT_COUNCIL"],
+      icon: FaClipboardUser,
+      text: "등급 신청",
+      route: "/setting/applyRating",
     },
   ];
 
@@ -273,7 +279,7 @@ const Button = styled.button<ButtonProps>`
   background-color: ${theme.colors.primary};
   color: white;
   border-radius: 1rem;
-  width: ${(props) => (props.total <= 3 ? "5.5rem" : "6rem")};
+  width: ${(props) => (props.total <= 3 ? "7rem" : "6rem")};
   height: 5rem;
   font-size: 0.7rem;
   position: relative;
