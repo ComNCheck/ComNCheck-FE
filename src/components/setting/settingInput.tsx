@@ -54,7 +54,7 @@ const CharCount = styled.div`
 `;
 
 interface SettingInputProps {
-  id: string;
+  id?: number;
   value: string;
   isSubmitted: boolean;
   onRemove: () => void;
@@ -62,7 +62,6 @@ interface SettingInputProps {
   onChange: (text: string) => void;
 }
 export default function SettingInput({
-  id,
   value,
   isSubmitted,
   onSubmit,

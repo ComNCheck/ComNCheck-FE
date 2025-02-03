@@ -30,3 +30,17 @@ export const getAllQuestion = async (): Promise<AllQuestionResponse[]> => {
     throw error;
   }
 };
+
+// 해당 질문 삭제 api
+export const deleteQustion = async (
+  developerQuestionId: number
+): Promise<void> => {
+  try {
+    const response = await instance.delete(
+      `/api/v1/developer/questions/${developerQuestionId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
