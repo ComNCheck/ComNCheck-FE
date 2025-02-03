@@ -6,7 +6,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   width: 95%;
   height: 30rem;
-  padding: 20px;
+  padding: 1rem;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0px 10px ${theme.colors.mutedText};

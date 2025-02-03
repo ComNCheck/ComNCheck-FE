@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 import NoticeCard from "./Component/NoticeCard";
 import NoticeCommonCard from "./Component/NoticeCommonCard";
+import { FaPenToSquare } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 const mockNotices = [
   {
@@ -12,27 +14,51 @@ const mockNotices = [
     title: "2025학년도 1학기 개강총회",
     date: "2025.09.10(화)",
     dDay: "D-5",
+    googleFormLink: "https://www.naver.com/",
   },
   {
     id: 2,
     title: "2025학년도 1학기 개강총회",
     date: "2025.09.10(화)",
     dDay: "D-5",
+    googleFormLink: "https://www.naver.com/",
   },
   {
     id: 3,
     title: "2025학년도 1학기 개강총회",
     date: "2025.09.10(화)",
     dDay: "D-5",
+    googleFormLink: "https://www.naver.com/",
   },
 ];
 
 export default function Notice() {
+  const router = useRouter();
+
+  const handleWriteClick = () => {
+    router.push("/notice/event/enroll");
+  };
+  const handleEventClick = () => {
+    router.push("/notice/event");
+  };
+  const handleCollegeClick = () => {
+    router.push("/notice/college");
+  };
+  const handleEmploymentClick = () => {
+    router.push("/notice/employment");
+  };
+
   return (
     <ContainerWrapper>
       <SlideHeader />
       <ContentContainer>
-        <Header>과행사 공지 확인하기</Header>
+        <Header>
+          <p onClick={handleEventClick}>과행사 공지 확인하기</p>
+          <WritingBtn onClick={handleWriteClick}>
+            글쓰기
+            <FaPenToSquare />
+          </WritingBtn>
+        </Header>
         <ContentNoticeBox>
           <ScrollContainer>
             {mockNotices.map((notice) => (
@@ -40,7 +66,7 @@ export default function Notice() {
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
-        <Header>학부 공지 확인하기</Header>
+        <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
             {mockNotices.map((notice) => (
@@ -48,7 +74,7 @@ export default function Notice() {
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
-        <Header>취업정보 공지 확인하기</Header>
+        <Header onClick={handleEmploymentClick}>취업정보 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
             {mockNotices.map((notice) => (
@@ -65,6 +91,17 @@ const Header = styled.div`
   font-size: 1.2rem;
   font-weight: 700;
   padding-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+const WritingBtn = styled.div`
+  gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
 `;
 
 const ContentContainer = styled.div`

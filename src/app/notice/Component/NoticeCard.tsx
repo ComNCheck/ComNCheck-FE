@@ -11,8 +11,17 @@ const NoticeCard = ({
     title: string;
     date: string;
     dDay: string;
+    googleFormLink: string;
   };
 }) => {
+  const handleApplyClick = () => {
+    if (notice.googleFormLink) {
+      window.open(notice.googleFormLink, "_blank");
+    } else {
+      alert("구글폼 링크가 존재하지 않습니다.");
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -21,7 +30,7 @@ const NoticeCard = ({
           <Date>{notice.date}</Date>
         </Info>
         <DDay>{notice.dDay}</DDay>
-        <ApplyButton>구글폼 신청</ApplyButton>
+        <ApplyButton onClick={handleApplyClick}>구글폼 신청</ApplyButton>
       </CardContent>
     </Card>
   );
@@ -41,6 +50,7 @@ const CardContent = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  gap: 1rem;
 `;
 
 const Info = styled.div`
@@ -72,8 +82,11 @@ const ApplyButton = styled.button`
   font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
+
   &:hover {
     background-color: ${theme.colors.background};
+    color: ${theme.colors.text};
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 `;
 
