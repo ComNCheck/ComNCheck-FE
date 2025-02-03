@@ -1,0 +1,78 @@
+"use client";
+import React from "react";
+import styled from "styled-components";
+import { theme } from "@/app/styles/theme";
+
+const NoticeCommonCard = ({
+  notice,
+}: {
+  notice: {
+    id: number;
+    title: string;
+    date: string;
+    dDay: string;
+  };
+}) => {
+  return (
+    <Card>
+      <CardContent>
+        <Info>
+          <Title>{notice.title}</Title>
+          <Date>{notice.date}</Date>
+        </Info>
+      </CardContent>
+    </Card>
+  );
+};
+
+const Card = styled.div`
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid ${theme.colors.mutedText};
+  background-color: white;
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const Info = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Title = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
+const Date = styled.div`
+  font-size: 0.9rem;
+  color: ${theme.colors.mutedText};
+`;
+
+const DDay = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+  color: ${theme.colors.primary};
+`;
+
+const ApplyButton = styled.button`
+  background-color: white;
+  border: 1px solid ${theme.colors.mutedText};
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  &:hover {
+    background-color: ${theme.colors.background};
+  }
+`;
+
+export default NoticeCommonCard;
