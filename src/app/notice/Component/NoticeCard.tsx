@@ -2,6 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
+import { useRouter } from "next/navigation";
 
 const NoticeCard = ({
   notice,
@@ -14,6 +15,7 @@ const NoticeCard = ({
     googleFormLink: string;
   };
 }) => {
+  const router = useRouter();
   const handleApplyClick = () => {
     if (notice.googleFormLink) {
       window.open(notice.googleFormLink, "_blank");
@@ -21,9 +23,12 @@ const NoticeCard = ({
       alert("구글폼 링크가 존재하지 않습니다.");
     }
   };
+  const handleCardClick = () => {
+    router.push("/notice/event/detail");
+  };
 
   return (
-    <Card>
+    <Card onClick={handleCardClick}>
       <CardContent>
         <Info>
           <Title>{notice.title}</Title>
