@@ -14,5 +14,6 @@ export interface AllQuestionResponse {
   title: string;
   content: string;
   createdAt: string;
+  shared: boolean;
   answer: Answer[] | null;
 }

@@ -39,10 +39,14 @@ export const deleteQuestion = async (
 };
 
 //MY - 내가 쓴글 답변예정일 경우, 수정 가능
-export const putQuestion = async (majorQuestionId: number): Promise<void> => {
+export const putQuestion = async (
+  majorQuestionId: number,
+  shared: boolean
+): Promise<void> => {
   try {
     const response = await instance.put(
-      `/api/v1/major/questions/${majorQuestionId}`
+      `/api/v1/major/questions/${majorQuestionId}`,
+      { shared }
     );
     return response.data;
   } catch (error) {
