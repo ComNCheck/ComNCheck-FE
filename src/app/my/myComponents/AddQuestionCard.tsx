@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
+import { AllQuestionRequest } from "@/apis/question.type";
 
 interface AddQuestionCardProps {
-  onSubmit: () => void;
+  onSubmit: (questionData: AllQuestionRequest) => void;
   submitButtonText: string;
 }
 
@@ -15,9 +16,20 @@ export default function AddQuestionCard({
   submitButtonText,
 }: AddQuestionCardProps) {
   const [isToggleOn, setIsToggleOn] = useState(true);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const toggleHandler = () => {
     setIsToggleOn(!isToggleOn);
+  };
+
+  const handleSubmit = () => {
+    if (!title.trim() || !content.trim()) {
+      alert("제목과 내용을 입력해주세요.");
+      return;
+    }
+
+    onSubmit({ title, content });
   };
 
   return (
@@ -33,21 +45,26 @@ export default function AddQuestionCard({
             )}
           </ToggleWrapper>
         </LabelWrapper>
-        <Input type="text" id="title" placeholder="이예림" defaultValue="" />
+        <Input
+          type="text"
+          id="title"
+          placeholder="질문 제목을 입력해주세요"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <Label htmlFor="question">궁금한 점</Label>
         <Textarea
           id="question"
           rows={4}
           placeholder="궁금한 점을 적어주세요!"
-        ></Textarea>
-        {/* <SubmitButton type="button" onClick={onSubmit}>
-          {submitButtonText}
-        </SubmitButton> */}
-        <ButtonWapper>
-          <SubmitButton type="button" onClick={onSubmit}>
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <ButtonWrapper>
+          <SubmitButton type="button" onClick={handleSubmit}>
             {submitButtonText}
           </SubmitButton>
-        </ButtonWapper>
+        </ButtonWrapper>
       </Form>
     </FormWrapper>
   );
@@ -58,6 +75,7 @@ const FormWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const Form = styled.div`
   width: 95%;
   height: 25rem;
@@ -98,12 +116,6 @@ const Input = styled.input`
   border-radius: 7px;
   font-size: 0.9rem;
   color: ${theme.colors.text};
-  font-family: "Pretendard", sans-serif;
-  &:focus {
-    outline: none;
-    border-color: ${theme.button.primary.background};
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-  }
 `;
 
 const Textarea = styled.textarea`
@@ -116,14 +128,9 @@ const Textarea = styled.textarea`
   font-size: 0.9rem;
   color: ${theme.colors.text};
   resize: none;
-  font-family: "Pretendard", sans-serif;
-  &:focus {
-    outline: none;
-    border-color: ${theme.button.primary.background};
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-  }
 `;
-const ButtonWapper = styled.div`
+
+const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
 `;

@@ -41,9 +41,9 @@ export default function My() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 로컬 스토리지에 있는 json 값 중에 role 값 불러오기
   useEffect(() => {
-    const userData = localStorage.getItem("userInfo");
-    if (userData) {
-      const parsedData = JSON.parse(userData);
+    const memberData = localStorage.getItem("userInfo");
+    if (memberData) {
+      const parsedData = JSON.parse(memberData);
       setRole(parsedData.role);
     }
   }, []);
