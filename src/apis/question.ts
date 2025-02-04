@@ -38,7 +38,7 @@ export const deleteQuestion = async (
   }
 };
 
-//MY - 내가 쓴글 답변예정일 경우, 수정 가능
+//MY - 내가 쓴글 내가쓴글 답변완료일 경우, 확인 가능
 export const putQuestion = async (
   majorQuestionId: number,
   shared: boolean
@@ -47,6 +47,24 @@ export const putQuestion = async (
     const response = await instance.put(
       `/api/v1/major/questions/${majorQuestionId}`,
       { shared }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// MY - 내가 쓴글 답변예정일 경우, 수정 가능
+export const UpdateQuestion = async (
+  majorQuestionId: number,
+  shared: boolean,
+  title: string,
+  content: string
+): Promise<void> => {
+  try {
+    const response = await instance.put(
+      `/api/v1/major/questions/${majorQuestionId}`,
+      { shared, title, content }
     );
     return response.data;
   } catch (error) {
