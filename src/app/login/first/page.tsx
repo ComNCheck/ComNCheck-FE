@@ -47,7 +47,10 @@ const RadioInput = styled.input`
   margin-right: 0.5rem;
 `;
 export default function FirstLogin() {
-  const [memberId, setMemberId] = useState<number | null>(null);
+  const [memberId, setMemberId] = useState<number | null>(() => {
+    const storedData = localStorage.getItem("memberData");
+    return storedData ? JSON.parse(storedData).memberId : null;
+  });
   const [name, setName] = useState<string | null>(() => {
     // 로컬스토리지에서 name 가져오기 (없으면 null)
     const storedData = localStorage.getItem("memberData");
@@ -73,8 +76,13 @@ export default function FirstLogin() {
     fetchMemberData();
   }, []);
   const handleClick = (url: string) => {
-    router.push(`${url}?id=${memberId}`);
+    if (memberId) {
+      router.push(`${url}?id=${memberId}`);
+    } else {
+      console.warn("memberId가 없습니다. 데이터를 확인해주세요.");
+    }
   };
+
   return (
     <Wrapper>
       <Logo src="/logo.png" alt="로고" />
@@ -92,6 +100,7 @@ export default function FirstLogin() {
             type="radio"
             name="hasNumber"
             onClick={() => handleClick("/signup")}
+            disabled={!memberId}
           />
           학번이 있어요 ⭕
         </HasNumberLabel>
