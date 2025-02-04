@@ -15,3 +15,15 @@ export const MemberResponse = async (
     throw error;
   }
 };
+
+// 학생회 리스트 api
+export const getPresidentList = async (): Promise<PresidentCouncilResponse> => {
+  try {
+    const response = await instance.get(
+      "/api/v1/member/members/president-council"
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

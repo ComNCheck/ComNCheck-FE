@@ -5,6 +5,9 @@ import ContainerBox from "@/components/setting/ContainerBox";
 import TitleContainer from "@/components/setting/TitleContainer";
 import SettingHeader from "@/components/Header/settingHeader";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { PresidentCouncilResponse } from "@/apis/member.type";
+import { getPresidentList } from "@/apis/member";
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,10 +101,24 @@ export default function CouncilList() {
     },
   ];
 
-  const president = councilList.find((member) => member.role === "president");
-  const studentCouncil = councilList.filter(
-    (member) => member.role === "student_council"
-  );
+  // const president = councilList.find((member) => member.role === "president");
+  // const studentCouncil = councilList.filter(
+  //   (member) => member.role === "student_council"
+  // );
+
+  const [data, setData] = useState<PresidentCouncilResponse | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getPresidentList();
+        setData(response);
+      } catch (error) {
+        console.error("학생회 정보 불러오기 실패", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <Wrapper>
       <SettingHeader />
@@ -114,12 +131,14 @@ export default function CouncilList() {
           <FormWrapper>
             <Label>👑 과회장</Label>
             <FormContainer>
-              {president && <Name> {president.name}</Name>}
+              {data?.president && <Name>{data.president.name}</Name>}
             </FormContainer>
             <Label>️🎁 학생회</Label>
             <FormContainer>
-              {studentCouncil.map((list) => (
-                <Form key={list.id}>
+              {data?.councilList?.map((list) => (
+                <Form key={list.name}>
+                  {" "}
+                  {/* id 대신 name을 key로 사용 */}
                   <Name>{list.name}</Name>
                   <Position>{list.position}</Position>
                 </Form>
