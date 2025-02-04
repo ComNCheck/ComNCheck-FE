@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
-import { AllQuestionRequest } from "@/apis/question.type";
+import { QuestionRequest } from "@/apis/question.type";
 
 interface AddQuestionCardProps {
-  onSubmit: (questionData: AllQuestionRequest) => void;
+  onSubmit: (questionData: QuestionRequest) => void;
   submitButtonText: string;
 }
 

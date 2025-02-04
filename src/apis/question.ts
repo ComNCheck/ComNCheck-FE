@@ -1,12 +1,25 @@
 import instance from "./instance";
-import { AllQuestionRequest } from "./question.type";
+import { QuestionRequest, AllQuestionResponse } from "./question.type";
 
 // MY - 질문하기 post
-export const postQuestion = async (data: AllQuestionRequest): Promise<void> => {
+export const postQuestion = async (data: QuestionRequest): Promise<void> => {
   try {
     await instance.post("/api/v1/major/questions", data);
   } catch (error) {
-    console.error("API 요청 실패:", error);
+    console.error("MY - 질문하기 post API 요청 실패:", error);
+    throw error;
+  }
+};
+
+// MY - 내가 쓴글 조회
+export const getQuestion = async (): Promise<AllQuestionResponse[]> => {
+  try {
+    const response = await instance.get<AllQuestionResponse[]>(
+      "/api/v1/major/questions/my"
+    );
+    return response.data;
+  } catch (error) {
+    console.error("MY - 내가 쓴글 조회 API 요청 실패:", error);
     throw error;
   }
 };

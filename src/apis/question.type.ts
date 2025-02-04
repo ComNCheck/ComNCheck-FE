@@ -1,5 +1,17 @@
 // MY - 질문하기 post
-export interface AllQuestionRequest {
+export interface QuestionRequest {
   title: string;
   content: string;
+}
+
+// MY - 질문하기 get
+export interface Answer {
+  content: string;
+}
+export interface AllQuestionResponse {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  answer: Answer[] | null;
 }

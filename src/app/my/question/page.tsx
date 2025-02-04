@@ -6,12 +6,12 @@ import TitleContainer from "@/components/setting/TitleContainer";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import { useRouter } from "next/navigation";
 import { postQuestion } from "@/apis/question";
-import { AllQuestionRequest } from "@/apis/question.type";
+import { QuestionRequest } from "@/apis/question.type";
 
 export default function Question() {
   const router = useRouter();
 
-  const handleSubmit = async (questionData: AllQuestionRequest) => {
+  const handleSubmit = async (questionData: QuestionRequest) => {
     try {
       await postQuestion(questionData);
       router.back();
