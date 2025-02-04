@@ -48,20 +48,24 @@ const RadioInput = styled.input`
 `;
 export default function FirstLogin() {
   const [memberId, setMemberId] = useState<number | null>(null);
-  const [name, setName] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(() => {
+    // 로컬스토리지에서 name 가져오기 (없으면 null)
+    const storedData = localStorage.getItem("memberData");
+    return storedData ? JSON.parse(storedData).name : null;
+  });
+
   const router = useRouter();
 
   useEffect(() => {
     const fetchMemberData = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/v1/member");
-        const { memberId, name } = response.data;
-        setMemberId(memberId);
-        setName(name);
+        const memberData = response.data;
+        localStorage.setItem("memberData", JSON.stringify(memberData));
 
-        //로컬스토리지 저장
-        localStorage.setItem("memberId", memberId.toString()); //숫자를 문자열로 변환환
-        localStorage.setItem("name", name);
+        // 상태 업데이트
+        setMemberId(memberData.memberId);
+        setName(memberData.name);
       } catch (error) {
         console.error("회원정보 불러오기 실패: ", error);
       }
@@ -88,7 +92,6 @@ export default function FirstLogin() {
             type="radio"
             name="hasNumber"
             onClick={() => handleClick("/signup")}
-            disabled={!memberId}
           />
           학번이 있어요 ⭕
         </HasNumberLabel>
