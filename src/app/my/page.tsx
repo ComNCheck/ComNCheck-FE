@@ -7,7 +7,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { BiSolidQuoteLeft, BiSolidQuoteRight } from "react-icons/bi";
 import { TbSquaresFilled } from "react-icons/tb";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SeminarAlert from "../../components/modal/seminarAlert";
 import { IoSettings } from "react-icons/io5";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -36,9 +36,19 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 export default function My() {
-  const role: UserRole = "ROLE_ADMIN";
+  const [role, setRole] = useState<UserRole>("ROLE_STUDENT");
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // 로컬 스토리지에 있는 json 값 중에 role 값 불러오기
+  useEffect(() => {
+    const userData = localStorage.getItem("userInfo");
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      setRole(parsedData.role);
+    }
+  }, []);
+
+  // const role: UserRole = "ROLE_ADMIN";
 
   const buttonConfig: ButtonConfig[] = [
     {
