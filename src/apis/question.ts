@@ -37,3 +37,15 @@ export const deleteQuestion = async (
     throw error;
   }
 };
+
+//MY - 내가 쓴글 답변예정일 경우, 수정 가능
+export const putQuestion = async (majorQuestionId: number): Promise<void> => {
+  try {
+    const response = await instance.put(
+      `/api/v1/major/questions/${majorQuestionId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

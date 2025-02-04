@@ -15,12 +15,12 @@ export default function AddQuestionCard({
   onSubmit,
   submitButtonText,
 }: AddQuestionCardProps) {
-  const [isToggleOn, setIsToggleOn] = useState(true);
+  const [shared, setShared] = useState(true);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const toggleHandler = () => {
-    setIsToggleOn(!isToggleOn);
+    setShared(!shared);
   };
 
   const handleSubmit = () => {
@@ -29,7 +29,7 @@ export default function AddQuestionCard({
       return;
     }
 
-    onSubmit({ title, content });
+    onSubmit({ title, content, shared });
   };
 
   return (
@@ -38,7 +38,7 @@ export default function AddQuestionCard({
         <LabelWrapper>
           <Label htmlFor="title">제목</Label>
           <ToggleWrapper onClick={toggleHandler}>
-            {isToggleOn ? (
+            {shared ? (
               <BiSolidToggleRight size={30} color={theme.colors.primary} />
             ) : (
               <BiToggleLeft size={30} color={theme.colors.mutedText} />

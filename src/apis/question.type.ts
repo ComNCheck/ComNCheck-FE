@@ -2,6 +2,7 @@
 export interface QuestionRequest {
   title: string;
   content: string;
+  shared: boolean;
 }
 
 // MY - 질문하기 get
