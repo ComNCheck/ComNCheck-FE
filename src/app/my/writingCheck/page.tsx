@@ -5,7 +5,7 @@ import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { getQuestion } from "@/apis/question";
+import { getQuestion, deleteQuestion } from "@/apis/question";
 
 export default function WritingCheck() {
   const router = useRouter();
@@ -19,7 +19,8 @@ export default function WritingCheck() {
         const data = await getQuestion();
         setQuestions(
           data.map((question, index) => ({
-            id: index + 1, // 1부터 시작하는 ID
+            cardId: index + 1,
+            id: question.id,
             title: question.title,
             date: question.createdAt,
             isAnswered: question.answer !== null && question.answer.length > 0,
@@ -33,9 +34,16 @@ export default function WritingCheck() {
     fetchQuestions();
   }, []);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      setQuestions((prev) => prev.filter((q) => q.id !== id));
+      try {
+        await deleteQuestion(id);
+        setQuestions((prev) => prev.filter((q) => q.id !== id));
+        alert("질문이 성공적으로 삭제되었습니다.");
+      } catch (error) {
+        console.error("질문 삭제 실패:", error);
+        alert("질문 삭제에 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 

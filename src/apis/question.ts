@@ -23,3 +23,17 @@ export const getQuestion = async (): Promise<AllQuestionResponse[]> => {
     throw error;
   }
 };
+
+//MY - 내가쓴글 답변완료일 경우, 삭제가능
+export const deleteQuestion = async (
+  majorQuestionId: number
+): Promise<void> => {
+  try {
+    const response = await instance.delete(
+      `/api/v1/major/questions/${majorQuestionId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
