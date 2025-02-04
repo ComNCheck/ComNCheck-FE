@@ -76,13 +76,8 @@ export default function FirstLogin() {
     fetchMemberData();
   }, []);
   const handleClick = (url: string) => {
-    if (memberId) {
-      router.push(`${url}?id=${memberId}`);
-    } else {
-      console.warn("memberId가 없습니다. 데이터를 확인해주세요.");
-    }
+    router.push(`${url}?id=${memberId}`);
   };
-
   return (
     <Wrapper>
       <Logo src="/logo.png" alt="로고" />
