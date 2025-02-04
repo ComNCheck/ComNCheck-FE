@@ -8,26 +8,59 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
+import { getQuestionById } from "@/apis/question";
+import { postAnswer } from "@/apis/answer";
+import { AllQuestionResponse } from "@/apis/question.type";
 
 export default function WriteAnswer() {
-  const [isToggleOn, setIsToggleOn] = useState(true);
-  const [question, setQuestion] = useState({ title: "", content: "" });
+  const [shared, setShared] = useState(true);
+  const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const [answer, setAnswer] = useState("");
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const router = useRouter();
 
   useEffect(() => {
-    // 여기서 id를 사용하여 질문 데이터를 가져옵니다.
-    // 예: fetchQuestion(id).then(data => setQuestion(data));
+    if (id) {
+      fetchQuestion(parseInt(id));
+    }
   }, [id]);
 
-  const toggleHandler = () => {
-    setIsToggleOn(!isToggleOn);
+  const fetchQuestion = async (questionId: number) => {
+    try {
+      const data = await getQuestionById(questionId);
+      setQuestion(data);
+      setShared(data.shared);
+    } catch (error) {
+      console.error("질문 데이터 가져오기 실패:", error);
+    }
   };
 
-  const handleSubmit = () => {
-    // 답변 제출 로직
-    // 예: submitAnswer(id, answer).then(() => router.push('/answer'));
+  const toggleHandler = () => {
+    setShared(!shared);
+  };
+
+  const handleSubmit = async () => {
+    if (!question) {
+      alert("질문 정보를 불러오지 못했습니다.");
+      return;
+    }
+    if (!answer.trim()) {
+      alert("답변을 입력해주세요.");
+      return;
+    }
+
+    try {
+      await postAnswer({
+        questionId: question.id,
+        content: answer,
+      });
+      alert("답변이 성공적으로 등록되었습니다.");
+      router.push("/my/answer");
+    } catch (error) {
+      console.error("답변 등록 실패:", error);
+      alert("답변 등록에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -47,16 +80,16 @@ export default function WriteAnswer() {
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
             <ToggleWrapper onClick={toggleHandler}>
-              {isToggleOn ? (
+              {shared ? (
                 <BiSolidToggleRight size={30} color={theme.colors.primary} />
               ) : (
                 <BiToggleLeft size={30} color={theme.colors.mutedText} />
               )}
             </ToggleWrapper>
           </LabelWrapper>
-          <ContentTitle>{question.title}질문 제목</ContentTitle>
+          <ContentTitle>{question?.title || "질문 제목"}</ContentTitle>
           <Label htmlFor="question">궁금한 점</Label>
-          <ContentDetail id="question">{question.content}</ContentDetail>
+          <ContentDetail id="question">{question?.content || ""}</ContentDetail>
         </ContentBoxSmall>
         <ContentBoxSmall>
           <LabelWrapper>

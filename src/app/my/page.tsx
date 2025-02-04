@@ -36,7 +36,7 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 export default function My() {
-  const [role, setRole] = useState<UserRole>("ROLE_STUDENT");
+  const [role, setRole] = useState<UserRole>("ROLE_ADMIN"); //나중에 여기 기본 값으로 ROLE_STUDENT 넣기 수정하기
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 로컬 스토리지에 있는 json 값 중에 role 값 불러오기

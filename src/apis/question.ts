@@ -23,6 +23,20 @@ export const getQuestion = async (): Promise<AllQuestionResponse[]> => {
     throw error;
   }
 };
+// MY - 내가 쓴글 특정 조회
+export const getQuestionById = async (
+  majorQuestionId: number
+): Promise<AllQuestionResponse> => {
+  try {
+    const response = await instance.get<AllQuestionResponse>(
+      `/api/v1/major/questions/${majorQuestionId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("MY - 내가 쓴글 특정 조회 API 요청 실패:", error);
+    throw error;
+  }
+};
 
 //MY - 내가쓴글 답변완료일 경우, 삭제가능
 export const deleteQuestion = async (

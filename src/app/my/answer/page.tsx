@@ -1,43 +1,40 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import SubHeader from "@/components/Header/SubHeader";
-import styled from "styled-components";
+import React, { useState, useEffect, useMemo } from "react";
 import IsAnswerToggle from "../myComponents/IsAnswerToggle";
 import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
+import { getQuestion, deleteQuestion } from "@/apis/question";
+import { AllQuestionResponse } from "@/apis/question.type";
+
+interface QuestionWithIsAnswered extends AllQuestionResponse {
+  isAnswered: boolean;
+}
 
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);
   const router = useRouter();
-  const [questions, setQuestions] = React.useState(
-    [
-      {
-        id: 1,
-        title: "어쩌고 저쩌고 이건 ?",
-        date: "2025.01.10",
-        answere:
-          "저번 구글폼 을 통해 참여자를 받았었는데,예산문제로 더이상 추가 모집은 없습니다. 감사합니다.",
-      },
-      {
-        id: 2,
-        title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-        date: "2025.01.10",
-        answere: "",
-      },
-      {
-        id: 3,
-        title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-        date: "2025.01.10",
-        answere: "",
-      },
-    ].map((question) => ({
-      ...question,
-      isAnswered: !!question.answere,
-    }))
-  );
+  const [questions, setQuestions] = useState<QuestionWithIsAnswered[]>([]);
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  const fetchQuestions = async () => {
+    try {
+      const fetchedQuestions = await getQuestion();
+      setQuestions(
+        fetchedQuestions.map((q) => ({
+          ...q,
+          isAnswered: q.answer !== null && q.answer.length > 0,
+        }))
+      );
+    } catch (error) {
+      console.error("질문 목록 불러오기 실패:", error);
+    }
+  };
 
   const handleCardClick = (id: number, isAnswered: boolean) => {
     if (isAnswered) {
@@ -48,16 +45,28 @@ export default function Answer() {
   };
 
   const filteredQuestions = useMemo(() => {
-    return questions.filter((q) => q.isAnswered === isAnswered);
+    return questions
+      .filter((q) => q.isAnswered === isAnswered)
+      .map(({ id, title, createdAt, isAnswered }) => ({
+        id,
+        title,
+        date: createdAt,
+        isAnswered,
+      }));
   }, [questions, isAnswered]);
 
   const handleToggle = () => {
     setIsAnswered((prev) => !prev);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      setQuestions((prev) => prev.filter((q) => q.id !== id));
+      try {
+        await deleteQuestion(id);
+        setQuestions((prev) => prev.filter((q) => q.id !== id));
+      } catch (error) {
+        console.error("질문 삭제 실패:", error);
+      }
     }
   };
 
