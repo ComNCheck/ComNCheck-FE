@@ -8,6 +8,8 @@ import styled from "styled-components";
 import TitleContainer from "@/components/setting/TitleContainer";
 import { IoIosArrowDown } from "react-icons/io";
 import Form from "@/components/setting/form";
+import { roleChangeType } from "@/apis/roleChange.type";
+import { roleApply } from "@/apis/roleChange";
 
 const Wrapper = styled.div`
   display: flex;
@@ -139,6 +141,8 @@ export default function ApplyRating() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>("학생");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleRoleChange = (role: string) => {
     setSelectedRole(role);
     setValues((prevValues) => ({ ...prevValues, role }));
@@ -152,18 +156,33 @@ export default function ApplyRating() {
     setValues({ ...values, [field]: textarea.value });
   };
 
-  const handleSubmit = () => {
-    if (!isFormValid) return;
+  const handleSubmit = async () => {
+    if (!isFormValid || isSubmitting) return;
     console.log(values);
-    setToastVisible(true);
-    // 폼 내용 초기화
-    setValues({
-      name: "",
-      id: "",
-      unit: "",
-      position: "",
-      role: "학생",
-    });
+    setIsSubmitting(true); //제출 중에 로딩 활성화
+    try {
+      const data: roleChangeType = {
+        name: values.name,
+        studentNumber: parseInt(values.id),
+        major: values.unit,
+        requestPosition: values.position,
+        requestRole: selectedRole,
+      };
+      await roleApply(data);
+      setToastVisible(true);
+      // 폼 내용 초기화
+      setValues({
+        name: "",
+        id: "",
+        unit: "",
+        position: "",
+        role: "학생",
+      });
+    } catch (error) {
+      console.error("등급신청 실패", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -248,8 +267,11 @@ export default function ApplyRating() {
             </DropdownContainer>
           </FormWrapper>
           <ButtonContainer>
-            <Button disabled={!isFormValid} onClick={handleSubmit}>
-              신청
+            <Button
+              disabled={!isFormValid || isSubmitting}
+              onClick={handleSubmit}
+            >
+              {isSubmitting ? "신청 중 .." : "신청"}
             </Button>
           </ButtonContainer>
         </FormContainer>
