@@ -4,40 +4,79 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
-import SubHeader from "@/components/Header/SubHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
+import { getQuestionById } from "@/apis/question";
+import { getAnswer, putAnswer } from "@/apis/answer";
+import { AllQuestionResponse } from "@/apis/question.type";
+import { AnswerRequest } from "@/apis/answer.type";
 
 export default function EditAnswer() {
-  const [isToggleOn, setIsToggleOn] = useState(true);
-  const [question, setQuestion] = useState({ title: "", content: "" });
+  const [shared, setShared] = useState(true);
+  const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const [answer, setAnswer] = useState("");
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const router = useRouter();
 
   useEffect(() => {
-    // 여기서 id를 사용하여 질문 데이터를 가져옵니다.
-    // 예: fetchQuestion(id).then(data => setQuestion(data));
+    if (id) {
+      fetchQuestionAndAnswer(parseInt(id));
+    }
   }, [id]);
 
-  const toggleHandler = () => {
-    setIsToggleOn(!isToggleOn);
+  const fetchQuestionAndAnswer = async (questionId: number) => {
+    try {
+      const questionData = await getQuestionById(questionId);
+      setQuestion(questionData);
+      setShared(questionData.shared);
+
+      const answerData = await getAnswer(questionId);
+      if (answerData) {
+        setAnswer(answerData.content);
+      }
+    } catch (error) {
+      console.error("데이터 가져오기 실패:", error);
+    }
   };
 
-  const handleSubmit = () => {
-    // 답변 수정 로직
-    // 예: submitAnswer(id, answer).then(() => router.push('/answer'));
+  const toggleHandler = () => {
+    setShared(!shared);
+  };
+
+  const handleSubmit = async () => {
+    if (!question) {
+      alert("질문 정보를 불러오지 못했습니다.");
+      return;
+    }
+    if (!answer.trim()) {
+      alert("답변을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const answerData: AnswerRequest = {
+        questionId: question.id,
+        content: answer,
+      };
+      await putAnswer(question.id, answerData);
+      alert("답변이 성공적으로 수정되었습니다.");
+      router.push("/my/answer");
+    } catch (error) {
+      console.error("답변 수정 실패:", error);
+      alert("답변 수정에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (
     <ContainerWrapper>
       <TitleContainer
-        title="답변하기"
+        title="답변 수정하기"
         description={
           <>
-            질문에 대한 답변을 작성하고
+            질문에 대한 답변을 수정하고
             <br />
             완료 버튼을 눌러주세요.
           </>
@@ -48,16 +87,16 @@ export default function EditAnswer() {
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
             <ToggleWrapper onClick={toggleHandler}>
-              {isToggleOn ? (
+              {shared ? (
                 <BiSolidToggleRight size={30} color={theme.colors.primary} />
               ) : (
                 <BiToggleLeft size={30} color={theme.colors.mutedText} />
               )}
             </ToggleWrapper>
           </LabelWrapper>
-          <ContentTitle>{question.title}수정할 카드의 제목</ContentTitle>
+          <ContentTitle>{question?.title || "수정할 카드의 제목"}</ContentTitle>
           <Label htmlFor="question">궁금한 점</Label>
-          <ContentDetail id="question">{question.content}</ContentDetail>
+          <ContentDetail id="question">{question?.content || ""}</ContentDetail>
         </ContentBoxSmall>
         <ContentBoxSmall>
           <LabelWrapper>

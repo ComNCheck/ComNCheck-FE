@@ -3,40 +3,31 @@ import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { useSwipeable } from "react-swipeable";
-import { useRouter } from "next/navigation";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import CustomRow from "@/components/CustomRow";
 
-const QuestionCard = ({
-  question,
-  index,
-  onDelete,
-  onCardClick,
-}: {
+interface QuestionCardProps {
   question: {
     id: number;
     title: string;
     date: string;
-    answere: string;
     isAnswered: boolean;
   };
   index: number;
   onDelete: (id: number) => void;
   onCardClick: (id: number, isAnswered: boolean) => void;
+}
+
+const QuestionCard: React.FC<QuestionCardProps> = ({
+  question,
+  index,
+  onDelete,
+  onCardClick,
 }) => {
   const [isSwiped, setIsSwiped] = React.useState(false);
-  const [showAnswerBox, setShowAnswerBox] = React.useState(false);
-  const router = useRouter();
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      setIsSwiped(true);
-      if (showAnswerBox) {
-        setTimeout(() => {
-          setShowAnswerBox(false);
-        }, 300);
-      }
-    },
+    onSwipedLeft: () => setIsSwiped(true),
     onSwipedRight: () => setIsSwiped(false),
   });
 
@@ -48,7 +39,7 @@ const QuestionCard = ({
     <Card {...handlers} onClick={handleCardClick}>
       <CustomRow>
         <ContentWrapper isSwiped={isSwiped}>
-          <QuestionWapper>
+          <QuestionWrapper>
             <NumberCircle>{index + 1}</NumberCircle>
             <QuestionInfo>
               <QuestionTitle>
@@ -58,7 +49,7 @@ const QuestionCard = ({
               </QuestionTitle>
               <QuestionDate>{question.date}</QuestionDate>
             </QuestionInfo>
-          </QuestionWapper>
+          </QuestionWrapper>
           <AnswerStatus isAnswered={question.isAnswered}>
             {question.isAnswered ? "답변완료" : "답변예정"}
           </AnswerStatus>
@@ -100,7 +91,7 @@ const ContentWrapper = styled.div<{ isSwiped: boolean }>`
   justify-content: space-between;
 `;
 
-const QuestionWapper = styled.div`
+const QuestionWrapper = styled.div`
   display: flex;
   align-items: center;
 `;

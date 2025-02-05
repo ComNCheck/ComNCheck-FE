@@ -7,7 +7,6 @@ interface Question {
   id: number;
   title: string;
   date: string;
-  answere: string;
   isAnswered: boolean;
 }
 

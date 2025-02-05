@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
@@ -9,15 +9,29 @@ import { QuestionRequest } from "@/apis/question.type";
 interface AddQuestionCardProps {
   onSubmit: (questionData: QuestionRequest) => void;
   submitButtonText: string;
+  initialData?: {
+    title: string;
+    content: string;
+    shared: boolean;
+  };
 }
 
-export default function AddQuestionCard({
+export default function UpdateQuestionCard({
   onSubmit,
   submitButtonText,
+  initialData,
 }: AddQuestionCardProps) {
-  const [shared, setShared] = useState(true);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [shared, setShared] = useState(initialData?.shared ?? true);
+  const [title, setTitle] = useState(initialData?.title ?? "");
+  const [content, setContent] = useState(initialData?.content ?? "");
+
+  useEffect(() => {
+    if (initialData) {
+      setShared(initialData.shared);
+      setTitle(initialData.title);
+      setContent(initialData.content);
+    }
+  }, [initialData]);
 
   const toggleHandler = () => {
     setShared(!shared);

@@ -1,17 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
-import styled from "styled-components";
+import React from "react";
 import AddQuestionCard from "../myComponents/AddQuestionCard";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { theme } from "@/app/styles/theme";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { postQuestion } from "@/apis/question";
+import { QuestionRequest } from "@/apis/question.type";
 
 export default function Question() {
-  // const router = useRouter();
-  const handleSubmit = () => {
-    // router.back();
+  const router = useRouter();
+
+  const handleSubmit = async (questionData: QuestionRequest) => {
+    try {
+      await postQuestion(questionData);
+      router.back();
+    } catch (error) {
+      console.error("에러 발생:", error);
+      alert("질문을 등록하는 중 오류가 발생했습니다.");
+    }
   };
 
   return (
