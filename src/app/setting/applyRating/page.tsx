@@ -267,11 +267,8 @@ export default function ApplyRating() {
             </DropdownContainer>
           </FormWrapper>
           <ButtonContainer>
-            <Button
-              disabled={!isFormValid || isSubmitting}
-              onClick={handleSubmit}
-            >
-              {isSubmitting ? "신청 중 .." : "신청"}
+            <Button disabled={!isFormValid} onClick={handleSubmit}>
+              신청
             </Button>
           </ButtonContainer>
         </FormContainer>
