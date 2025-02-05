@@ -1,6 +1,6 @@
 "use client";
 import { theme } from "@/app/styles/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaCheckCircle,
   FaPlusCircle,
@@ -68,14 +68,19 @@ export default function SettingInput({
   onRemove,
   onChange,
 }: SettingInputProps) {
-  const [text, setText] = useState("");
-  const [status, setStatus] = useState<"add" | "submit" | "remove">(
-    value ? "submit" : "add"
-  );
+  const [text, setText] = useState(value);
+  const [status, setStatus] = useState<"add" | "submit" | "remove">(() => {
+    if (isSubmitted) return "remove";
+    return value ? "submit" : "add";
+  });
+
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value.slice(0, 100);
     setText(newText);
-    onChange(newText);
+    useEffect(() => {
+      onChange(text);
+    }, [text, onChange]);
+
     if (newText.length > 0 && status === "add") {
       setStatus("submit");
     } else if (newText.length === 0 && status === "submit") {

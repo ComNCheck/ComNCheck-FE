@@ -144,8 +144,24 @@ export default function ApplyRating() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleRoleChange = (role: string) => {
+    let roleMapping: string;
+
+    // 사용자가 선택한 값에 따라 서버에 전달할 값을 매핑
+    switch (role) {
+      case "학생":
+        roleMapping = "ROLE_STUDENT";
+        break;
+      case "학생회":
+        roleMapping = "ROLE_MAJOR_PRESIDENT"; // 예시, 실제 서버에서 원하는 값으로 수정
+        break;
+      case "과회장":
+        roleMapping = "ROLE_GRADUATE_STUDENT"; // 예시, 실제 서버에서 원하는 값으로 수정
+        break;
+      default:
+        roleMapping = "ROLE_STUDENT"; // 기본값 설정
+    }
     setSelectedRole(role);
-    setValues((prevValues) => ({ ...prevValues, role }));
+    setValues((prevValues) => ({ ...prevValues, role: roleMapping }));
     setIsDropdownOpen(false);
   };
   const handleInput = (
@@ -166,7 +182,7 @@ export default function ApplyRating() {
         studentNumber: parseInt(values.id),
         major: values.unit,
         requestPosition: values.position,
-        requestRole: selectedRole,
+        requestRole: values.role,
       };
       await roleApply(data);
       setToastVisible(true);
@@ -176,7 +192,7 @@ export default function ApplyRating() {
         id: "",
         unit: "",
         position: "",
-        role: "학생",
+        role: "ROLE_STUDENT",
       });
     } catch (error) {
       console.error("등급신청 실패", error);
@@ -267,11 +283,8 @@ export default function ApplyRating() {
             </DropdownContainer>
           </FormWrapper>
           <ButtonContainer>
-            <Button
-              disabled={!isFormValid || isSubmitting}
-              onClick={handleSubmit}
-            >
-              {isSubmitting ? "신청 중 .." : "신청"}
+            <Button disabled={!isFormValid} onClick={handleSubmit}>
+              신청
             </Button>
           </ButtonContainer>
         </FormContainer>

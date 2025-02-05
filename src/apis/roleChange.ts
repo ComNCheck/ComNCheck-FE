@@ -2,15 +2,11 @@ import instance from "./instance";
 import { roleChangeType } from "./roleChange.type";
 
 //학생회 등급신청 api
-export const roleApply = async (
-  data: roleChangeType
-): Promise<roleChangeType> => {
+export const roleApply = async (data: roleChangeType): Promise<void> => {
   try {
-    const response = await instance.post<roleChangeType>(
-      "/api/v1/role-change-requests"
-    );
-    return response.data;
+    await instance.post("/api/v1/role-change-requests", data);
   } catch (error) {
+    console.error("학생회 등급신청:", error);
     throw error;
   }
 };

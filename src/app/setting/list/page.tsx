@@ -137,8 +137,6 @@ export default function CouncilList() {
             <FormContainer>
               {data?.councilList?.map((list) => (
                 <Form key={list.name}>
-                  {" "}
-                  {/* id 대신 name을 key로 사용 */}
                   <Name>{list.name}</Name>
                   <Position>{list.position}</Position>
                 </Form>

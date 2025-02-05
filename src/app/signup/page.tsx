@@ -109,7 +109,7 @@ export default function Signup() {
 
       try {
         const response = await axios.post(
-          `http://localhost:8080/api/v1/member/${memberId}/student/number`,
+          `http://localhost:8080/api/v1/member/student/number`,
           formData,
           {
             headers: {
@@ -181,10 +181,7 @@ export default function Signup() {
         accept="image/*"
         onChange={handleFileChange}
       />
-      <NextBtn
-        onClick={handleNextClick}
-        disabled={!selectedFile || !isUploadSuccess}
-      />
+      <NextBtn onClick={handleNextClick} disabled={!selectedFile} />
       {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );
