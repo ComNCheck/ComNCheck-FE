@@ -62,6 +62,7 @@ export default function ToDeveloper() {
     const fetchQuestions = async () => {
       try {
         const questions = await getAllQuestion();
+        console.log("불러온 데이터:", questions);
         const formattedQuestions = questions.map((q) => ({
           id: q.id,
           text: q.content,
@@ -75,10 +76,13 @@ export default function ToDeveloper() {
     fetchQuestions();
   }, []);
 
+  useEffect(() => {
+    console.log(inputs);
+  }, [inputs]);
   // 새로운 의견 추가
   const handleSubmit = async (text: string, index: number) => {
     try {
-      const response = await postQuestion({ content: text }); // 서버 응답에서 id 받음
+      await postQuestion({ content: text }); // 서버 응답에서 id 받음
       setInputs((prev) =>
         prev.map((input, i) =>
           i === index ? { ...input, isSubmitted: true } : input
@@ -107,6 +111,9 @@ export default function ToDeveloper() {
         setToastVisible(true);
       } catch (error) {
         console.error("삭제 실패:", error);
+      } finally {
+        setIsModalOpen(false);
+        setDeleteId(null);
       }
     }
     setIsModalOpen(false);
@@ -136,7 +143,7 @@ export default function ToDeveloper() {
         </TitleContent>
         {inputs.map((input, index) => (
           <SettingInput
-            key={index}
+            key={input.id || index}
             value={input.text}
             isSubmitted={input.isSubmitted}
             onSubmit={(text) => handleSubmit(text, index)}

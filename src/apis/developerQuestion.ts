@@ -4,16 +4,10 @@ import {
 } from "./developerQuestion.type";
 import instance from "./instance";
 
-// 하고싶은 말 입력 api
-export const postQuestion = async (
-  data: DevQuestionRequest
-): Promise<DevQuestionRequest> => {
+// 개발자에게 하고싶은 말 입력 api
+export const postQuestion = async (data: DevQuestionRequest): Promise<void> => {
   try {
-    const response = await instance.post<DevQuestionRequest>(
-      "/api/v1/developer/question",
-      data
-    );
-    return response.data;
+    await instance.post("/api/v1/developer/questions", data);
   } catch (error) {
     throw error;
   }
@@ -23,7 +17,7 @@ export const postQuestion = async (
 export const getAllQuestion = async (): Promise<AllQuestionResponse[]> => {
   try {
     const response = await instance.get<AllQuestionResponse[]>(
-      "/api/v1/developer/question"
+      "/api/v1/developer/questions"
     );
     return response.data;
   } catch (error) {
@@ -36,10 +30,7 @@ export const deleteQustion = async (
   developerQuestionId: number
 ): Promise<void> => {
   try {
-    const response = await instance.delete(
-      `/api/v1/developer/questions/${developerQuestionId}`
-    );
-    return response.data;
+    await instance.delete(`/api/v1/developer/questions/${developerQuestionId}`);
   } catch (error) {
     throw error;
   }
