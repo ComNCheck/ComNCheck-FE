@@ -7,6 +7,14 @@ import NoticeCard from "./Component/NoticeCard";
 import NoticeCommonCard from "./Component/NoticeCommonCard";
 import { FaPenToSquare } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+type UserRole =
+  | "ROLE_ADMIN"
+  | "ROLE_MAJOR_PRESIDENT"
+  | "ROLE_STUDENT_COUNCIL"
+  | "ROLE_STUDENT"
+  | "ROLE_GRADUATE_STUDENT";
 
 const mockNotices = [
   {
@@ -34,6 +42,7 @@ const mockNotices = [
 
 export default function Notice() {
   const router = useRouter();
+  const [role, setRole] = useState<UserRole>("ROLE_ADMIN");
 
   const handleWriteClick = () => {
     router.push("/notice/event/enroll");
@@ -48,16 +57,28 @@ export default function Notice() {
     router.push("/notice/employment");
   };
 
+  useEffect(() => {
+    const memberData = localStorage.getItem("userInfo");
+    if (memberData) {
+      const parsedData = JSON.parse(memberData);
+      setRole(parsedData.role);
+    }
+  }, []);
+
   return (
     <ContainerWrapper>
       <SlideHeader />
       <ContentContainer>
         <Header>
           <p onClick={handleEventClick}>과행사 공지 확인하기</p>
-          <WritingBtn onClick={handleWriteClick}>
-            글쓰기
-            <FaPenToSquare />
-          </WritingBtn>
+          {(role === "ROLE_ADMIN" ||
+            role === "ROLE_MAJOR_PRESIDENT" ||
+            role === "ROLE_STUDENT_COUNCIL") && (
+            <WritingBtn onClick={handleWriteClick}>
+              글쓰기
+              <FaPenToSquare />
+            </WritingBtn>
+          )}
         </Header>
         <ContentNoticeBox>
           <ScrollContainer>
