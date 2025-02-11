@@ -27,6 +27,15 @@ interface ButtonConfig {
   action?: "openModal";
 }
 
+interface UserInfo {
+  memberId: number;
+  name: string;
+  major: string;
+  studentNumber: number;
+  role: UserRole;
+  checkStudentCard: boolean;
+}
+
 const roleLabels: Record<UserRole, string> = {
   ROLE_ADMIN: "관리자",
   ROLE_MAJOR_PRESIDENT: "과회장",
@@ -37,14 +46,22 @@ const roleLabels: Record<UserRole, string> = {
 
 export default function My() {
   const [role, setRole] = useState<UserRole>("ROLE_ADMIN"); //나중에 여기 기본 값으로 ROLE_STUDENT 넣기 수정하기
+  const [name, setName] = useState<string>("이름");
+  const [id, setId] = useState<string>("학번");
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 로컬 스토리지에 있는 json 값 중에 role 값 불러오기
   useEffect(() => {
-    const memberData = localStorage.getItem("userInfo");
+    const memberData = localStorage.getItem("memberData");
     if (memberData) {
-      const parsedData = JSON.parse(memberData);
-      setRole(parsedData.role);
+      try {
+        const parsedData: UserInfo = JSON.parse(memberData);
+        setRole(parsedData.role as UserRole);
+        setName(parsedData.name);
+        setId(parsedData.studentNumber.toString());
+      } catch (error) {
+        console.error("Failed to parse memberData from localStorage:", error);
+      }
     }
   }, []);
 
@@ -194,8 +211,8 @@ export default function My() {
         <FaRegAddressCard />
       </ProfileIcon>
       <Role>{roleLabels[role]}</Role>
-      <Name>이예림</Name>
-      <ID>202302351</ID>
+      <Name>{name}</Name>
+      <ID>{id}</ID>
       <ButtonContainer>{renderButtons()}</ButtonContainer>
       {isModalOpen && (
         <SeminarAlert isOpen={isModalOpen} closeModal={closeModal} />
