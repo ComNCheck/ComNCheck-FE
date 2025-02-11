@@ -1,12 +1,9 @@
 "use client";
 
 import { theme } from "@/app/styles/theme";
-import Toast from "@/components/modal/toast";
-import SettingHeader from "@/components/Header/settingHeader";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { IoIosArrowDown } from "react-icons/io";
 import Form from "@/components/setting/form";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import EventBtn from "../../Component/EventBtn";
@@ -17,14 +14,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 31rem;
-`;
-
-const SettingContainer = styled.div`
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  height: 100%;
 `;
 
 const FormContainer = styled.div`
