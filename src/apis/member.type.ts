@@ -7,6 +7,9 @@ export interface memberType {
   // studentNumber: string;
   // role: string;
   // checkStudentCard: boolean;
+  // alarmMajorEvent: boolean;
+  // alarmMajorNotice: boolean;
+  // alarmEmploymentNotice: boolean;
 }
 
 // 학생회 리스트 반환값

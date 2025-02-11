@@ -51,7 +51,7 @@ const WritingBtn = styled.div`
 const ImageContainer = styled.div`
   display: flex;
   position: relative;
-  width: 100%
+  width: 100%;
   height: auto;
   justify-content: center;
   align-items: center;

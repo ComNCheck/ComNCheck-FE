@@ -77,9 +77,6 @@ export default function SettingInput({
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value.slice(0, 100);
     setText(newText);
-    useEffect(() => {
-      onChange(text);
-    }, [text, onChange]);
 
     if (newText.length > 0 && status === "add") {
       setStatus("submit");
@@ -87,13 +84,16 @@ export default function SettingInput({
       setStatus("add");
     }
   };
-
+  useEffect(() => {
+    onChange(text);
+  }, [text]);
   const handleSubmit = () => {
     if (text.trim() === "") return;
     setStatus("remove");
     console.log(status);
     onSubmit(text);
   };
+
   return (
     <InputContainer>
       <Icon>
