@@ -85,3 +85,16 @@ export const UpdateQuestion = async (
     throw error;
   }
 };
+
+// FAQ - 답변 가져오기 get
+export const getFAQ = async (): Promise<AllQuestionResponse[]> => {
+  try {
+    const response = await instance.get<AllQuestionResponse[]>(
+      "/api/v1/major/questions"
+    );
+    return response.data;
+  } catch (error) {
+    console.error("FAQ - 공개여부 True인 질문 get API 요청 실패:", error);
+    throw error;
+  }
+};

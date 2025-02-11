@@ -17,6 +17,15 @@ type UserRole =
   | "ROLE_STUDENT"
   | "ROLE_GRADUATE_STUDENT";
 
+interface UserInfo {
+  memberId: number;
+  name: string;
+  major: string;
+  studentNumber: number;
+  role: UserRole;
+  checkStudentCard: boolean;
+}
+
 const mockNotices = [
   {
     id: 1,
@@ -84,10 +93,14 @@ export default function Notice() {
   };
 
   useEffect(() => {
-    const memberData = localStorage.getItem("userInfo");
+    const memberData = localStorage.getItem("memberData");
     if (memberData) {
-      const parsedData = JSON.parse(memberData);
-      setRole(parsedData.role);
+      try {
+        const parsedData: UserInfo = JSON.parse(memberData);
+        setRole(parsedData.role as UserRole);
+      } catch (error) {
+        console.error("로컬 스토리지 값 안보여짐 에러 :", error);
+      }
     }
   }, []);
 

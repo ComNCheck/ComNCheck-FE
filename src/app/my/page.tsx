@@ -60,21 +60,14 @@ export default function My() {
         setName(parsedData.name);
         setId(parsedData.studentNumber.toString());
       } catch (error) {
-        console.error("Failed to parse memberData from localStorage:", error);
+        console.error("로컬 스토리지 값 안보여짐 에러 :", error);
       }
     }
   }, []);
 
-  // const role: UserRole = "ROLE_ADMIN";
-
   const buttonConfig: ButtonConfig[] = [
     {
-      role: [
-        "ROLE_ADMIN",
-        // "ROLE_STUDENT_COUNCIL",
-        "ROLE_STUDENT",
-        "ROLE_GRADUATE_STUDENT",
-      ],
+      role: ["ROLE_ADMIN", "ROLE_STUDENT", "ROLE_GRADUATE_STUDENT"],
       icon: BiSolidQuoteLeft,
       text: "질문하기",
       route: "/my/question",
