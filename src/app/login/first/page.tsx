@@ -112,7 +112,11 @@ export default function FirstLogin() {
           학번이 있어요 ⭕
         </HasNumberLabel>
         <HasNumberLabel>
-          <RadioInput type="radio" name="hasNumber" />
+          <RadioInput
+            type="radio"
+            name="hasNumber"
+            onClick={() => handleClick("/notice")}
+          />
           학번이 없어요 ❌
         </HasNumberLabel>
       </HasNumberContainer>

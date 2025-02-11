@@ -123,13 +123,13 @@ export default function Signup() {
         alert("이미지 업로드 성공!");
         setIsUploadSuccess(true);
 
-        //서버 응답데이터를 이용해 로컬스토리지 갱신
-        const storedData = localStorage.getItem("memberData");
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          const updatedData = { ...parsedData, ...response.data };
-          localStorage.setItem("memberData", JSON.stringify(updatedData));
-        }
+        // //서버 응답데이터를 이용해 로컬스토리지 갱신
+        // const storedData = localStorage.getItem("memberData");
+        // if (storedData) {
+        //   const parsedData = JSON.parse(storedData);
+        //   const updatedData = { ...parsedData, ...response.data };
+        //   localStorage.setItem("memberData", JSON.stringify(updatedData));
+        // }
       } catch (error) {
         console.error("업로드 에러:", error);
         alert("이미지 업로드 실패");

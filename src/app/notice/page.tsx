@@ -7,6 +7,8 @@ import NoticeCard from "./Component/NoticeCard";
 import NoticeCommonCard from "./Component/NoticeCommonCard";
 import { FaPenToSquare } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import axios from "axios";
 
 const mockNotices = [
   {
@@ -33,6 +35,31 @@ const mockNotices = [
 ];
 
 export default function Notice() {
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      try {
+        console.log(
+          "로컬스토리지 memberData:",
+          localStorage.getItem("memberData")
+        ); //
+
+        const response = await axios.get(
+          "http://localhost:8080/api/v1/member",
+          {
+            withCredentials: true, // 요청 시 쿠키 포함
+          }
+        );
+        console.log("서버에서 받은 memberData:", response.data); //
+        const memberData = response.data;
+        localStorage.setItem("memberData", JSON.stringify(memberData));
+        console.log(memberData);
+      } catch (error) {
+        console.error("회원정보 불러오기 실패: ", error);
+      }
+    };
+    fetchMemberData();
+  }, []);
+
   const router = useRouter();
 
   const handleWriteClick = () => {
