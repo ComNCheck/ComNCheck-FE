@@ -1,52 +1,51 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CommonQuestionList from "../my/myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
+import { getFAQ } from "@/apis/question";
+import { AllQuestionResponse } from "@/apis/question.type";
 
 export default function FAQ() {
   const router = useRouter();
-  const [questions, setQuestions] = React.useState(
-    [
-      {
-        id: 1,
-        title: "어쩌고 저쩌고 이건 ?",
-        date: "2025.01.10",
-        answere:
-          "저번 구글폼 을 통해 참여자를 받았었는데,예산문제로 더이상 추가 모집은 없습니다. 감사합니다.",
-      },
-      {
-        id: 2,
-        title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-        date: "2025.01.10",
-        answere:
-          "저번 구글폼 을 통해 참여자를 받았었는데,예산문제로 더이상 추가 모집은 없습니다. 감사합니다.",
-      },
-      {
-        id: 3,
-        title: "어쩌고 저쩌고 이러쿵 저러쿵 이건 어떻게 하나요??????",
-        date: "2025.01.10",
-        answere:
-          "저번 구글폼 을 통해 참여자를 받았었는데,예산문제로 더이상 추가 모집은 없습니다. 감사합니다.",
-      },
-    ].map((question) => ({
-      ...question,
-      isAnswered: !!question.answere,
-    }))
-  );
+  const [questions, setQuestions] = useState<AllQuestionResponse[]>([]);
+
+  useEffect(() => {
+    fetchFAQ();
+  }, []);
+
+  const fetchFAQ = async () => {
+    try {
+      const faqData = await getFAQ();
+      setQuestions(
+        faqData.filter((q) => q.shared && q.answer && q.answer.length > 0)
+      );
+    } catch (error) {
+      console.error("FAQ 데이터 가져오기 실패:", error);
+    }
+  };
 
   const handleDelete = (id: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
       setQuestions((prev) => prev.filter((q) => q.id !== id));
     }
   };
+
   const handleCardClick = (id: number, isAnswered: boolean) => {
     if (isAnswered) {
       router.push(`/faq/check?id=${id}`);
     }
   };
+
+  const formattedQuestions = questions.map((q) => ({
+    id: q.id,
+    title: q.title,
+    date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
+    answere: q.answer ? q.answer[0]?.content : "",
+    isAnswered: true,
+  }));
 
   return (
     <ContainerWrapper>
@@ -61,7 +60,7 @@ export default function FAQ() {
         }
       />
       <CommonQuestionList
-        questions={questions}
+        questions={formattedQuestions}
         onDelete={handleDelete}
         onCardClick={handleCardClick}
       />
