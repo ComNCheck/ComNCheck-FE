@@ -1,31 +1,32 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import { getQuestion, deleteQuestion } from "@/apis/question";
+import IsAnswerToggle from "../myComponents/IsAnswerToggle";
+import { AllQuestionResponse } from "@/apis/question.type";
 
 export default function WritingCheck() {
   const router = useRouter();
-  const [questions, setQuestions] = useState<
-    { id: number; title: string; date: string; isAnswered: boolean }[]
-  >([]);
+  const [questions, setQuestions] = useState<AllQuestionResponse[]>([]);
+  const [isAnswered, setIsAnswered] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const data = await getQuestion();
-        setQuestions(
-          data.map((question, index) => ({
-            cardId: index + 1,
-            id: question.id,
-            title: question.title,
-            date: question.createdAt,
-            isAnswered: question.answer !== null && question.answer.length > 0,
-          }))
-        );
+        const fetchedQuestions = await getQuestion();
+
+        const formattedQuestions = fetchedQuestions.map((q) => ({
+          ...q,
+          // answer가 존재하는 경우에만 배열로 변환
+          answer: q.answer ? [q.answer] : null,
+        })) as AllQuestionResponse[];
+
+        console.log("변환된 질문 목록:", formattedQuestions);
+        setQuestions(formattedQuestions);
       } catch (error) {
         console.error("질문 목록 불러오기 실패:", error);
       }
@@ -55,6 +56,24 @@ export default function WritingCheck() {
     }
   };
 
+  const handleToggle = () => {
+    setIsAnswered((prev) => !prev);
+  };
+
+  const filteredQuestions = useMemo(() => {
+    return questions
+      .filter((q) => {
+        const hasAnswer = q.answer !== null && q.answer.length > 0;
+        return isAnswered === hasAnswer;
+      })
+      .map((q) => ({
+        id: q.id,
+        title: q.title,
+        date: q.createdAt,
+        isAnswered: q.answer !== null && q.answer.length > 0,
+      }));
+  }, [questions, isAnswered]);
+
   return (
     <ContainerWrapper>
       <TitleContainer
@@ -67,8 +86,13 @@ export default function WritingCheck() {
           </>
         }
       />
+      <IsAnswerToggle
+        isAnswered={isAnswered}
+        onToggle={handleToggle}
+        labels={{ inactive: "답변 예정", active: "답변 완료" }}
+      />
       <CommonQuestionList
-        questions={questions}
+        questions={filteredQuestions}
         onDelete={handleDelete}
         onCardClick={handleCardClick}
       />
