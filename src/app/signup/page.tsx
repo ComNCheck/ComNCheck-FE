@@ -44,6 +44,12 @@ const Logo = styled.img`
   width: 3.50138rem;
   height: 1.99269rem;
 `;
+const Login = styled.div`
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 900;
+`;
 const Title = styled.div`
   margin: 3.5rem 0 2.56rem 0;
   color: ${theme.colors.text};
@@ -150,8 +156,8 @@ export default function Signup() {
   return (
     <Wrapper>
       <Header>
-        <Logo src="/logo.png" alt="로고" />
-        <div onClick={() => router.push("/login")}>로그인</div>
+        <Logo src="/logo.svg" alt="로고" />
+        <Login onClick={() => router.push("/login")}>로그인</Login>
       </Header>
       <Title>회원가입</Title>
       <SubTitleContainer>
