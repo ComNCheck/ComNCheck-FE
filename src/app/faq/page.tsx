@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import { getFAQ } from "@/apis/question";
-import { AllQuestionResponse } from "@/apis/question.type";
+import { AllQuestionResponse, AnswerType } from "@/apis/question.type";
 
 export default function FAQ() {
   const router = useRouter();
@@ -39,13 +39,17 @@ export default function FAQ() {
     }
   };
 
-  const formattedQuestions = questions.map((q) => ({
-    id: q.id,
-    title: q.title,
-    date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
-    answere: q.answer ? q.answer[0]?.content : "",
-    isAnswered: true,
-  }));
+  const formattedQuestions = questions.map((q) => {
+    const answer: AnswerType | null =
+      q.answer && q.answer.length > 0 ? q.answer[0] : null;
+    return {
+      id: q.id,
+      title: q.title,
+      date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
+      answere: answer ? answer.content : "",
+      isAnswered: !!answer,
+    };
+  });
 
   return (
     <ContainerWrapper>

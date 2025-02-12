@@ -113,6 +113,10 @@ export const getFAQ = async (): Promise<AllQuestionResponse[]> => {
     const response = await instance.get<AllQuestionResponse[]>(
       "/api/v1/major/questions"
     );
+    console.error(
+      "FAQ - 공개여부 True인 질문 get API 요청 실패:",
+      response.data
+    );
     return response.data;
   } catch (error) {
     console.error("FAQ - 공개여부 True인 질문 get API 요청 실패:", error);
