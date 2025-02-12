@@ -25,7 +25,11 @@ export const getRoleChangeList = async (): Promise<roleChangeListType[]> => {
       "MY - 과회장 학생회 등급 신청 목록 조회 API 요청값 : ",
       response.data
     );
-    return response.data;
+    const responseData = Array.isArray(response.data)
+      ? response.data
+      : [response.data];
+    return responseData;
+    // return response.data;
   } catch (error) {
     console.error(
       "MY - 과회장 학생회 등급 신청 목록 조회 API 요청 실패:",

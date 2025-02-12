@@ -62,7 +62,8 @@ export default function ModifyRole() {
       console.log("받아온 상세 정보:", roleDetail);
 
       if (roleDetail) {
-        setSelectedRole(roleDetail);
+        const roleData = Array.isArray(roleDetail) ? roleDetail : [roleDetail];
+        setSelectedRole(roleData);
       }
     } catch (error) {
       console.error("등급 신청 상세 정보를 불러오는 중 오류 발생:", error);

@@ -18,10 +18,14 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
   if (!role || role.length === 0) return null;
 
   const currentRole = role[0];
+  if (!currentRole) return null;
+
   const [selectedPosition, setSelectedPosition] = useState(
-    currentRole.position
+    currentRole.position || ""
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  console.log("currentRole:", currentRole);
 
   const handlePositionChange = (newPosition: string) => {
     setSelectedPosition(newPosition);
@@ -64,7 +68,7 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
           <DropdownContainer>
             <SelectContainer onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
               <SelectedValue>{selectedPosition}</SelectedValue>
-              <ArrowIcon open={isDropdownOpen} />
+              <ArrowIcon $open={isDropdownOpen} />
             </SelectContainer>
             {isDropdownOpen && (
               <DropdownList>
@@ -180,8 +184,8 @@ const SelectedValue = styled.div`
   flex: 1;
 `;
 
-const ArrowIcon = styled(IoIosArrowDown)<{ open: boolean }>`
-  transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0)")};
+const ArrowIcon = styled(IoIosArrowDown)<{ $open: boolean }>`
+  transform: ${({ $open }) => ($open ? "rotate(180deg)" : "rotate(0)")};
   transition: transform 0.2s ease-in-out;
 `;
 

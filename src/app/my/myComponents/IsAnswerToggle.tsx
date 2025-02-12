@@ -19,9 +19,9 @@ const IsAnswerToggle: React.FC<IsAnswerToggleProps> = ({
   return (
     <ToggleWrapper>
       <ToggleSwitch onClick={onToggle}>
-        <Slider active={isAnswered} />
-        <Label active={!isAnswered}>{labels.inactive}</Label>
-        <Label active={isAnswered}>{labels.active}</Label>
+        <Slider $active={isAnswered} />
+        <Label $active={!isAnswered}>{labels.inactive}</Label>
+        <Label $active={isAnswered}>{labels.active}</Label>
       </ToggleSwitch>
     </ToggleWrapper>
   );
@@ -47,7 +47,7 @@ const ToggleSwitch = styled.div`
   cursor: pointer;
 `;
 
-const Slider = styled.div<{ active: boolean }>`
+const Slider = styled.div<{ $active: boolean }>`
   position: absolute;
   top: 5px;
   left: 5px;
@@ -56,16 +56,16 @@ const Slider = styled.div<{ active: boolean }>`
   background-color: ${theme.toggle.primary.background};
   border-radius: 20px;
   transition: all 0.3s ease;
-  transform: ${({ active }) =>
-    active ? "translateX(100px)" : "translateX(0)"};
+  transform: ${({ $active }) =>
+    $active ? "translateX(100px)" : "translateX(0)"};
 `;
 
-const Label = styled.span<{ active: boolean }>`
+const Label = styled.span<{ $active: boolean }>`
   flex: 1;
   text-align: center;
   font-size: 16px;
   font-weight: 600;
-  color: ${({ active }) => (active ? "#fff" : "#a0a0a0")};
+  color: ${({ $active }) => ($active ? "#fff" : "#a0a0a0")};
   z-index: 1;
   user-select: none;
   transition: color 0.3s ease;

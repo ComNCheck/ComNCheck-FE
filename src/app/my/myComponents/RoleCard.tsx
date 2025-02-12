@@ -46,7 +46,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
 
   return (
     <CardWrapper {...handlers}>
-      <Card isSwiped={isSwiped}>
+      <Card $isSwiped={isSwiped}>
         <MainContent>
           <NumberCircle>{index + 1}</NumberCircle>
           <RoleInfo>
@@ -58,7 +58,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
           </OpenButton>
         </MainContent>
       </Card>
-      <DeleteButton isSwiped={isSwiped} onClick={handleDelete}>
+      <DeleteButton $isSwiped={isSwiped} onClick={handleDelete}>
         <RiDeleteBin6Fill />
       </DeleteButton>
     </CardWrapper>
@@ -74,7 +74,7 @@ const CardWrapper = styled.div`
   overflow: hidden;
 `;
 
-const Card = styled.div<{ isSwiped: boolean }>`
+const Card = styled.div<{ $isSwiped: boolean }>`
   display: flex;
   align-items: center;
   padding: 15px;
@@ -83,7 +83,7 @@ const Card = styled.div<{ isSwiped: boolean }>`
   cursor: pointer;
   transition: transform 0.3s ease;
   flex: 1;
-  ${({ isSwiped }) => isSwiped && `transform: translateX(-3rem);`}
+  ${({ $isSwiped }) => $isSwiped && `transform: translateX(-3rem);`}
 `;
 
 const MainContent = styled.div`
@@ -135,7 +135,7 @@ const OpenButton = styled.button`
   cursor: pointer;
 `;
 
-const DeleteButton = styled.button<{ isSwiped: boolean }>`
+const DeleteButton = styled.button<{ $isSwiped: boolean }>`
   position: absolute;
   right: 0;
   top: 0;
@@ -150,8 +150,8 @@ const DeleteButton = styled.button<{ isSwiped: boolean }>`
   border: none;
   cursor: pointer;
   transition: opacity 0.3s ease;
-  opacity: ${({ isSwiped }) => (isSwiped ? 1 : 0)};
-  pointer-events: ${({ isSwiped }) => (isSwiped ? "auto" : "none")};
+  opacity: ${({ $isSwiped }) => ($isSwiped ? 1 : 0)};
+  pointer-events: ${({ $isSwiped }) => ($isSwiped ? "auto" : "none")};
 `;
 
 const RequestPosition = styled.div``;
