@@ -21,8 +21,15 @@ export default function Answer() {
   const fetchQuestions = async () => {
     try {
       const fetchedQuestions = await getQuestionAllList();
-      setQuestions(fetchedQuestions);
-      console.log("불러온 질문 목록:", fetchedQuestions);
+
+      const formattedQuestions = fetchedQuestions.map((q) => ({
+        ...q,
+        // answer가 존재하는 경우에만 배열로 변환
+        answer: q.answer ? [q.answer] : null,
+      })) as AllQuestionResponse[];
+
+      console.log("변환된 질문 목록:", formattedQuestions);
+      setQuestions(formattedQuestions);
     } catch (error) {
       console.error("질문 목록 불러오기 실패:", error);
     }
@@ -36,36 +43,31 @@ export default function Answer() {
     }
   };
 
+  const handleToggle = () => {
+    setIsAnswered((prev) => !prev);
+  };
+
   const filteredQuestions = useMemo(() => {
     return questions
       .filter((q) => {
-        const hasAnswer =
-          q.answer !== null && Array.isArray(q.answer) && q.answer.length > 0;
-        return isAnswered ? hasAnswer : !hasAnswer;
+        const hasAnswer = Boolean(q.answer?.[0]?.content.trim());
+        return isAnswered === hasAnswer;
       })
       .map((q) => ({
         id: q.id,
         title: q.title,
         date: q.createdAt,
-        isAnswered:
-          q.answer !== null && Array.isArray(q.answer) && q.answer.length > 0,
+        isAnswered: Boolean(q.answer?.[0]?.content.trim()),
       }));
   }, [questions, isAnswered]);
 
-  const handleToggle = () => {
-    setIsAnswered((prev) => !prev);
-  };
-
   const handleDelete = async ($id: number) => {
-    // 해당 질문 찾기
     const question = questions.find((q) => q.id === $id);
 
-    // 답변이 없는 경우 삭제 불가
-    if (
-      !question?.answer ||
-      !Array.isArray(question.answer) ||
-      question.answer.length === 0
-    ) {
+    // answer가 있고 content가 있는 경우에만 삭제 가능
+    const hasValidAnswer = Boolean(question?.answer?.[0]?.content.trim());
+
+    if (!hasValidAnswer) {
       alert("답변이 완료된 글만 삭제할 수 있습니다.");
       return;
     }

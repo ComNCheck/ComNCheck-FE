@@ -92,6 +92,11 @@ export const getQuestionAllList = async (): Promise<AllQuestionResponse[]> => {
     const response = await instance.get<AllQuestionResponse[]>(
       `/api/v1/major/questions/all`
     );
+
+    console.error(
+      "MY - 답변하기 모든 질문 list 불러오기 학생회,과회장 권한 get API 요청 값:",
+      response.data
+    );
     return response.data;
   } catch (error) {
     console.error(
