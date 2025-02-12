@@ -86,6 +86,22 @@ export const UpdateQuestion = async (
   }
 };
 
+// MY - 답변하기 모든 질문 list 불러오기 학생회,과회장 권한
+export const getQuestionAllList = async (): Promise<AllQuestionResponse[]> => {
+  try {
+    const response = await instance.get<AllQuestionResponse[]>(
+      `/api/v1/major/questions/all`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "MY - 답변하기 모든 질문 list 불러오기 학생회,과회장 권한 get API 요청 실패:",
+      error
+    );
+    throw error;
+  }
+};
+
 // FAQ - 답변 가져오기 get
 export const getFAQ = async (): Promise<AllQuestionResponse[]> => {
   try {

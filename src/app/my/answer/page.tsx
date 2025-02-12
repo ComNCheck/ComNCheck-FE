@@ -6,17 +6,13 @@ import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { getQuestion, deleteQuestion } from "@/apis/question";
-import { AllQuestionResponse } from "@/apis/question.type";
-
-interface QuestionWithIsAnswered extends AllQuestionResponse {
-  isAnswered: boolean;
-}
+import { deleteQuestion, getQuestionAllList } from "../../../apis/question";
+import { AllQuestionResponse } from "../../../apis/question.type";
 
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);
   const router = useRouter();
-  const [questions, setQuestions] = useState<QuestionWithIsAnswered[]>([]);
+  const [questions, setQuestions] = useState<AllQuestionResponse[]>([]);
 
   useEffect(() => {
     fetchQuestions();
@@ -24,34 +20,35 @@ export default function Answer() {
 
   const fetchQuestions = async () => {
     try {
-      const fetchedQuestions = await getQuestion();
-      setQuestions(
-        fetchedQuestions.map((q) => ({
-          ...q,
-          isAnswered: q.answer !== null && q.answer.length > 0,
-        }))
-      );
+      const fetchedQuestions = await getQuestionAllList();
+      setQuestions(fetchedQuestions);
+      console.log("불러온 질문 목록:", fetchedQuestions);
     } catch (error) {
       console.error("질문 목록 불러오기 실패:", error);
     }
   };
 
-  const handleCardClick = (id: number, isAnswered: boolean) => {
-    if (isAnswered) {
-      router.push(`/my/answer/edit?id=${id}`);
+  const handleCardClick = ($id: number, $isAnswered: boolean) => {
+    if ($isAnswered) {
+      router.push(`/my/answer/edit?id=${$id}`);
     } else {
-      router.push(`/my/answer/write?id=${id}`);
+      router.push(`/my/answer/write?id=${$id}`);
     }
   };
 
   const filteredQuestions = useMemo(() => {
     return questions
-      .filter((q) => q.isAnswered === isAnswered)
-      .map(({ id, title, createdAt, isAnswered }) => ({
-        id,
-        title,
-        date: createdAt,
-        isAnswered,
+      .filter((q) => {
+        const hasAnswer =
+          q.answer !== null && Array.isArray(q.answer) && q.answer.length > 0;
+        return isAnswered ? hasAnswer : !hasAnswer;
+      })
+      .map((q) => ({
+        id: q.id,
+        title: q.title,
+        date: q.createdAt,
+        isAnswered:
+          q.answer !== null && Array.isArray(q.answer) && q.answer.length > 0,
       }));
   }, [questions, isAnswered]);
 
@@ -59,13 +56,28 @@ export default function Answer() {
     setIsAnswered((prev) => !prev);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async ($id: number) => {
+    // 해당 질문 찾기
+    const question = questions.find((q) => q.id === $id);
+
+    // 답변이 없는 경우 삭제 불가
+    if (
+      !question?.answer ||
+      !Array.isArray(question.answer) ||
+      question.answer.length === 0
+    ) {
+      alert("답변이 완료된 글만 삭제할 수 있습니다.");
+      return;
+    }
+
     if (window.confirm("삭제하시겠습니까?")) {
       try {
-        await deleteQuestion(id);
-        setQuestions((prev) => prev.filter((q) => q.id !== id));
+        await deleteQuestion($id);
+        setQuestions((prev) => prev.filter((q) => q.id !== $id));
+        alert("삭제되었습니다.");
       } catch (error) {
         console.error("질문 삭제 실패:", error);
+        alert("삭제에 실패했습니다.");
       }
     }
   };
