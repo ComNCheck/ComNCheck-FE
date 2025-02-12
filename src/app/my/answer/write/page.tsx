@@ -50,16 +50,24 @@ export default function WriteAnswer() {
       return;
     }
 
+    const answerData = {
+      questionId: question.id,
+      content: answer,
+    };
+
     try {
-      await postAnswer({
-        questionId: question.id,
-        content: answer,
-      });
+      console.log("답변 요청 데이터:", answerData);
+      await postAnswer(answerData);
       alert("답변이 성공적으로 등록되었습니다.");
+      // window.location.href = "/my/answer";
       router.push("/my/answer");
     } catch (error) {
       console.error("답변 등록 실패:", error);
-      alert("답변 등록에 실패했습니다. 다시 시도해주세요.");
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "알 수 없는 오류가 발생했습니다.";
+      alert(`답변 등록에 실패했습니다: ${errorMessage}`);
     }
   };
 

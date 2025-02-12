@@ -5,6 +5,7 @@ import instance from "./instance";
 export const postAnswer = async (data: AnswerRequest): Promise<void> => {
   try {
     await instance.post("/api/v1/major/answers", data);
+    console.error("MY - 답변하기 post API 요청 성공:", data);
   } catch (error) {
     console.error("MY - 답변하기 post API 요청 실패:", error);
     throw error;
