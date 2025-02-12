@@ -1,24 +1,13 @@
-"use client";
-
 import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { IoMdCloseCircle, IoIosArrowDown } from "react-icons/io";
-
-interface Role {
-  id: number;
-  name: string;
-  studentNumber: string;
-  unit: string;
-  position: string;
-  role: string;
-  isApply: boolean;
-}
-
+import { getRoleChangeDetail } from "../../apis/roleChange";
+import { roleChangeDetailType } from "../../apis/roleChange.type";
 interface RoleCheckModalProps {
-  role: Role;
+  role: roleChangeDetailType[] | null;
   onClose: () => void;
-  onUpdate: (updatedRole: Role) => void;
+  onUpdate: (updatedRole: roleChangeDetailType) => void;
 }
 
 const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
@@ -26,16 +15,25 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
   onClose,
   onUpdate,
 }) => {
-  const [selectedRole, setSelectedRole] = useState(role.role);
+  if (!role || role.length === 0) return null;
+
+  const currentRole = role[0];
+  const [selectedPosition, setSelectedPosition] = useState(
+    currentRole.position
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleRoleChange = (role: string) => {
-    setSelectedRole(role);
+  const handlePositionChange = (newPosition: string) => {
+    setSelectedPosition(newPosition);
     setIsDropdownOpen(false);
   };
 
   const handleSubmit = () => {
-    const updatedRole = { ...role, role: selectedRole };
+    const updatedRole = {
+      ...currentRole,
+      position: selectedPosition,
+      status: "APPROVED",
+    };
     onUpdate(updatedRole);
     onClose();
   };
@@ -50,20 +48,22 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
         {[
           { key: "name", label: "이름" },
           { key: "studentNumber", label: "학번" },
-          { key: "unit", label: "소속 단위" },
-          { key: "position", label: "직책" },
+          { key: "major", label: "학과" },
+          { key: "position", label: "신청 직책" },
         ].map(({ key, label }) => (
           <FormWrapper key={key}>
             <Label>{label}</Label>
-            <FixedForm>{role[key as keyof Role]}</FixedForm>
+            <FixedForm>
+              {currentRole[key as keyof roleChangeDetailType]}
+            </FixedForm>
           </FormWrapper>
         ))}
 
         <FormWrapper>
-          <Label>등급</Label>
+          <Label>변경할 직책</Label>
           <DropdownContainer>
             <SelectContainer onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-              <SelectedValue>{selectedRole}</SelectedValue>
+              <SelectedValue>{selectedPosition}</SelectedValue>
               <ArrowIcon open={isDropdownOpen} />
             </SelectContainer>
             {isDropdownOpen && (
@@ -71,7 +71,7 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
                 {["학생", "학생회", "과회장"].map((option) => (
                   <DropdownItem
                     key={option}
-                    onClick={() => handleRoleChange(option)}
+                    onClick={() => handlePositionChange(option)}
                   >
                     {option}
                   </DropdownItem>

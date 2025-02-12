@@ -12,6 +12,7 @@ export interface roleChangeListType {
   requestId: number;
   name: string;
   requestPosition: string;
+  status: string;
 }
 
 // 과회장 - 등급 신청 목록 api - 특정 신청 목록 값

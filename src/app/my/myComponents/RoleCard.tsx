@@ -5,33 +5,27 @@ import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { useSwipeable } from "react-swipeable";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import RoleCheckModal from "@/components/modal/RoleCheckModal";
-
-interface Role {
-  id: number;
-  name: string;
-  studentNumber: string;
-  unit: string;
-  position: string;
-  role: string;
-  isApply: boolean;
-}
+import {
+  roleChangeListType,
+  roleChangeDetailType,
+} from "../../../apis/roleChange.type";
 
 interface RoleCardProps {
-  role: Role;
+  role: roleChangeListType;
   index: number;
-  onDelete?: (id: number) => void;
-  onUpdate: (updatedRole: Role) => void;
+  onDelete: (requestId: number) => void;
+  onCardClick: (requestId: number) => void;
+  onUpdate: (updatedRole: roleChangeDetailType) => void;
 }
 
 const RoleCard: React.FC<RoleCardProps> = ({
   role,
   index,
   onDelete,
+  onCardClick,
   onUpdate,
 }) => {
   const [isSwiped, setIsSwiped] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => setIsSwiped(true),
@@ -40,39 +34,37 @@ const RoleCard: React.FC<RoleCardProps> = ({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onDelete) {
-      onDelete(role.id);
-    }
+    onDelete(role.requestId);
+  };
+
+  const handleOpenModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("열람 버튼 클릭 - requestId:", role.requestId);
+    onCardClick(role.requestId);
   };
 
   return (
-    <>
-      <CardWrapper {...handlers}>
-        <Card isSwiped={isSwiped}>
-          <MainContent>
-            <NumberCircle>{index + 1}</NumberCircle>
-            <RoleInfo>
-              <RoleName>{role.name}</RoleName>
-              <RoleStatus>{role.role}</RoleStatus>
-            </RoleInfo>
-            <OpenButton onClick={() => setIsModalOpen(true)}>열람</OpenButton>
-          </MainContent>
-        </Card>
-        <DeleteButton isSwiped={isSwiped} onClick={handleDelete}>
-          <RiDeleteBin6Fill />
-        </DeleteButton>
-      </CardWrapper>
-
-      {isModalOpen && (
-        <RoleCheckModal
-          role={role}
-          onClose={() => setIsModalOpen(false)}
-          onUpdate={onUpdate}
-        />
-      )}
-    </>
+    <CardWrapper {...handlers}>
+      <Card isSwiped={isSwiped}>
+        <MainContent>
+          <NumberCircle>{index + 1}</NumberCircle>
+          <RoleInfo>
+            <RoleName>{role.name}</RoleName>
+            <RequestPosition>{role.requestPosition}</RequestPosition>
+          </RoleInfo>
+          <OpenButton type="button" onClick={handleOpenModal}>
+            열람
+          </OpenButton>
+        </MainContent>
+      </Card>
+      <DeleteButton isSwiped={isSwiped} onClick={handleDelete}>
+        <RiDeleteBin6Fill />
+      </DeleteButton>
+    </CardWrapper>
   );
 };
+export default RoleCard;
 
 const CardWrapper = styled.div`
   position: relative;
@@ -162,4 +154,4 @@ const DeleteButton = styled.button<{ isSwiped: boolean }>`
   pointer-events: ${({ isSwiped }) => (isSwiped ? "auto" : "none")};
 `;
 
-export default RoleCard;
+const RequestPosition = styled.div``;

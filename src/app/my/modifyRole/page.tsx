@@ -1,87 +1,80 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import IsAnswerToggle from "../myComponents/IsAnswerToggle";
 import CommonRoleList from "../myComponents/CommonRoleList";
 import RoleCheckModal from "@/components/modal/RoleCheckModal";
-
-interface Role {
-  id: number;
-  name: string;
-  studentNumber: string;
-  unit: string;
-  position: string;
-  role: string;
-  isApply: boolean;
-}
-
-interface RoleCheckModalProps {
-  role: Role;
-  onClose: () => void;
-  onUpdate: (updatedRole: Role) => void;
-}
+import {
+  getRoleChangeList,
+  getRoleChangeDetail,
+} from "../../../apis/roleChange";
+import {
+  roleChangeListType,
+  roleChangeDetailType,
+} from "../../../apis/roleChange.type";
 
 export default function ModifyRole() {
   const [isApply, setIsApply] = useState<boolean>(false);
-  const [roles, setRoles] = useState<Role[]>([
-    {
-      id: 1,
-      name: "이예림",
-      studentNumber: "202302351",
-      unit: "컴퓨터공학부",
-      position: "학술부장",
-      role: "학생회",
-      isApply: false,
-    },
-    {
-      id: 2,
-      name: "노성원",
-      studentNumber: "202302351",
-      unit: "컴퓨터공학부",
-      position: "학술부장",
-      role: "학생",
-      isApply: false,
-    },
-    {
-      id: 3,
-      name: "조성민",
-      studentNumber: "202302351",
-      unit: "컴퓨터공학부",
-      position: "학술부장",
-      role: "졸업생",
-      isApply: false,
-    },
-  ]);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [roles, setRoles] = useState<roleChangeListType[]>([]);
+  const [selectedRole, setSelectedRole] = useState<
+    roleChangeDetailType[] | null
+  >(null);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const roleChangeList = await getRoleChangeList();
+        setRoles(roleChangeList);
+        console.error("등급 신청 목록을 불러오기 data:", roleChangeList);
+      } catch (error) {
+        console.error("등급 신청 목록을 불러오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
 
   const filteredRoles = useMemo(() => {
-    return roles.filter((role) => role.isApply === isApply);
+    return roles.filter((role) =>
+      isApply ? role.status === "APPROVED" : role.status === "PENDING"
+    );
   }, [roles, isApply]);
 
   const handleToggle = () => {
     setIsApply((prev) => !prev);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (requestId: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      setRoles((prevRoles) => prevRoles.filter((role) => role.id !== id));
+      setRoles((prevRoles) =>
+        prevRoles.filter((role) => role.requestId !== requestId)
+      );
     }
   };
 
-  const handleCardClick = (id: number) => {
-    const role = roles.find((r) => r.id === id);
-    if (role) {
-      setSelectedRole(role);
+  const handleCardClick = async (requestId: number) => {
+    try {
+      console.log("handleCardClick 호출됨 - requestId:", requestId);
+      const roleDetail = await getRoleChangeDetail(requestId);
+      console.log("받아온 상세 정보:", roleDetail);
+
+      if (roleDetail) {
+        setSelectedRole(roleDetail);
+      }
+    } catch (error) {
+      console.error("등급 신청 상세 정보를 불러오는 중 오류 발생:", error);
     }
   };
 
-  const handleRoleUpdate = (updatedRole: Role) => {
+  const handleRoleUpdate = (updatedRole: roleChangeDetailType) => {
     setRoles((prevRoles) =>
       prevRoles.map((role) =>
-        role.id === updatedRole.id ? { ...updatedRole, isApply: true } : role
+        role.requestId === updatedRole.requestId
+          ? { ...role, status: "APPROVED" }
+          : role
       )
     );
     setSelectedRole(null);
