@@ -76,16 +76,16 @@ export default function ToDeveloper() {
     fetchQuestions();
   }, []);
 
-  useEffect(() => {
-    console.log(inputs);
-  }, [inputs]);
+  // useEffect(() => {
+  //   console.log(inputs);
+  // }, [inputs]);
   // 새로운 의견 추가
   const handleSubmit = async (text: string, index: number) => {
     try {
-      await postQuestion({ content: text }); // 서버 응답에서 id 받음
+      const response = await postQuestion({ content: text }); // 서버 응답에서 id 받음
       setInputs((prev) =>
         prev.map((input, i) =>
-          i === index ? { ...input, isSubmitted: true } : input
+          i === index ? { ...input, id: response.id, isSubmitted: true } : input
         )
       );
       setMessage("제출되었습니다. 의견 감사합니다.");

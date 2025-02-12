@@ -69,24 +69,24 @@ export default function SettingInput({
   onChange,
 }: SettingInputProps) {
   const [text, setText] = useState(value);
-  const [status, setStatus] = useState<"add" | "submit" | "remove">(() => {
-    if (isSubmitted) return "remove";
-    return value ? "submit" : "add";
-  });
+  const [status, setStatus] = useState<"add" | "submit" | "remove">(() =>
+    isSubmitted ? "remove" : value ? "submit" : "add"
+  );
+
+  // value 변경 시 내부 상태 동기화
+  useEffect(() => {
+    setText(value);
+    setStatus(isSubmitted ? "remove" : value ? "submit" : "add");
+  }, [value, isSubmitted]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value.slice(0, 100);
     setText(newText);
+    onChange(newText);
 
-    if (newText.length > 0 && status === "add") {
-      setStatus("submit");
-    } else if (newText.length === 0 && status === "submit") {
-      setStatus("add");
-    }
+    setStatus(newText.length > 0 ? "submit" : "add");
   };
-  useEffect(() => {
-    onChange(text);
-  }, [text]);
+
   const handleSubmit = () => {
     if (text.trim() === "") return;
     setStatus("remove");
