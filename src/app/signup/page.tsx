@@ -44,6 +44,12 @@ const Logo = styled.img`
   width: 3.50138rem;
   height: 1.99269rem;
 `;
+const Login = styled.div`
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 900;
+`;
 const Title = styled.div`
   margin: 3.5rem 0 2.56rem 0;
   color: ${theme.colors.text};
@@ -83,8 +89,20 @@ const PictureSpace = styled.div.withConfig({
 const HiddenInput = styled.input`
   display: none;
 `;
+const Loader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.25rem;
+  color: ${theme.colors.primary};
+`;
 export default function Signup() {
   const [isActive, setIsActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); //로딩상태
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,45 +114,47 @@ export default function Signup() {
   const searchParams = useSearchParams();
   const memberId = searchParams.get("id");
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     console.log(file);
     if (file) {
       setSelectedFile(file);
       setIsActive(true);
+    }
+  };
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
+      alert("파일을 선택해주세요.");
+      return;
+    }
+    setIsLoading(true);
+    //formData 생성
+    const formData = new FormData();
+    formData.append("studentCardImage", selectedFile);
 
-      //formData 생성
-      const formData = new FormData();
-      formData.append("studentCardImage", file);
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/v1/member/student/number`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true, //쿠키 허용
+        }
+      );
 
-      try {
-        const response = await axios.post(
-          `http://localhost:8080/api/v1/member/student/number`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true, //쿠키 허용
-          }
-        );
-
-        console.log("서버 응답:", response.data);
-        alert("이미지 업로드 성공!");
-        setIsUploadSuccess(true);
-
-        // //서버 응답데이터를 이용해 로컬스토리지 갱신
-        // const storedData = localStorage.getItem("memberData");
-        // if (storedData) {
-        //   const parsedData = JSON.parse(storedData);
-        //   const updatedData = { ...parsedData, ...response.data };
-        //   localStorage.setItem("memberData", JSON.stringify(updatedData));
-        // }
-      } catch (error) {
-        console.error("업로드 에러:", error);
-        alert("이미지 업로드 실패");
-        setIsUploadSuccess(false);
-      }
+      console.log("서버 응답:", response.data);
+      setIsUploadSuccess(true);
+      router.push("/signup/complete");
+    } catch (error) {
+      console.error("업로드 에러:", error);
+      setIsLoading(false);
+      setIsUploadSuccess(false);
+    } finally {
+      // 로딩 종료
+      setIsLoading(false);
     }
   };
   const toggleModal = () => {
@@ -150,8 +170,8 @@ export default function Signup() {
   return (
     <Wrapper>
       <Header>
-        <Logo src="/logo.png" alt="로고" />
-        <div onClick={() => router.push("/login")}>로그인</div>
+        <Logo src="/logo.svg" alt="로고" />
+        <Login onClick={() => router.push("/login")}>로그인</Login>
       </Header>
       <Title>회원가입</Title>
       <SubTitleContainer>
@@ -181,7 +201,12 @@ export default function Signup() {
         accept="image/*"
         onChange={handleFileChange}
       />
-      <NextBtn onClick={handleNextClick} disabled={!selectedFile} />
+
+      <NextBtn
+        onClick={handleFileUpload}
+        disabled={!selectedFile || isLoading}
+      />
+      {isLoading && <Loader>로딩 중...</Loader>}
       {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );

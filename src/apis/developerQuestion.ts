@@ -5,9 +5,12 @@ import {
 import instance from "./instance";
 
 // 개발자에게 하고싶은 말 입력 api
-export const postQuestion = async (data: DevQuestionRequest): Promise<void> => {
+export const postQuestion = async (
+  data: DevQuestionRequest
+): Promise<{ id: number; content: string }> => {
   try {
-    await instance.post("/api/v1/developer/questions", data);
+    const response = await instance.post("/api/v1/developer/questions", data);
+    return response.data;
   } catch (error) {
     throw error;
   }
