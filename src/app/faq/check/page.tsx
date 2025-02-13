@@ -13,8 +13,6 @@ export default function FAQCheck() {
   const [isToggleOn, setIsToggleOn] = useState(true);
   const [question, setQuestion] = useState({ title: "", content: "" });
   const [answer, setAnswer] = useState("");
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   const router = useRouter();
 
   const toggleHandler = () => {

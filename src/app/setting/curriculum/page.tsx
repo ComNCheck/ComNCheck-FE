@@ -3,7 +3,7 @@ import { theme } from "@/app/styles/theme";
 import SettingHeader from "@/components/Header/settingHeader";
 import ContainerBox from "@/components/setting/ContainerBox";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { curriculumData } from "../curriculum/curriculumData";

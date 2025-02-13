@@ -75,32 +75,6 @@ const Position = styled.div`
 `;
 
 export default function CouncilList() {
-  const councilList = [
-    {
-      id: 1,
-      role: "president",
-      name: "박수정",
-    },
-    {
-      id: 2,
-      role: "student_council",
-      name: "이예림",
-      position: "기획국장",
-    },
-    {
-      id: 3,
-      role: "student_council",
-      name: "이예림",
-      position: "기획국장",
-    },
-    {
-      id: 4,
-      role: "student_council",
-      name: "이예림",
-      position: "기획국장",
-    },
-  ];
-
   // const president = councilList.find((member) => member.role === "president");
   // const studentCouncil = councilList.filter(
   //   (member) => member.role === "student_council"
