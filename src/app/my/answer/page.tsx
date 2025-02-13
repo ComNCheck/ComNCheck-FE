@@ -6,17 +6,13 @@ import CommonQuestionList from "../myComponents/CommonQuestionList";
 import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { getQuestion, deleteQuestion } from "@/apis/question";
-import { AllQuestionResponse } from "@/apis/question.type";
-
-interface QuestionWithIsAnswered extends AllQuestionResponse {
-  isAnswered: boolean;
-}
+import { deleteQuestion, getQuestionAllList } from "../../../apis/question";
+import { AllQuestionResponse } from "../../../apis/question.type";
 
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);
   const router = useRouter();
-  const [questions, setQuestions] = useState<QuestionWithIsAnswered[]>([]);
+  const [questions, setQuestions] = useState<AllQuestionResponse[]>([]);
 
   useEffect(() => {
     fetchQuestions();
@@ -24,48 +20,66 @@ export default function Answer() {
 
   const fetchQuestions = async () => {
     try {
-      const fetchedQuestions = await getQuestion();
-      setQuestions(
-        fetchedQuestions.map((q) => ({
-          ...q,
-          isAnswered: q.answer !== null && q.answer.length > 0,
-        }))
-      );
+      const fetchedQuestions = await getQuestionAllList();
+
+      const formattedQuestions = fetchedQuestions.map((q) => ({
+        ...q,
+        // answer가 존재하는 경우에만 배열로 변환
+        answer: q.answer ? [q.answer] : null,
+      })) as AllQuestionResponse[];
+
+      console.log("변환된 질문 목록:", formattedQuestions);
+      setQuestions(formattedQuestions);
     } catch (error) {
       console.error("질문 목록 불러오기 실패:", error);
     }
   };
 
-  const handleCardClick = (id: number, isAnswered: boolean) => {
-    if (isAnswered) {
-      router.push(`/my/answer/edit?id=${id}`);
+  const handleCardClick = ($id: number, $isAnswered: boolean) => {
+    if ($isAnswered) {
+      router.push(`/my/answer/edit?id=${$id}`);
     } else {
-      router.push(`/my/answer/write?id=${id}`);
+      router.push(`/my/answer/write?id=${$id}`);
     }
   };
-
-  const filteredQuestions = useMemo(() => {
-    return questions
-      .filter((q) => q.isAnswered === isAnswered)
-      .map(({ id, title, createdAt, isAnswered }) => ({
-        id,
-        title,
-        date: createdAt,
-        isAnswered,
-      }));
-  }, [questions, isAnswered]);
 
   const handleToggle = () => {
     setIsAnswered((prev) => !prev);
   };
 
-  const handleDelete = async (id: number) => {
+  const filteredQuestions = useMemo(() => {
+    return questions
+      .filter((q) => {
+        const hasAnswer = Boolean(q.answer?.[0]?.content.trim());
+        return isAnswered === hasAnswer;
+      })
+      .map((q) => ({
+        id: q.id,
+        title: q.title,
+        date: q.createdAt,
+        isAnswered: Boolean(q.answer?.[0]?.content.trim()),
+      }));
+  }, [questions, isAnswered]);
+
+  const handleDelete = async ($id: number) => {
+    const question = questions.find((q) => q.id === $id);
+
+    // answer가 있고 content가 있는 경우에만 삭제 가능
+    const hasValidAnswer = Boolean(question?.answer?.[0]?.content.trim());
+
+    if (!hasValidAnswer) {
+      alert("답변이 완료된 글만 삭제할 수 있습니다.");
+      return;
+    }
+
     if (window.confirm("삭제하시겠습니까?")) {
       try {
-        await deleteQuestion(id);
-        setQuestions((prev) => prev.filter((q) => q.id !== id));
+        await deleteQuestion($id);
+        setQuestions((prev) => prev.filter((q) => q.id !== $id));
+        alert("삭제되었습니다.");
       } catch (error) {
         console.error("질문 삭제 실패:", error);
+        alert("삭제에 실패했습니다.");
       }
     }
   };

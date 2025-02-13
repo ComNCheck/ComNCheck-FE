@@ -18,7 +18,9 @@ const SeminarAlert: React.FC<SeminarAlertProps> = ({ isOpen, closeModal }) => {
         </CloseButton>
         <Title>서비스를 통합 중이에요!</Title>
         <Subtitle>빠른 시일 내에 만나요!</Subtitle>
-        <Logo>🔗 X 컴퓨터공학부 세미나실 신청</Logo>
+        <Link href="https://studyroom.computer.hufs.ac.kr/">
+          🔗 X 컴퓨터공학부 세미나실 신청
+        </Link>
       </ModalContent>
     </ModalOverlay>
   );
@@ -73,7 +75,7 @@ const Subtitle = styled.p`
   color: ${theme.colors.mutedText};
 `;
 
-const Logo = styled.div`
+const Link = styled.a`
   font-size: 1rem;
   font-weight: bold;
   color: ${theme.colors.primary};

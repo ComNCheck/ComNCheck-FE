@@ -26,8 +26,19 @@ export default function Check() {
 
   const fetchQuestion = async (questionId: number) => {
     try {
-      const questions = await getQuestion();
-      const currentQuestion = questions.find((q) => q.id === questionId);
+      const fetchedQuestions = await getQuestion();
+
+      // answer가 존재하는 경우 배열로 변환
+      const formattedQuestions = fetchedQuestions.map((q) => ({
+        ...q,
+        answer: q.answer ? [q.answer] : null,
+      })) as AllQuestionResponse[];
+
+      console.log("변환된 질문 목록:", formattedQuestions);
+
+      const currentQuestion = formattedQuestions.find(
+        (q) => q.id === questionId
+      );
       if (currentQuestion) {
         setQuestion(currentQuestion);
         setShared(currentQuestion.shared);

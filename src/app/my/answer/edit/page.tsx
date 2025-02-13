@@ -9,7 +9,7 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 import { getQuestionById } from "@/apis/question";
-import { getAnswer, putAnswer } from "@/apis/answer";
+import { putAnswer } from "@/apis/answer";
 import { AllQuestionResponse } from "@/apis/question.type";
 import { AnswerRequest } from "@/apis/answer.type";
 
@@ -30,12 +30,22 @@ export default function EditAnswer() {
   const fetchQuestionAndAnswer = async (questionId: number) => {
     try {
       const questionData = await getQuestionById(questionId);
-      setQuestion(questionData);
-      setShared(questionData.shared);
+      console.log("원본 질문 데이터:", questionData); // 디버깅용 로그
 
-      const answerData = await getAnswer(questionId);
-      if (answerData) {
-        setAnswer(answerData.content);
+      // answer 필드를 배열로 변환
+      const formattedQuestion = {
+        ...questionData,
+        answer: questionData.answer ? [questionData.answer] : null,
+      } as AllQuestionResponse;
+
+      console.log("변환된 질문 데이터:", formattedQuestion); // 디버깅용 로그
+      setQuestion(formattedQuestion);
+      setShared(formattedQuestion.shared);
+
+      if (formattedQuestion.answer && formattedQuestion.answer.length > 0) {
+        setAnswer(formattedQuestion.answer[0].content);
+      } else {
+        setAnswer("");
       }
     } catch (error) {
       console.error("데이터 가져오기 실패:", error);
@@ -59,8 +69,9 @@ export default function EditAnswer() {
     try {
       const answerData: AnswerRequest = {
         questionId: question.id,
-        content: answer,
+        content: answer.trim(),
       };
+
       await putAnswer(question.id, answerData);
       alert("답변이 성공적으로 수정되었습니다.");
       router.push("/my/answer");
@@ -104,8 +115,8 @@ export default function EditAnswer() {
           </LabelWrapper>
           <ContentAnswer
             id="question"
-            placeholder="답변을 입력하세요"
             value={answer}
+            placeholder="여기에 답변을 입력하세요."
             onChange={(e) => setAnswer(e.target.value)}
           ></ContentAnswer>
 

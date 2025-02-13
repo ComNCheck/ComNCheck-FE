@@ -1,28 +1,24 @@
 import React from "react";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import FormWrapper from "@/components/container/FormWrapper";
+
+import {
+  roleChangeListType,
+  roleChangeDetailType,
+} from "../../../apis/roleChange.type";
 import RoleCard from "./RoleCard";
 
-interface Role {
-  id: number;
-  name: string;
-  studentNumber: string;
-  unit: string;
-  position: string;
-  role: string;
-  isApply: boolean;
-}
-
 interface CommonRoleListProps {
-  roles: Role[];
-  onDelete: (id: number) => void;
-  onCardClick: (id: number, isApply: boolean) => void;
-  onUpdate: (updatedRole: Role) => void;
+  roles: roleChangeListType[];
+  onDelete: (requestId: number) => void;
+  onCardClick: (requestId: number) => void;
+  onUpdate: (updatedRole: roleChangeDetailType) => void;
 }
 
 const CommonRoleList: React.FC<CommonRoleListProps> = ({
   roles,
   onDelete,
+  onCardClick,
   onUpdate,
 }) => {
   return (
@@ -30,10 +26,11 @@ const CommonRoleList: React.FC<CommonRoleListProps> = ({
       <FormWrapper>
         {roles.map((role, index) => (
           <RoleCard
-            key={role.id}
+            key={role.requestId}
             role={role}
             index={index}
             onDelete={onDelete}
+            onCardClick={onCardClick}
             onUpdate={onUpdate}
           />
         ))}

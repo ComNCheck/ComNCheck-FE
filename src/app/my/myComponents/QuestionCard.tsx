@@ -38,7 +38,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   return (
     <Card {...handlers} onClick={handleCardClick}>
       <CustomRow>
-        <ContentWrapper isSwiped={isSwiped}>
+        <ContentWrapper $isSwiped={isSwiped}>
           <QuestionWrapper>
             <NumberCircle>{index + 1}</NumberCircle>
             <QuestionInfo>
@@ -50,13 +50,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
               <QuestionDate>{question.date}</QuestionDate>
             </QuestionInfo>
           </QuestionWrapper>
-          <AnswerStatus isAnswered={question.isAnswered}>
+          <AnswerStatus $isAnswered={question.isAnswered}>
             {question.isAnswered ? "답변완료" : "답변예정"}
           </AnswerStatus>
         </ContentWrapper>
 
         <DeleteButton
-          isSwiped={isSwiped}
+          $isSwiped={isSwiped}
           onClick={(e) => {
             e.stopPropagation();
             onDelete(question.id);
@@ -80,14 +80,14 @@ const Card = styled.div`
   cursor: pointer;
 `;
 
-const ContentWrapper = styled.div<{ isSwiped: boolean }>`
+const ContentWrapper = styled.div<{ $isSwiped: boolean }>`
   display: flex;
   flex: 1;
   align-items: center;
   transition: transform 0.3s ease;
   padding-right: 1rem;
-  transform: ${({ isSwiped }) =>
-    isSwiped ? "translateX(-3rem)" : "translateX(0)"};
+  transform: ${({ $isSwiped }) =>
+    $isSwiped ? "translateX(-3rem)" : "translateX(0)"};
   justify-content: space-between;
 `;
 
@@ -129,14 +129,14 @@ const QuestionDate = styled.span`
   color: ${theme.colors.mutedText};
 `;
 
-const AnswerStatus = styled.span<{ isAnswered: boolean }>`
+const AnswerStatus = styled.span<{ $isAnswered: boolean }>`
   font-size: 0.9rem;
   font-weight: bold;
-  color: ${({ isAnswered }) =>
-    isAnswered ? theme.colors.success : theme.colors.warning};
+  color: ${({ $isAnswered }) =>
+    $isAnswered ? theme.colors.success : theme.colors.warning};
 `;
 
-const DeleteButton = styled.button<{ isSwiped: boolean }>`
+const DeleteButton = styled.button<{ $isSwiped: boolean }>`
   position: absolute;
   right: 0;
   top: 0;
@@ -150,8 +150,8 @@ const DeleteButton = styled.button<{ isSwiped: boolean }>`
   font-weight: bold;
   border: none;
   cursor: pointer;
-  opacity: ${({ isSwiped }) => (isSwiped ? 1 : 0)};
-  pointer-events: ${({ isSwiped }) => (isSwiped ? "auto" : "none")};
+  opacity: ${({ $isSwiped }) => ($isSwiped ? 1 : 0)};
+  pointer-events: ${({ $isSwiped }) => ($isSwiped ? "auto" : "none")};
   transition: opacity 0.3s ease;
 `;
 
