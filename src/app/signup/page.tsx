@@ -111,8 +111,7 @@ export default function Signup() {
   const handlePictureClick = () => {
     fileInputRef.current?.click();
   };
-  const searchParams = useSearchParams();
-  const memberId = searchParams.get("id");
+
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,13 +159,7 @@ export default function Signup() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const handleNextClick = () => {
-    if (selectedFile && isUploadSuccess) {
-      router.push("/signup/complete");
-    } else {
-      alert("이미지를 업로드 해주세요.");
-    }
-  };
+
   return (
     <Wrapper>
       <Header>
