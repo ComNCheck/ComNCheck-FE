@@ -14,15 +14,15 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
   onClose,
   onUpdate,
 }) => {
+  const [selectedPosition, setSelectedPosition] = useState(
+    role?.[0]?.position || ""
+  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   if (!role || role.length === 0) return null;
 
   const currentRole = role[0];
   if (!currentRole) return null;
-
-  const [selectedPosition, setSelectedPosition] = useState(
-    currentRole.position || ""
-  );
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   console.log("currentRole:", currentRole);
 

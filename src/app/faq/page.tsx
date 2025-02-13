@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import { getFAQ } from "@/apis/question";
-import { AllFAQQuestionResponse, AnswerType } from "@/apis/question.type";
+import { AllFAQQuestionResponse } from "@/apis/question.type";
 import FAQQuestionList from "../my/myComponents/FAQQuestionList";
 
 export default function FAQ() {

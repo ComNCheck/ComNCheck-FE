@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
-import { getQuestion, putQuestion } from "../../../apis/question";
+import { getQuestion } from "../../../apis/question";
 import { AllQuestionResponse } from "../../../apis/question.type";
 
 export default function FAQCheck() {
