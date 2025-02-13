@@ -4,15 +4,17 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 
 export default function FAQCheck() {
   const [isToggleOn, setIsToggleOn] = useState(true);
-  const [question, setQuestion] = useState({ title: "", content: "" });
-  const [answer, setAnswer] = useState("");
+  const [question] = useState({ title: "", content: "" }); //빌드 test중
+  const [answer] = useState(""); //빌드 test중
+  //const [question, setQuestion] = useState({ title: "", content: "" });
+  //const [answer, setAnswer] = useState("");
   const router = useRouter();
 
   const toggleHandler = () => {
