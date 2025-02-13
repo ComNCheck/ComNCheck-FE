@@ -9,6 +9,7 @@ import HeaderNavbar from "@/components/Header/HeaderNavbar";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loading from "./loading/page";
+import Head from "next/head";
 
 export default function RootLayout({
   children,
@@ -26,6 +27,10 @@ export default function RootLayout({
   const shouldHide = hidePaths.some((path) => pathname.startsWith(path));
   return (
     <html lang="en">
+      <Head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0077FF" />
+      </Head>
       <body>
         <GlobalStyle />
         <StyledComponentsRegistry>
