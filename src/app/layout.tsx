@@ -18,7 +18,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000);
+    const timer = setTimeout(() => setLoading(false), 300);
     return () => clearTimeout(timer);
   }, []);
 
@@ -30,15 +30,15 @@ export default function RootLayout({
         <GlobalStyle />
         <StyledComponentsRegistry>
           <ThemeProviderWrapper>
-            {/* {loading ? (
+            {loading ? (
               <Loading />
-            ) : ( */}
-            <Container>
-              {!shouldHide && <HeaderNavbar />}
-              <MobileWapper>{children}</MobileWapper>
-              {!shouldHide && <BottomNavbar />}
-            </Container>
-            {/* )} */}
+            ) : (
+              <Container>
+                {!shouldHide && <HeaderNavbar />}
+                <MobileWapper>{children}</MobileWapper>
+                {!shouldHide && <BottomNavbar />}
+              </Container>
+            )}
           </ThemeProviderWrapper>
         </StyledComponentsRegistry>
       </body>
