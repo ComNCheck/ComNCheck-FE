@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   display: flex;
@@ -99,7 +100,7 @@ export default function Login() {
         )}
       </AlertContainer>
       <GoogleBtn onClick={handleLogin}>
-        <img src="/GoogleLogo.svg" alt="구글 로고" />
+        <Image src="/GoogleLogo.svg" alt="구글 로고" />
         Sign up with Google
       </GoogleBtn>
       <StatusContainer>

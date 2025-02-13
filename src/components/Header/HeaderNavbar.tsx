@@ -1,7 +1,7 @@
 "use client";
 
 import { theme } from "@/app/styles/theme";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import styled from "styled-components";
 
 const NavbarContainer = styled.div`
