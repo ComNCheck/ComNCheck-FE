@@ -5,10 +5,11 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { theme } from "../styles/theme";
 import { MdCameraEnhance } from "react-icons/md";
 import { useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
 import axios from "axios";
+import Image from "next/image";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -111,9 +112,8 @@ export default function Signup() {
   const handlePictureClick = () => {
     fileInputRef.current?.click();
   };
-  const searchParams = useSearchParams();
-  const memberId = searchParams.get("id");
-  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+
+  //const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -146,12 +146,12 @@ export default function Signup() {
       );
 
       console.log("서버 응답:", response.data);
-      setIsUploadSuccess(true);
+      //setIsUploadSuccess(true);
       router.push("/signup/complete");
     } catch (error) {
       console.error("업로드 에러:", error);
       setIsLoading(false);
-      setIsUploadSuccess(false);
+      //setIsUploadSuccess(false);
     } finally {
       // 로딩 종료
       setIsLoading(false);
@@ -160,13 +160,7 @@ export default function Signup() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const handleNextClick = () => {
-    if (selectedFile && isUploadSuccess) {
-      router.push("/signup/complete");
-    } else {
-      alert("이미지를 업로드 해주세요.");
-    }
-  };
+
   return (
     <Wrapper>
       <Header>
@@ -184,7 +178,7 @@ export default function Signup() {
       </SubTitleContainer>
       <PictureSpace isActive={isActive} onClick={handlePictureClick}>
         {selectedFile ? (
-          <img
+          <Image
             src={URL.createObjectURL(selectedFile)}
             alt="선택된 이미지"
             style={{ width: "100%", height: "90%", objectFit: "contain" }}

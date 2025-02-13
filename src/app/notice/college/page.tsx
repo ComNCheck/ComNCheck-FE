@@ -2,11 +2,9 @@
 
 import { theme } from "@/app/styles/theme";
 import styled from "styled-components";
-import TitleContainer from "@/components/setting/TitleContainer";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
-import NoticeCard from "../Component/NoticeCard";
+
 import NoticeCommonCard from "../Component/NoticeCommonCard";
-import SubHeader from "@/components/Header/SubHeader";
 
 const mockNotices = [
   {
@@ -75,14 +73,14 @@ const Header = styled.div`
   width: 100%;
 `;
 
-interface FormValues {
-  name: string;
-  date: string;
-  time: string;
-  location: string;
-  writing: string;
-  googleFormLink: string;
-}
+// interface FormValues {
+//   name: string;
+//   date: string;
+//   time: string;
+//   location: string;
+//   writing: string;
+//   googleFormLink: string;
+// }
 
 export default function College() {
   return (

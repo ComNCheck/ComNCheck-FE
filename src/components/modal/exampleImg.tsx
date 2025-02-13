@@ -1,5 +1,5 @@
 "use client";
-import ReactDOM from "react-dom";
+
 import { theme } from "@/app/styles/theme";
 import { IoMdCloseCircle } from "react-icons/io";
 import styled from "styled-components";

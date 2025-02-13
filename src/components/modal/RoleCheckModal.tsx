@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { IoMdCloseCircle, IoIosArrowDown } from "react-icons/io";
-import { getRoleChangeDetail } from "../../apis/roleChange";
 import { roleChangeDetailType } from "../../apis/roleChange.type";
 interface RoleCheckModalProps {
   role: roleChangeDetailType[] | null;
