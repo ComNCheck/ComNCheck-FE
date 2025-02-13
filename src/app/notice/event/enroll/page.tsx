@@ -94,7 +94,7 @@ export default function EventEnroll() {
       console.log("Form submitted:", values);
       console.log("File uploaded:", selectedFile);
       // 여기에 다음 페이지로 이동하는 로직을 추가하기
-      router.back;
+      router.back(); //빌드에러 수정
     }
   };
 
