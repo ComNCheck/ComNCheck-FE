@@ -23,7 +23,6 @@ const RoleCard: React.FC<RoleCardProps> = ({
   index,
   onDelete,
   onCardClick,
-  onUpdate,
 }) => {
   const [isSwiped, setIsSwiped] = useState(false);
 
@@ -119,11 +118,6 @@ const RoleName = styled.h3`
   font-weight: 600;
   color: ${theme.colors.text};
   margin: 0;
-`;
-
-const RoleStatus = styled.span`
-  font-size: 0.9rem;
-  color: gray;
 `;
 
 const OpenButton = styled.button`

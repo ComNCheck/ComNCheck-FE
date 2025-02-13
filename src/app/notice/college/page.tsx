@@ -73,14 +73,14 @@ const Header = styled.div`
   width: 100%;
 `;
 
-interface FormValues {
-  name: string;
-  date: string;
-  time: string;
-  location: string;
-  writing: string;
-  googleFormLink: string;
-}
+// interface FormValues {
+//   name: string;
+//   date: string;
+//   time: string;
+//   location: string;
+//   writing: string;
+//   googleFormLink: string;
+// }
 
 export default function College() {
   return (

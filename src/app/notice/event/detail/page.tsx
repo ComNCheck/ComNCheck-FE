@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import { FaPenToSquare } from "react-icons/fa6";
