@@ -1,5 +1,9 @@
 import instance from "./instance";
-import { QuestionRequest, AllQuestionResponse } from "./question.type";
+import {
+  QuestionRequest,
+  AllQuestionResponse,
+  AllFAQQuestionResponse,
+} from "./question.type";
 
 // MY - 질문하기 post
 export const postQuestion = async (data: QuestionRequest): Promise<void> => {
@@ -93,7 +97,7 @@ export const getQuestionAllList = async (): Promise<AllQuestionResponse[]> => {
       `/api/v1/major/questions/all`
     );
 
-    console.error(
+    console.log(
       "MY - 답변하기 모든 질문 list 불러오기 학생회,과회장 권한 get API 요청 값:",
       response.data
     );
@@ -108,18 +112,18 @@ export const getQuestionAllList = async (): Promise<AllQuestionResponse[]> => {
 };
 
 // FAQ - 답변 가져오기 get
-export const getFAQ = async (): Promise<AllQuestionResponse[]> => {
+export const getFAQ = async (): Promise<AllFAQQuestionResponse[]> => {
+  console.log("getFAQ 함수 실행됨");
+
   try {
-    const response = await instance.get<AllQuestionResponse[]>(
+    console.log("API 요청 시작...");
+    const response = await instance.get<AllFAQQuestionResponse[]>(
       "/api/v1/major/questions"
     );
-    console.error(
-      "FAQ - 공개여부 True인 질문 get API 요청 실패:",
-      response.data
-    );
+    console.log("API 응답 받음:", response.data);
     return response.data;
   } catch (error) {
-    console.error("FAQ - 공개여부 True인 질문 get API 요청 실패:", error);
+    console.error("FAQ API 요청 실패:", error);
     throw error;
   }
 };

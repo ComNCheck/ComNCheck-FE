@@ -100,7 +100,7 @@ export default function Login() {
         )}
       </AlertContainer>
       <GoogleBtn onClick={handleLogin}>
-        <Image src="/GoogleLogo.svg" alt="구글 로고" />
+        <Image src="/GoogleLogo.svg" alt="구글 로고" width={20} height={20} />
         Sign up with Google
       </GoogleBtn>
       <StatusContainer>
