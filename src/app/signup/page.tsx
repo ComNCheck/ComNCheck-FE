@@ -181,6 +181,8 @@ export default function Signup() {
           <Image
             src={URL.createObjectURL(selectedFile)}
             alt="선택된 이미지"
+            width={500} // 원하는 기본 크기 설정
+            height={50}
             style={{ width: "100%", height: "90%", objectFit: "contain" }}
           />
         ) : (
