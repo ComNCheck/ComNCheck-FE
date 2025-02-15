@@ -35,3 +35,14 @@ export interface Content {
   link: string;
   notice_id: number;
 }
+
+export interface makeEvent {
+  //id: number;
+  eventName: string;
+  date: string;
+  time: string;
+  location: string;
+  notice: string;
+  googleFormLink: string;
+  cardNewsImageUrls?: string[];
+}

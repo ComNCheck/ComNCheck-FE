@@ -27,30 +27,6 @@ interface UserInfo {
   checkStudentCard: boolean;
 }
 
-const mockNotices = [
-  {
-    id: 1,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 2,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 3,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-];
-
 export default function Notice() {
   const [eventNotices, setEventNotices] = useState<any[]>([]);
   const [majorNotices, setmajorNotices] = useState<any[]>([]);
@@ -145,8 +121,8 @@ export default function Notice() {
         </Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {eventNotices.map((notice) => (
-              <NoticeCard key={notice.id} notice={notice} />
+            {eventNotices.map((notice, index) => (
+              <NoticeCard key={index} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
@@ -161,8 +137,8 @@ export default function Notice() {
         <Header onClick={handleEmploymentClick}>취업정보 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {employNotices.map((notice) => (
-              <NoticeCommonCard key={notice.id} notice={notice} />
+            {employNotices.map((notice, index) => (
+              <NoticeCommonCard key={index} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>

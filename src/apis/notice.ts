@@ -1,5 +1,5 @@
 import instance from "./instance";
-import { majorEventList, majorNoticeList } from "./notice.type";
+import { majorEventList, majorNoticeList, makeEvent } from "./notice.type";
 
 export const getMajorEvent = async (): Promise<majorEventList> => {
   //과행사 게시글 목록 조회 api
@@ -45,6 +45,19 @@ export const getEmployNotice = async (
           page: page,
         },
       }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const writeEvent = async (data: makeEvent): Promise<makeEvent> => {
+  //과 행사 게시글 작성
+  try {
+    const response = await instance.post<makeEvent>(
+      `/api/v1/major-event`,
+      data
     );
     return response.data;
   } catch (error) {

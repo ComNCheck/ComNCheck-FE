@@ -8,6 +8,8 @@ import Form from "@/components/setting/form";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import EventBtn from "../../Component/EventBtn";
 import { useRouter } from "next/navigation";
+import { writeEvent } from "@/apis/notice";
+import { makeEvent } from "@/apis/notice.type";
 
 const Wrapper = styled.div`
   display: flex;
@@ -54,7 +56,7 @@ interface FormValues {
   date: string;
   time: string;
   location: string;
-  writing: string;
+  notice: string;
   googleFormLink: string;
 }
 
@@ -65,12 +67,23 @@ export default function EventEnroll() {
     date: "",
     time: "",
     location: "",
-    writing: "",
+    notice: "",
     googleFormLink: "",
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    setIsFormValid(
+      values.name !== "" &&
+        values.date !== "" &&
+        values.time !== "" &&
+        values.location !== "" &&
+        values.notice !== "" &&
+        values.googleFormLink !== ""
+    );
+  }, [values]);
 
   const handleInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -89,25 +102,33 @@ export default function EventEnroll() {
     }
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     if (isFormValid && selectedFile && isUploadSuccess) {
       console.log("Form submitted:", values);
       console.log("File uploaded:", selectedFile);
       // 여기에 다음 페이지로 이동하는 로직을 추가하기
-      router.back(); //빌드에러 수정
+
+      try {
+        const data: makeEvent = {
+          eventName: values.name,
+          date: values.date,
+          time: values.time,
+          location: values.location,
+          notice: values.notice,
+          googleFormLink: values.googleFormLink,
+        };
+        const uploadSuccess = await writeEvent(data);
+
+        if (uploadSuccess) {
+          console.log("Event successfully uploaded:", data);
+          // 업로드 성공 후, 이전 페이지로 이동하거나 다른 페이지로 리다이렉트
+          router.back(); // 혹은 다른 페이지로 리디렉션할 경우 router.push('/next-page');
+        }
+      } catch (error) {
+        console.log("제출에러", error);
+      }
     }
   };
-
-  useEffect(() => {
-    setIsFormValid(
-      values.name !== "" &&
-        values.date !== "" &&
-        values.time !== "" &&
-        values.location !== "" &&
-        values.writing !== "" &&
-        values.googleFormLink !== ""
-    );
-  }, [values]);
 
   return (
     <Wrapper>
@@ -165,10 +186,10 @@ export default function EventEnroll() {
             <Label>🍀 공지글</Label>
             <Form
               placeholder={`행사 공지글을 입력해주세요`}
-              onChange={(e) => handleInput(e, "writing")}
-              value={values.writing}
+              onChange={(e) => handleInput(e, "notice")}
+              value={values.notice}
               hasPlaceholder={true}
-              isFilled={values.writing.length > 0}
+              isFilled={values.notice.length > 0}
             />
           </FormWrapper>
 
