@@ -6,6 +6,7 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import NoticeCommonCard from "../Component/NoticeCommonCard";
 import { useEffect, useState } from "react";
 import { getEmployNotice } from "@/apis/notice";
+import { majorNoticeList } from "@/apis/notice.type";
 
 const ScrollContainer = styled.div`
   width: 100%;
@@ -52,15 +53,15 @@ const Header = styled.div`
 `;
 
 export default function Employment() {
-  const [notices, setNotices] = useState<any[]>([]);
-  const [size, setSize] = useState<number>(8);
-  const [page, setPage] = useState<number>(1);
-
+  const [notices, setNotices] = useState<majorNoticeList | null>(null);
+  // const [size, setSize] = useState<number>(8);
+  // const [page, setPage] = useState<number>(1);
+  const size = 8;
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const data = await getEmployNotice(size, page);
-        setNotices(data.content);
+        const data = await getEmployNotice(size);
+        setNotices(data);
       } catch (error) {
         console.error("Failed to fetch notices", error);
       }
@@ -73,8 +74,8 @@ export default function Employment() {
         <Header>취업공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {notices.map((notice) => (
-              <NoticeCommonCard key={notice.id} notice={notice} />
+            {notices?.content?.map((notice) => (
+              <NoticeCommonCard key={notice.notice_id} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>

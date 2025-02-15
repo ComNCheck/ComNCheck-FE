@@ -1,8 +1,8 @@
 export interface majorEventList {
   //과행사 공지사항 목록 api
-  eventName: "string";
-  date: "string";
-  time: Time[];
+  eventName: string;
+  date: string;
+  time: Time;
 }
 export interface Time {
   hour: number;

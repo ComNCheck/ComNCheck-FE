@@ -10,7 +10,7 @@ const NoticeCommonCard = ({
     notice_id: number;
     title: string;
     date: string;
-    dDay: string;
+    //dDay: string;
   };
 }) => {
   return (

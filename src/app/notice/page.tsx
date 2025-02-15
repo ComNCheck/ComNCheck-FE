@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getEmployNotice, getMajorEvent, getMajorNotice } from "@/apis/notice";
+import { majorEventList, majorNoticeList } from "@/apis/notice.type";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -26,11 +27,19 @@ interface UserInfo {
   role: UserRole;
   checkStudentCard: boolean;
 }
-
+// interface eventProps {
+//   notice: majorEventList;
+//   dDay: string;
+//   googleFormLink?: string;
+// }
 export default function Notice() {
-  const [eventNotices, setEventNotices] = useState<any[]>([]);
-  const [majorNotices, setmajorNotices] = useState<any[]>([]);
-  const [employNotices, setemployNotices] = useState<any[]>([]);
+  const [eventNotices, setEventNotices] = useState<majorEventList[]>([]);
+  const [majorNotices, setmajorNotices] = useState<majorNoticeList | null>(
+    null
+  );
+  const [employNotices, setemployNotices] = useState<majorNoticeList | null>(
+    null
+  );
   const size = 3;
   useEffect(() => {
     const fetchNotices = async () => {
@@ -41,8 +50,8 @@ export default function Notice() {
           getMajorEvent(),
         ]);
 
-        setmajorNotices(majorData.content);
-        setemployNotices(employData.content);
+        setmajorNotices(majorData);
+        setemployNotices(employData);
         setEventNotices([eventData]);
       } catch (error) {
         console.error("공지사항을 가져오는 데 실패했습니다.", error);
@@ -104,6 +113,14 @@ export default function Notice() {
     }
   }, []);
 
+  const calculateDDay = (date: string) => {
+    const eventDate = new Date(date);
+    const today = new Date();
+    const diff = Math.ceil(
+      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    return diff >= 0 ? `D-${diff}` : "종료됨";
+  };
   return (
     <ContainerWrapper>
       <SlideHeader />
@@ -121,15 +138,24 @@ export default function Notice() {
         </Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {eventNotices.map((notice, index) => (
-              <NoticeCard key={index} notice={notice} />
-            ))}
+            {eventNotices.map((notice, index) => {
+              const dDay = calculateDDay(notice.date);
+              return (
+                <NoticeCard
+                  key={index}
+                  notice={{
+                    ...notice,
+                    dDay,
+                  }}
+                />
+              );
+            })}
           </ScrollContainer>
         </ContentNoticeBox>
         <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {majorNotices.map((notice, index) => (
+            {majorNotices?.content.map((notice, index) => (
               <NoticeCommonCard key={index} notice={notice} />
             ))}
           </ScrollContainer>
@@ -137,7 +163,7 @@ export default function Notice() {
         <Header onClick={handleEmploymentClick}>취업정보 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {employNotices.map((notice, index) => (
+            {employNotices?.content.map((notice, index) => (
               <NoticeCommonCard key={index} notice={notice} />
             ))}
           </ScrollContainer>

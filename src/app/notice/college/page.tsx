@@ -7,6 +7,7 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import NoticeCommonCard from "../Component/NoticeCommonCard";
 import { useEffect, useState } from "react";
 import { getMajorNotice } from "@/apis/notice";
+import { majorNoticeList } from "@/apis/notice.type";
 
 const ScrollContainer = styled.div`
   width: 100%;
@@ -62,15 +63,15 @@ const Header = styled.div`
 // }
 
 export default function College() {
-  const [notices, setNotices] = useState<any[]>([]);
-  const [size, setSize] = useState<number>(8);
-  const [page, setPage] = useState<number>(1);
+  const [notices, setNotices] = useState<majorNoticeList | null>(null);
+  // const [size, setSize] = useState<number>(8);
+  const size = 8;
 
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const data = await getMajorNotice(size, page);
-        setNotices(data.content);
+        const data = await getMajorNotice(size);
+        setNotices(data);
       } catch (error) {
         console.error("Failed to fetch notices", error);
       }
@@ -83,7 +84,7 @@ export default function College() {
         <Header>학부공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {notices.map((notice) => (
+            {notices?.content?.map((notice) => (
               <NoticeCommonCard key={notice.notice_id} notice={notice} />
             ))}
           </ScrollContainer>
