@@ -130,17 +130,21 @@ export default function Notice() {
     <ContainerWrapper>
       <SlideHeader />
       <ContentContainer>
-        <Header>
-          <p onClick={handleEventClick}>과행사 공지 확인하기</p>
-          {(role === "ROLE_ADMIN" ||
-            role === "ROLE_MAJOR_PRESIDENT" ||
-            role === "ROLE_STUDENT_COUNCIL") && (
-            <WritingBtn onClick={handleWriteClick}>
-              글쓰기
-              <FaPenToSquare />
-            </WritingBtn>
-          )}
-        </Header>
+        <HeaderContainer>
+          <Header>
+            <p onClick={handleEventClick}>과행사 공지 확인하기</p>
+            <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
+            {(role === "ROLE_ADMIN" ||
+              role === "ROLE_MAJOR_PRESIDENT" ||
+              role === "ROLE_STUDENT_COUNCIL") && (
+              <WritingBtn onClick={handleWriteClick}>
+                글쓰기
+                <FaPenToSquare />
+              </WritingBtn>
+            )}
+          </Header>
+        </HeaderContainer>
+
         <ContentNoticeBox>
           <ScrollContainer>
             {eventNotices.map((notice, index) => {
@@ -159,7 +163,7 @@ export default function Notice() {
         </ContentNoticeBox>
         <HeaderContainer>
           <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
-          <ToggleBtn onToggle={handleToggle} active={isActive} />
+          <ToggleBtn keyName="alarmMajorNotice" initialState={false} />
         </HeaderContainer>
         <ContentNoticeBox>
           <ScrollContainer>
@@ -172,7 +176,7 @@ export default function Notice() {
           <Header onClick={handleEmploymentClick}>
             취업정보 공지 확인하기
           </Header>
-          <ToggleBtn onToggle={handleToggle} active={isActive} />
+          <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} />
         </HeaderContainer>
         <ContentNoticeBox>
           <ScrollContainer>
