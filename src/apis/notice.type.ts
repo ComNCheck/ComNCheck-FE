@@ -37,7 +37,7 @@ export interface Content {
 }
 
 export interface makeEvent {
-  //id: number;
+  id?: number;
   eventName: string;
   date: string;
   time: string;

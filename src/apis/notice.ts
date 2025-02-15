@@ -64,3 +64,16 @@ export const writeEvent = async (data: makeEvent): Promise<makeEvent> => {
     throw error;
   }
 };
+
+export const inquireEvent = async (
+  majorEventId: number
+): Promise<majorEventList> => {
+  try {
+    const response = await instance.post<majorEventList>(
+      `api/v1/major-event/${majorEventId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
