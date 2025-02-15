@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { getEmployNotice, getMajorEvent, getMajorNotice } from "@/apis/notice";
 import { majorEventList, majorNoticeList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -27,11 +28,7 @@ interface UserInfo {
   role: UserRole;
   checkStudentCard: boolean;
 }
-// interface eventProps {
-//   notice: majorEventList;
-//   dDay: string;
-//   googleFormLink?: string;
-// }
+
 export default function Notice() {
   const [eventNotices, setEventNotices] = useState<majorEventList[]>([]);
   const [majorNotices, setmajorNotices] = useState<majorNoticeList | null>(
@@ -41,6 +38,13 @@ export default function Notice() {
     null
   );
   const size = 3;
+
+  const [isActive, setIsActive] = useState(false);
+
+  const handleToggle = () => {
+    setIsActive((prev) => !prev);
+  };
+
   useEffect(() => {
     const fetchNotices = async () => {
       try {
@@ -121,21 +125,26 @@ export default function Notice() {
     );
     return diff >= 0 ? `D-${diff}` : "종료됨";
   };
+
   return (
     <ContainerWrapper>
       <SlideHeader />
       <ContentContainer>
-        <Header>
-          <p onClick={handleEventClick}>과행사 공지 확인하기</p>
-          {(role === "ROLE_ADMIN" ||
-            role === "ROLE_MAJOR_PRESIDENT" ||
-            role === "ROLE_STUDENT_COUNCIL") && (
-            <WritingBtn onClick={handleWriteClick}>
-              글쓰기
-              <FaPenToSquare />
-            </WritingBtn>
-          )}
-        </Header>
+        <HeaderContainer>
+          <Header>
+            <p onClick={handleEventClick}>과행사 공지 확인하기</p>
+            <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
+            {(role === "ROLE_ADMIN" ||
+              role === "ROLE_MAJOR_PRESIDENT" ||
+              role === "ROLE_STUDENT_COUNCIL") && (
+              <WritingBtn onClick={handleWriteClick}>
+                글쓰기
+                <FaPenToSquare />
+              </WritingBtn>
+            )}
+          </Header>
+        </HeaderContainer>
+
         <ContentNoticeBox>
           <ScrollContainer>
             {eventNotices.map((notice, index) => {
@@ -152,7 +161,10 @@ export default function Notice() {
             })}
           </ScrollContainer>
         </ContentNoticeBox>
-        <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
+        <HeaderContainer>
+          <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
+          <ToggleBtn keyName="alarmMajorNotice" initialState={false} />
+        </HeaderContainer>
         <ContentNoticeBox>
           <ScrollContainer>
             {majorNotices?.content.map((notice, index) => (
@@ -160,7 +172,12 @@ export default function Notice() {
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
-        <Header onClick={handleEmploymentClick}>취업정보 공지 확인하기</Header>
+        <HeaderContainer>
+          <Header onClick={handleEmploymentClick}>
+            취업정보 공지 확인하기
+          </Header>
+          <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} />
+        </HeaderContainer>
         <ContentNoticeBox>
           <ScrollContainer>
             {employNotices?.content.map((notice, index) => (
@@ -172,11 +189,18 @@ export default function Notice() {
     </ContainerWrapper>
   );
 }
-
+const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+`;
 const Header = styled.div`
   font-size: 1.2rem;
   font-weight: 700;
-  padding-top: 0.5rem;
+  //padding-top: 0.5rem;
   display: flex;
   justify-content: space-between;
   width: 100%;
