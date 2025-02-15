@@ -9,7 +9,7 @@ import { FaPenToSquare } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { getEmployNotice, getMajorNotice } from "@/apis/notice";
+import { getEmployNotice, getMajorEvent, getMajorNotice } from "@/apis/notice";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -52,6 +52,7 @@ const mockNotices = [
 ];
 
 export default function Notice() {
+  const [eventNotices, setEventNotices] = useState<any[]>([]);
   const [majorNotices, setmajorNotices] = useState<any[]>([]);
   const [employNotices, setemployNotices] = useState<any[]>([]);
   const size = 3;
@@ -75,6 +76,17 @@ export default function Notice() {
         setemployNotices(data.content);
       } catch (error) {
         console.error("Failed to fetch notices", error);
+      }
+    };
+    fetchNotices();
+  }, []);
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await getMajorEvent();
+        setEventNotices([data]);
+      } catch (error) {
+        console.log("과행사 공지 에러: ", error);
       }
     };
     fetchNotices();
@@ -149,7 +161,7 @@ export default function Notice() {
         </Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
+            {eventNotices.map((notice) => (
               <NoticeCard key={notice.id} notice={notice} />
             ))}
           </ScrollContainer>

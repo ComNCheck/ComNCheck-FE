@@ -35,7 +35,7 @@ export const getEmployNotice = async (
   size: number,
   page?: number
 ): Promise<majorNoticeList> => {
-  //학부 게시글 목록 조회 api
+  //취업 게시글 목록 조회 api
   try {
     const response = await instance.get<majorNoticeList>(
       `/api/v1/employment/notices/pages`,
