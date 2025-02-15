@@ -83,33 +83,53 @@ export default function EventDetail() {
   });
 
   const [dday, setDday] = useState<number | string>("");
-
+  const [role, setRole] = useState<string | null>(null);
   useEffect(() => {
-    if (event) {
-      // 현재 날짜와 이벤트 날짜 비교하여 DDay 계산
+    const storedMemberData = localStorage.getItem("memberData");
+    if (storedMemberData) {
+      const memberData = JSON.parse(storedMemberData);
+      setRole(memberData.role); // role 저장
+    }
+
+    if (event?.date) {
       const today = new Date();
       const eventDate = new Date(event.date); // 이벤트 날짜를 Date 객체로 변환
-      const timeDiff = eventDate.getTime() - today.getTime();
-      const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24)); // 밀리초를 일로 변환
 
-      if (daysRemaining < 0) {
-        // 이미 지난 이벤트일 경우 '종료'로 표시
-        setDday("종료");
+      // 유효한 날짜인지 확인
+      if (isNaN(eventDate.getTime())) {
+        console.log("잘못된 날짜 형식입니다:", event.date);
+        setDday("날짜 오류"); // 날짜 오류 표시
       } else {
-        // 아직 남은 경우 D-Day 표시
-        setDday(`D-${daysRemaining}`);
+        // 현재 날짜와 이벤트 날짜 비교하여 DDay 계산
+        const timeDiff = eventDate.getTime() - today.getTime();
+        const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24)); // 밀리초를 일로 변환
+
+        if (daysRemaining < 0) {
+          // 이미 지난 이벤트일 경우 '종료'로 표시
+          setDday("종료");
+        } else if (daysRemaining === 0) {
+          // D-Day가 오늘인 경우
+          setDday("D-Day");
+        } else {
+          // 아직 남은 경우 D-Day 표시
+          setDday(`D-${daysRemaining}`);
+        }
       }
     }
 
-    inquireEvent(event.id)
-      .then((data) => {
-        console.log("이벤트 데이터:", data);
-        setEvent(data);
-      })
-      .catch((error) => {
-        console.log("조회 실패: ", error);
-      });
+    // 이벤트 데이터를 가져오기
+    if (event?.id) {
+      inquireEvent(event.id)
+        .then((data) => {
+          console.log("이벤트 데이터:", data);
+          setEvent(data);
+        })
+        .catch((error) => {
+          console.log("조회 실패: ", error);
+        });
+    }
   }, [event?.id]);
+
   const handleWriteClick = () => {
     router.push("/notice/event/enroll");
   };
@@ -126,7 +146,15 @@ export default function EventDetail() {
         </div>
         <DDayDiv>{dday}</DDayDiv>
       </EventWrapper>
-      <WritingBtn onClick={handleWriteClick}>
+      <WritingBtn
+        onClick={handleWriteClick}
+        style={{
+          visibility:
+            role === "ROLE_MAJOR_PRESIDENT" || role === "ROLE_GRADUATE_STUDENT"
+              ? "visible"
+              : "hidden",
+        }}
+      >
         글쓰기
         <FaPenToSquare />
       </WritingBtn>
@@ -167,7 +195,7 @@ https://forms.gle/EcTcN3Gq9Pzzey9x6
 구글폼을 통해 신청해 주세요.`}
         </EventText> */}
       </FormWrapper>
-      <EventBtn onClick={handleNextClick} />
+      <EventBtn onClick={handleNextClick} text="구글폼 신청링크 바로가기" />
     </ContainerWrapper>
   );
 }
