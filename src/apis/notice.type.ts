@@ -37,10 +37,22 @@ export interface Content {
 }
 
 export interface makeEvent {
-  id?: number;
+  //id?: number;
   eventName: string;
   date: string;
   time: string;
+  location: string;
+  notice: string;
+  googleFormLink: string;
+  cardNewsImageUrls?: string[];
+}
+
+export interface makeEventDetail {
+  //과행사 공지 단건조회
+  id: number;
+  eventName: string;
+  date: string;
+  time: Time;
   location: string;
   notice: string;
   googleFormLink: string;
