@@ -5,6 +5,9 @@ import styled from "styled-components";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 
 import NoticeCommonCard from "../Component/NoticeCommonCard";
+import { useEffect, useState } from "react";
+import { getMajorNotice } from "@/apis/notice";
+import { majorNoticeList } from "@/apis/notice.type";
 
 const mockNotices = [
   {
@@ -83,14 +86,29 @@ const Header = styled.div`
 // }
 
 export default function College() {
+  const [notices, setNotices] = useState<any[]>([]);
+  const [size, setSize] = useState<number>(8);
+  const [page, setPage] = useState<number>(1);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await getMajorNotice(size, page);
+        setNotices(data.content);
+      } catch (error) {
+        console.error("Failed to fetch notices", error);
+      }
+    };
+    fetchNotices();
+  }, []);
   return (
     <ContainerWrapper>
       <ContentContainer>
         <Header>학부공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
-              <NoticeCommonCard key={notice.id} notice={notice} />
+            {notices.map((notice) => (
+              <NoticeCommonCard key={notice.notice_id} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>

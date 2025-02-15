@@ -7,7 +7,7 @@ const NoticeCommonCard = ({
   notice,
 }: {
   notice: {
-    id: number;
+    notice_id: number;
     title: string;
     date: string;
     dDay: string;

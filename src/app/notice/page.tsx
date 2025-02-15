@@ -9,6 +9,7 @@ import { FaPenToSquare } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { getMajorNotice } from "@/apis/notice";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -51,6 +52,20 @@ const mockNotices = [
 ];
 
 export default function Notice() {
+  const [notices, setNotices] = useState<any[]>([]);
+  const [size, setSize] = useState<number>(3);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await getMajorNotice(size);
+        setNotices(data.content);
+      } catch (error) {
+        console.error("Failed to fetch notices", error);
+      }
+    };
+    fetchNotices();
+  }, []);
   useEffect(() => {
     const fetchMemberData = async () => {
       try {
@@ -129,15 +144,15 @@ export default function Notice() {
         <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
-              <NoticeCommonCard key={notice.id} notice={notice} />
+            {notices.map((notice, index) => (
+              <NoticeCommonCard key={index} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
         <Header onClick={handleEmploymentClick}>취업정보 공지 확인하기</Header>
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
+            {notices.map((notice) => (
               <NoticeCommonCard key={notice.id} notice={notice} />
             ))}
           </ScrollContainer>
