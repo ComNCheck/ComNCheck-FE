@@ -8,6 +8,9 @@ import FormWrapper from "@/components/container/FormWrapper";
 import Image from "next/image";
 import imageSrc from "../../../../../public/logo.png";
 import EventBtn from "../../Component/EventBtn";
+import { useEffect, useState } from "react";
+import { makeEventDetail } from "@/apis/notice.type";
+import { inquireEvent } from "@/apis/notice";
 
 const Header = styled.div`
   font-size: 1.2rem;
@@ -69,31 +72,77 @@ const EventText = styled.div`
 `;
 export default function EventDetail() {
   const router = useRouter();
+  const [event, setEvent] = useState<makeEventDetail>({
+    id: 1,
+    eventName: "",
+    date: "",
+    time: { hour: 0, minute: 0, second: 0, nano: 0 }, // 시간 타입에 맞춰 초기값 설정
+    location: "",
+    notice: "",
+    googleFormLink: "",
+  });
 
+  const [dday, setDday] = useState<number | string>("");
+
+  useEffect(() => {
+    if (event) {
+      // 현재 날짜와 이벤트 날짜 비교하여 DDay 계산
+      const today = new Date();
+      const eventDate = new Date(event.date); // 이벤트 날짜를 Date 객체로 변환
+      const timeDiff = eventDate.getTime() - today.getTime();
+      const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24)); // 밀리초를 일로 변환
+
+      if (daysRemaining < 0) {
+        // 이미 지난 이벤트일 경우 '종료'로 표시
+        setDday("종료");
+      } else {
+        // 아직 남은 경우 D-Day 표시
+        setDday(`D-${daysRemaining}`);
+      }
+    }
+
+    inquireEvent(event.id)
+      .then((data) => {
+        console.log("이벤트 데이터:", data);
+        setEvent(data);
+      })
+      .catch((error) => {
+        console.log("조회 실패: ", error);
+      });
+  }, [event?.id]);
   const handleWriteClick = () => {
     router.push("/notice/event/enroll");
   };
   const handleNextClick = () => {};
+
   return (
     <ContainerWrapper>
-      <Header>2025학년도 1학기 개강총회</Header>
+      <Header>{event.eventName}</Header>
       <EventWrapper>
         <div>
-          <SubHeader>📍일시 - 2025.09.10(화) </SubHeader>
-          <SubHeader>📍일시 - 2025.09.10(화) </SubHeader>
-          <SubHeader>📍일시 - 2025.09.10(화) </SubHeader>
+          <SubHeader>📍일시 - {event.date} </SubHeader>
+          <SubHeader>📍시간 - {`${event.time}`}</SubHeader>
+          <SubHeader>📍장소 - {event.location} </SubHeader>
         </div>
-        <DDayDiv>D-5</DDayDiv>
+        <DDayDiv>{dday}</DDayDiv>
       </EventWrapper>
       <WritingBtn onClick={handleWriteClick}>
         글쓰기
         <FaPenToSquare />
       </WritingBtn>
       <FormWrapper>
-        <ImageContainer>
-          <StyledImage src={imageSrc} alt="개강총회 이미지" />
-        </ImageContainer>
-        <EventText>
+        {event?.cardNewsImageUrls && event.cardNewsImageUrls.length > 0 && (
+          <ImageContainer>
+            <StyledImage
+              src={event.cardNewsImageUrls[0]} // 첫 번째 이미지 사용
+              alt="이벤트 이미지"
+              width={600}
+              height={400} // 이미지 크기 설정
+            />
+          </ImageContainer>
+        )}
+        <EventText>{event.notice}</EventText>
+        {/* <EventText>
           {`[한국외대 컴퓨터공학부 2학기 개강총회]
 
 벌써 개강이 다가와 캠퍼스가 북적북적해졌어요.
@@ -116,12 +165,9 @@ export default function EventDetail() {
 
 https://forms.gle/EcTcN3Gq9Pzzey9x6
 구글폼을 통해 신청해 주세요.`}
-        </EventText>
+        </EventText> */}
       </FormWrapper>
-      <EventBtn
-        onClick={handleNextClick}
-        // disabled={!isFormValid || !selectedFile || !isUploadSuccess}
-      />
+      <EventBtn onClick={handleNextClick} />
     </ContainerWrapper>
   );
 }
