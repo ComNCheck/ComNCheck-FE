@@ -3,18 +3,15 @@ import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { useRouter } from "next/navigation";
+import { majorEventList } from "@/apis/notice.type";
 
-const NoticeCard = ({
-  notice,
-}: {
-  notice: {
-    id: number;
-    title: string;
-    date: string;
+interface NoticeCardProps {
+  notice: majorEventList & {
     dDay: string;
-    googleFormLink: string;
+    googleFormLink?: string;
   };
-}) => {
+}
+const NoticeCard = ({ notice }: NoticeCardProps) => {
   const router = useRouter();
   const handleApplyClick = () => {
     if (notice.googleFormLink) {
@@ -31,7 +28,7 @@ const NoticeCard = ({
     <Card onClick={handleCardClick}>
       <CardContent>
         <Info>
-          <Title>{notice.title}</Title>
+          <Title>{notice.eventName}</Title>
           <Date>{notice.date}</Date>
         </Info>
         <DDay>{notice.dDay}</DDay>
