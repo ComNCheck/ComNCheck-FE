@@ -56,41 +56,25 @@ export default function Notice() {
   const [majorNotices, setmajorNotices] = useState<any[]>([]);
   const [employNotices, setemployNotices] = useState<any[]>([]);
   const size = 3;
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const [majorData, employData, eventData] = await Promise.all([
+          getMajorNotice(size),
+          getEmployNotice(size),
+          getMajorEvent(),
+        ]);
 
-  useEffect(() => {
-    const fetchNotices = async () => {
-      try {
-        const data = await getMajorNotice(size);
-        setmajorNotices(data.content);
+        setmajorNotices(majorData.content);
+        setemployNotices(employData.content);
+        setEventNotices([eventData]);
       } catch (error) {
-        console.error("Failed to fetch notices", error);
+        console.error("공지사항을 가져오는 데 실패했습니다.", error);
       }
     };
-    fetchNotices();
-  }, []);
 
-  useEffect(() => {
-    const fetchNotices = async () => {
-      try {
-        const data = await getEmployNotice(size);
-        setemployNotices(data.content);
-      } catch (error) {
-        console.error("Failed to fetch notices", error);
-      }
-    };
     fetchNotices();
-  }, []);
-  useEffect(() => {
-    const fetchNotices = async () => {
-      try {
-        const data = await getMajorEvent();
-        setEventNotices([data]);
-      } catch (error) {
-        console.log("과행사 공지 에러: ", error);
-      }
-    };
-    fetchNotices();
-  }, []);
+  }, [size]);
   useEffect(() => {
     const fetchMemberData = async () => {
       try {
