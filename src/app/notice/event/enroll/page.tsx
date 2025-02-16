@@ -117,8 +117,9 @@ export default function EventEnroll() {
           notice: values.notice,
           googleFormLink: values.googleFormLink,
         };
+        console.log("데이터 가져오기 전");
         const uploadSuccess = await writeEvent(data);
-
+        console.log("데이터 가져오기 성공 + ");
         if (uploadSuccess) {
           console.log("Event successfully uploaded:", data);
           // 업로드 성공 후, 이전 페이지로 이동하거나 다른 페이지로 리다이렉트
