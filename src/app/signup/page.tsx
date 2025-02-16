@@ -10,6 +10,7 @@ import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
 import Image from "next/image";
 import { MemberResponse } from "@/apis/member";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -95,11 +96,9 @@ const Loader = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.25rem;
-  color: ${theme.colors.primary};
 `;
 export default function Signup() {
   const [isActive, setIsActive] = useState(false);
@@ -192,7 +191,11 @@ export default function Signup() {
         onClick={handleFileUpload}
         disabled={!selectedFile || isLoading}
       />
-      {isLoading && <Loader>로딩 중...</Loader>}
+      {isLoading && (
+        <Loader>
+          <LoadingSpinner />
+        </Loader>
+      )}
       {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );
