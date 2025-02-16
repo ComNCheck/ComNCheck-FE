@@ -84,7 +84,8 @@ export default function Login() {
 
   const handleLogin = () => {
     console.log("Google 로그인 시도 중...");
-    window.location.href = "http://localhost:8080/oauth2/authorize/google";
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
+    window.location.href = `${baseURL}/oauth2/authorize/google`;
   };
 
   return (

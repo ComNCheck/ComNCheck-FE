@@ -39,12 +39,6 @@ export default function Notice() {
   );
   const size = 3;
 
-  const [isActive, setIsActive] = useState(false);
-
-  const handleToggle = () => {
-    setIsActive((prev) => !prev);
-  };
-
   useEffect(() => {
     const fetchNotices = async () => {
       try {

@@ -9,7 +9,6 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import EventBtn from "../../Component/EventBtn";
 import { useRouter } from "next/navigation";
 import { writeEvent } from "@/apis/notice";
-import { makeEvent } from "@/apis/notice.type";
 
 const Wrapper = styled.div`
   display: flex;
@@ -52,36 +51,53 @@ const Label = styled.label`
 `;
 
 interface FormValues {
-  name: string;
+  eventName: string;
   date: string;
   time: string;
   location: string;
   notice: string;
   googleFormLink: string;
+  cardNewsImages: string[]; // 이미지 URL 배열
+  parsedDate: string; // 날짜
+  parsedTime: {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  }; // 시간
 }
 
 export default function EventEnroll() {
   const router = useRouter();
   const [values, setValues] = useState<FormValues>({
-    name: "",
+    eventName: "",
     date: "",
     time: "",
     location: "",
     notice: "",
     googleFormLink: "",
+    cardNewsImages: [],
+    parsedDate: "",
+    parsedTime: {
+      hour: 0,
+      minute: 0,
+      second: 0,
+      nano: 0,
+    },
   });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileList | null>(null);
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     setIsFormValid(
-      values.name !== "" &&
+      values.eventName !== "" &&
         values.date !== "" &&
         values.time !== "" &&
         values.location !== "" &&
         values.notice !== "" &&
-        values.googleFormLink !== ""
+        values.googleFormLink !== "" &&
+        values.cardNewsImages.length > 0
     );
   }, [values]);
 
@@ -94,36 +110,55 @@ export default function EventEnroll() {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-      // 여기에 파일 업로드 로직을 추가
-      // 업로드 성공 시 setIsUploadSuccess(true);
-      setIsUploadSuccess(true); // 예시를 위해 항상 true로 설정
+    if (e.target.files) {
+      const files = e.target.files;
+      setSelectedFile(files);
+      setIsUploadSuccess(true); // 업로드 성공 처리
+      const fileUrls: string[] = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      ); // 파일을 URL로 변환
+      setValues((prevValues) => ({
+        ...prevValues,
+        cardNewsImages: fileUrls, // URL 배열로 업데이트
+      }));
     }
   };
 
   const handleNextClick = async () => {
     if (isFormValid && selectedFile && isUploadSuccess) {
-      console.log("Form submitted:", values);
-      console.log("File uploaded:", selectedFile);
-      // 여기에 다음 페이지로 이동하는 로직을 추가하기
-
       try {
-        const data: makeEvent = {
-          eventName: values.name,
-          date: values.date,
-          time: values.time,
-          location: values.location,
-          notice: values.notice,
-          googleFormLink: values.googleFormLink,
-        };
-        console.log("데이터 가져오기 전");
-        const uploadSuccess = await writeEvent(data);
-        console.log("데이터 가져오기 성공 + ");
+        const formData = new FormData();
+        console.log("폼 데이터:", { ...values });
+
+        // eventName만 사용
+        formData.append("eventName", values.eventName);
+
+        // 나머지 데이터도 포함
+        formData.append("date", values.date);
+        formData.append("time", values.time);
+        formData.append("location", values.location);
+        formData.append("notice", values.notice);
+        formData.append("googleFormLink", values.googleFormLink);
+
+        // 이미지 파일 추가 (파일을 formData에 추가)
+        if (selectedFile) {
+          Array.from(selectedFile).forEach((file) => {
+            formData.append("cardNewsImages", file); // 실제 파일을 cardNewsImages라는 이름으로 추가
+          });
+        }
+
+        // 날짜와 시간 데이터 추가
+        formData.append("parsedDate", values.parsedDate); // parsedDate 추가
+        formData.append(
+          "parsedTime",
+          JSON.stringify(values.parsedTime) // parsedTime 추가
+        );
+
+        const uploadSuccess = await writeEvent(formData); // FormData를 서버로 전송
+        console.log("서버 응답:", uploadSuccess);
+
         if (uploadSuccess) {
-          console.log("Event successfully uploaded:", data);
-          // 업로드 성공 후, 이전 페이지로 이동하거나 다른 페이지로 리다이렉트
-          router.back(); // 혹은 다른 페이지로 리디렉션할 경우 router.push('/next-page');
+          router.back();
         }
       } catch (error) {
         console.log("제출에러", error);
@@ -143,10 +178,10 @@ export default function EventEnroll() {
             <Label>📍행사명</Label>
             <Form
               placeholder="ex) 2025학년도 1학기 개강총회"
-              onChange={(e) => handleInput(e, "name")}
-              value={values.name}
+              onChange={(e) => handleInput(e, "eventName")}
+              value={values.eventName}
               hasPlaceholder={false}
-              isFilled={values.name.length > 0}
+              isFilled={values.eventName.length > 0}
             />
           </FormWrapper>
 
@@ -207,7 +242,12 @@ export default function EventEnroll() {
 
           <FormWrapper>
             <Label>🔗 카드뉴스 이미지파일 업로드</Label>
-            <input type="file" onChange={handleFileChange} accept="image/*" />
+            <input
+              type="file"
+              onChange={handleFileChange}
+              accept="image/* "
+              multiple
+            />
           </FormWrapper>
         </FormContainer>
         <EventBtn
