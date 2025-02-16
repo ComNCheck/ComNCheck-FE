@@ -1,7 +1,6 @@
 "use client";
 import { loginFirst } from "@/apis/member";
 import { theme } from "@/app/styles/theme";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
