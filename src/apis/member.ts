@@ -1,16 +1,22 @@
 import { memberType, PresidentCouncilResponse } from "./member.type";
 import instance from "./instance";
-
-//로그인
+import axios from "axios";
 
 // 회원가입 시 이미지 제출
 export const MemberResponse = async (
-  formData: memberType
+  formData: FormData
 ): Promise<memberType> => {
   try {
-    const response = await instance.post<memberType>(
-      `/api/v1/member/student/number`,
-      formData
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await axios.post<memberType>(
+      `${baseURL}/api/v1/member/student/number`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true, // 쿠키 허용
+      }
     );
     return response.data;
   } catch (error) {

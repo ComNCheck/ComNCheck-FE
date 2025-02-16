@@ -10,6 +10,7 @@ import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
 import axios from "axios";
 import Image from "next/image";
+import { MemberResponse } from "@/apis/member";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -134,18 +135,8 @@ export default function Signup() {
     formData.append("studentCardImage", selectedFile);
 
     try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/member/student/number`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true, //쿠키 허용
-        }
-      );
-
-      console.log("서버 응답:", response.data);
+      const response = await MemberResponse(formData);
+      console.log("서버 응답:", response);
       //setIsUploadSuccess(true);
       router.push("/signup/complete");
     } catch (error) {
