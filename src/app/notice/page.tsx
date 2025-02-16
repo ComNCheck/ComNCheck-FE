@@ -30,7 +30,7 @@ interface UserInfo {
 }
 
 export default function Notice() {
-  const [eventNotices, setEventNotices] = useState<majorEventList[]>([]);
+  const [eventNotices, setEventNotices] = useState<majorEventList | null>(null);
   const [majorNotices, setmajorNotices] = useState<majorNoticeList | null>(
     null
   );
@@ -54,9 +54,11 @@ export default function Notice() {
           getMajorEvent(),
         ]);
 
+        console.log("과행사 공지 Data:", eventData);
+
         setmajorNotices(majorData);
         setemployNotices(employData);
-        setEventNotices([eventData]);
+        setEventNotices(eventData);
       } catch (error) {
         console.error("공지사항을 가져오는 데 실패했습니다.", error);
       }
@@ -134,6 +136,7 @@ export default function Notice() {
           <Header>
             <p onClick={handleEventClick}>과행사 공지 확인하기</p>
             <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
+
             {(role === "ROLE_ADMIN" ||
               role === "ROLE_MAJOR_PRESIDENT" ||
               role === "ROLE_STUDENT_COUNCIL") && (
@@ -147,18 +150,14 @@ export default function Notice() {
 
         <ContentNoticeBox>
           <ScrollContainer>
-            {eventNotices.map((notice, index) => {
-              const dDay = calculateDDay(notice.date);
-              return (
-                <NoticeCard
-                  key={index}
-                  notice={{
-                    ...notice,
-                    dDay,
-                  }}
-                />
-              );
-            })}
+            {eventNotices && (
+              <NoticeCard
+                notice={{
+                  ...eventNotices,
+                  dDay: calculateDDay(eventNotices.date),
+                }}
+              />
+            )}
           </ScrollContainer>
         </ContentNoticeBox>
         <HeaderContainer>
@@ -193,17 +192,18 @@ const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-between;
   gap: 0.5rem;
   padding-top: 0.5rem;
+  width: 100%;
 `;
 const Header = styled.div`
   font-size: 1.2rem;
   font-weight: 700;
   //padding-top: 0.5rem;
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: space-start;
+  // width: 100%;
 `;
 const WritingBtn = styled.div`
   gap: 0.5rem;
@@ -212,6 +212,8 @@ const WritingBtn = styled.div`
   justify-content: center;
   font-size: 1rem;
   font-weight: 600;
+  background-color: gray;
+  margin-left: 5rem;
 `;
 
 const ContentContainer = styled.div`
