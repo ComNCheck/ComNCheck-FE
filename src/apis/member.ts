@@ -1,6 +1,8 @@
 import { memberType, PresidentCouncilResponse } from "./member.type";
 import instance from "./instance";
 
+//로그인
+
 // 회원가입 시 이미지 제출
 export const MemberResponse = async (
   formData: memberType
