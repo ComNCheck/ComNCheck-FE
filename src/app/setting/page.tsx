@@ -5,6 +5,7 @@ import { theme } from "../styles/theme";
 import { IoChevronForward } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import SettingHeader from "@/components/Header/settingHeader";
+import { postLogout } from "@/apis/member";
 
 const Wrapper = styled.div`
   display: flex;
@@ -44,6 +45,10 @@ export default function Setting() {
   const handleClick = (url: string) => {
     router.push(url);
   };
+  const logoutClick = async () => {
+    await postLogout();
+    router.push("/login");
+  };
   return (
     <Wrapper>
       <SettingHeader />
@@ -77,7 +82,7 @@ export default function Setting() {
         </Content>
 
         <Content>
-          <Items>로그아웃</Items>
+          <Items onClick={logoutClick}>로그아웃</Items>
           <Icon>
             <IoChevronForward />
           </Icon>
