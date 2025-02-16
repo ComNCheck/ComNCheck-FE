@@ -66,9 +66,9 @@ export default function FirstLogin() {
           "로컬스토리지 memberData:",
           localStorage.getItem("memberData")
         );
-        const response = await loginFirst();
-        console.log("서버에서 받은 memberData:", response); //
-        const memberData = response;
+
+        const memberData = await loginFirst();
+        console.log("서버에서 받은 memberData:", memberData); //
         localStorage.setItem("memberData", JSON.stringify(memberData));
 
         // 상태 업데이트
