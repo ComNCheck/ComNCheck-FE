@@ -8,7 +8,6 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
-import axios from "axios";
 import Image from "next/image";
 import { MemberResponse } from "@/apis/member";
 

@@ -37,14 +37,20 @@ export interface Content {
 }
 
 export interface makeEvent {
-  //id?: number;
   eventName: string;
   date: string;
   time: string;
   location: string;
   notice: string;
   googleFormLink: string;
-  cardNewsImageUrls?: string[];
+  cardNewsImages: string[]; // 이미지 URL 배열
+  parsedDate?: string; // 날짜 형식
+  parsedTime?: {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  }; // 시간 정보
 }
 
 export interface makeEventDetail {

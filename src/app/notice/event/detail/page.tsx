@@ -6,7 +6,7 @@ import { FaPenToSquare } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import FormWrapper from "@/components/container/FormWrapper";
 import Image from "next/image";
-import imageSrc from "../../../../../public/logo.png";
+//import imageSrc from "../../../../../public/logo.png";
 import EventBtn from "../../Component/EventBtn";
 import { useEffect, useState } from "react";
 import { makeEventDetail } from "@/apis/notice.type";
