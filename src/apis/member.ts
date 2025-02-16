@@ -35,3 +35,12 @@ export const getPresidentList = async (): Promise<PresidentCouncilResponse> => {
     throw error;
   }
 };
+
+// 로그아웃 api
+export const postLogout = async (): Promise<void> => {
+  try {
+    await instance.post("/api/v1/member/logout");
+  } catch (error) {
+    throw error;
+  }
+};

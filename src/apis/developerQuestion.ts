@@ -9,10 +9,7 @@ export const postQuestion = async (
   data: DevQuestionRequest
 ): Promise<{ id: number; content: string }> => {
   try {
-    const response = await instance.post(
-      "/api/v1/developer/questions/my",
-      data
-    );
+    const response = await instance.post("/api/v1/developer/questions", data);
     return response.data;
   } catch (error) {
     throw error;
@@ -23,7 +20,7 @@ export const postQuestion = async (
 export const getAllQuestion = async (): Promise<AllQuestionResponse[]> => {
   try {
     const response = await instance.get<AllQuestionResponse[]>(
-      "/api/v1/developer/questions"
+      "/api/v1/developer/questions/my"
     );
     return response.data;
   } catch (error) {
