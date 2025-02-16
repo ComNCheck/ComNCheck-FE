@@ -156,6 +156,7 @@ export default function EventEnroll() {
 
         const uploadSuccess = await writeEvent(formData); // FormData를 서버로 전송
         console.log("서버 응답:", uploadSuccess);
+
         if (uploadSuccess) {
           router.back();
         }

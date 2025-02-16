@@ -3,6 +3,7 @@ export interface majorEventList {
   eventName: string;
   date: string;
   time: Time;
+  googleFormLink: string;
 }
 export interface Time {
   hour: number;

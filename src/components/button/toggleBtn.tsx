@@ -6,37 +6,13 @@ import {
 import { theme } from "@/app/styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
 
-const SwitchContainer = styled.div`
+const ToggleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 1.5rem;
-`;
-
-const SwitchButton = styled.button<{ active: boolean }>`
-  position: relative;
-  width: 3rem;
-  height: 1.5rem;
-  border-radius: 1.5rem;
-  background-color: ${({ active }) =>
-    active ? theme.colors.primary : theme.colors.mutedText};
-  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0.125rem;
-    left: ${({ active }) => (active ? "calc(100% - 1.375rem)" : "0.125rem")};
-    width: 1.25rem;
-    height: 1.25rem;
-    background-color: white;
-    border-radius: 50%;
-    transition: left 0.3s ease;
-  }
 `;
 
 interface ToggleBtnProps {
@@ -86,9 +62,13 @@ const ToggleBtn: React.FC<ToggleBtnProps> = ({ keyName, initialState }) => {
   };
 
   return (
-    <SwitchContainer>
-      <SwitchButton onClick={handleToggle} active={isActive}></SwitchButton>
-    </SwitchContainer>
+    <ToggleContainer onClick={handleToggle}>
+      {isActive ? (
+        <BiSolidToggleRight size={30} color={theme.colors.primary} />
+      ) : (
+        <BiToggleLeft size={30} color={theme.colors.mutedText} />
+      )}
+    </ToggleContainer>
   );
 };
 export default ToggleBtn;

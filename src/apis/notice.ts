@@ -11,11 +11,14 @@ export const getMajorEvent = async (): Promise<majorEventList> => {
   //과행사 게시글 목록 조회 api
   try {
     const response = await instance.get<majorEventList>(`/api/v1/major-event`);
+    console.log("과행사 게시글 목록 조회 api 요청 성공" + response.data);
     return response.data;
   } catch (error) {
+    console.error("과행사 게시글 목록 조회 api 요청 실패:", error);
     throw error;
   }
 };
+
 export const getMajorNotice = async (
   size: number,
   page?: number
