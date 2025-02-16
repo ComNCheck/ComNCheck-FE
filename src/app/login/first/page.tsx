@@ -1,6 +1,7 @@
 "use client";
-import { loginFirst } from "@/apis/member";
+//import { loginFirst } from "@/apis/member";
 import { theme } from "@/app/styles/theme";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -66,9 +67,12 @@ export default function FirstLogin() {
           "로컬스토리지 memberData:",
           localStorage.getItem("memberData")
         );
-
-        const memberData = await loginFirst();
-        console.log("서버에서 받은 memberData:", memberData); //
+        const baseURL = process.env.NEXT_PUBLIC_API_URL;
+        const response = await axios.get(`${baseURL}/api/v1/member`, {
+          withCredentials: true, // 요청 시 쿠키 포함
+        });
+        console.log("서버에서 받은 memberData:", response.data); //
+        const memberData = response.data;
         localStorage.setItem("memberData", JSON.stringify(memberData));
 
         // 상태 업데이트
