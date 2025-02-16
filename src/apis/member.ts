@@ -8,9 +8,11 @@ export const loginFirst = async (): Promise<memberType> => {
     const response = await instance.get("/api/v1/member");
     return response.data;
   } catch (error) {
+    console.error("회원정보 불러오기 실패: ", error);
     throw error;
   }
 };
+
 // 회원가입 시 이미지 제출
 export const MemberResponse = async (
   formData: FormData
