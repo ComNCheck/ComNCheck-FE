@@ -2,6 +2,15 @@ import { memberType, PresidentCouncilResponse } from "./member.type";
 import instance from "./instance";
 import axios from "axios";
 
+//첫 로그인 시
+export const loginFirst = async (): Promise<memberType> => {
+  try {
+    const response = await instance.get("/api/v1/member");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 // 회원가입 시 이미지 제출
 export const MemberResponse = async (
   formData: FormData
