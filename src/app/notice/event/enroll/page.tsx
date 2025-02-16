@@ -212,6 +212,7 @@ export default function EventEnroll() {
         <EventBtn
           onClick={handleNextClick}
           disabled={!isFormValid || !selectedFile || !isUploadSuccess}
+          text="행사 신청 완료하기"
         />
       </ContainerWrapper>
     </Wrapper>
