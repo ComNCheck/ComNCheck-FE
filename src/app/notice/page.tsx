@@ -119,7 +119,9 @@ export default function Notice() {
   return (
     <ContainerWrapper>
       <SlideHeader />
+
       <ContentContainer>
+        {/* <ScrollContainer> */}
         <HeaderContainer>
           <Header>
             <p onClick={handleEventClick}>과행사 공지 확인하기</p>
@@ -173,6 +175,7 @@ export default function Notice() {
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
+        {/* </ScrollContainer> */}
       </ContentContainer>
     </ContainerWrapper>
   );
@@ -213,7 +216,8 @@ const WritingBtn = styled.div`
 const ContentContainer = styled.div`
   width: 100%;
   max-width: 27rem;
-  overflow-y: scroll;
+  height: calc(100vh - 60px);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -228,11 +232,13 @@ const ContentContainer = styled.div`
 `;
 const ContentNoticeBox = styled.div`
   width: 100%;
-  height: 10rem;
+  min-height: 10rem;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0px 10px ${theme.colors.mutedText};
   overflow: hidden;
+
+  flex-shrink: 0;
 `;
 const ScrollContainer = styled.div`
   width: 100%;
