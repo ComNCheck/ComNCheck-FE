@@ -136,15 +136,16 @@ export default function Notice() {
           <Header>
             <p onClick={handleEventClick}>과행사 공지 확인하기</p>
             <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
-
-            {(role === "ROLE_ADMIN" ||
-              role === "ROLE_MAJOR_PRESIDENT" ||
-              role === "ROLE_STUDENT_COUNCIL") && (
-              <WritingBtn onClick={handleWriteClick}>
-                글쓰기
-                <FaPenToSquare />
-              </WritingBtn>
-            )}
+            <WritingBtnWrapper>
+              {(role === "ROLE_ADMIN" ||
+                role === "ROLE_MAJOR_PRESIDENT" ||
+                role === "ROLE_STUDENT_COUNCIL") && (
+                <WritingBtn onClick={handleWriteClick}>
+                  글쓰기
+                  <FaPenToSquare />
+                </WritingBtn>
+              )}
+            </WritingBtnWrapper>
           </Header>
         </HeaderContainer>
 
@@ -192,7 +193,7 @@ const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-between;
+  justify-content: space-between;
   gap: 0.5rem;
   padding-top: 0.5rem;
   width: 100%;
@@ -203,7 +204,12 @@ const Header = styled.div`
   //padding-top: 0.5rem;
   display: flex;
   justify-content: space-start;
-  // width: 100%;
+  width: 100%;
+`;
+const WritingBtnWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 20vh;
 `;
 const WritingBtn = styled.div`
   gap: 0.5rem;
@@ -212,8 +218,8 @@ const WritingBtn = styled.div`
   justify-content: center;
   font-size: 1rem;
   font-weight: 600;
-  background-color: gray;
-  margin-left: 5rem;
+  // background-color: gray;
+  cursor: pointer;
 `;
 
 const ContentContainer = styled.div`
