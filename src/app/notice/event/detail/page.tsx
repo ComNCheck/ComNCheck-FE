@@ -155,7 +155,7 @@ export default function EventDetail() {
               : "hidden",
         }}
       >
-        글쓰기
+        수정하기
         <FaPenToSquare />
       </WritingBtn>
       <FormWrapper>
