@@ -5,6 +5,7 @@ import {
   makeEvent,
   makeEventDetail,
 } from "./notice.type";
+import axios from "axios";
 
 export const getMajorEvent = async (): Promise<majorEventList> => {
   //과행사 게시글 목록 조회 api
@@ -60,12 +61,19 @@ export const getEmployNotice = async (
   }
 };
 
-export const writeEvent = async (data: makeEvent): Promise<makeEvent> => {
+export const writeEvent = async (data: FormData): Promise<makeEvent> => {
   //과 행사 게시글 작성
   try {
-    const response = await instance.post<makeEvent>(
-      `/api/v1/major-event`,
-      data
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await axios.post<makeEvent>(
+      `${baseURL}/api/v1/major-event`,
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // FormData에 맞는 Content-Type 설정
+        },
+        withCredentials: true, // 쿠키 허용
+      }
     );
     return response.data;
   } catch (error) {

@@ -29,7 +29,7 @@ export default function SettingHeader() {
     if (pathname.includes("/setting/curriculum")) {
       router.push("/setting");
     } else if (pathname === "/setting") {
-      router.push("/");
+      router.push("/my");
     } else {
       router.back();
     }

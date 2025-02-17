@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import SeminarAlert from "../../components/modal/seminarAlert";
 import { IoSettings } from "react-icons/io5";
 import { FaSignOutAlt } from "react-icons/fa";
+import { postLogout } from "@/apis/member";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -65,6 +66,11 @@ export default function My() {
     }
   }, []);
 
+  const logoutClick = async () => {
+    //로그아웃 버튼클릭시시
+    await postLogout();
+    router.push("/login");
+  };
   const buttonConfig: ButtonConfig[] = [
     {
       role: ["ROLE_ADMIN", "ROLE_STUDENT", "ROLE_GRADUATE_STUDENT"],
@@ -194,7 +200,7 @@ export default function My() {
           <IconButton onClick={() => router.push("/setting")}>
             <IoSettings />
           </IconButton>
-          <IconButton onClick={() => console.log("Logout clicked")}>
+          <IconButton onClick={logoutClick}>
             <FaSignOutAlt />
           </IconButton>
         </IconContainer>

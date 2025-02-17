@@ -21,10 +21,12 @@ const Button = styled.button`
 interface EventBtnProps {
   onClick: () => void;
   disabled?: boolean;
+  text: string;
 }
-const EventBtn: React.FC<EventBtnProps> = ({ onClick, disabled }) => (
+const EventBtn: React.FC<EventBtnProps> = ({ onClick, disabled, text }) => (
   <Button onClick={onClick} disabled={disabled}>
-    행사 신청 완료하기 <BsFillArrowRightCircleFill />
+    {text}
+    <BsFillArrowRightCircleFill />
   </Button>
 );
 export default EventBtn;
