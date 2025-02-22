@@ -7,6 +7,7 @@ import NoticeCard from "../Component/NoticeCard";
 import { useEffect, useState } from "react";
 import { getMajorEvent } from "@/apis/notice";
 import { majorEventList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
 
 const ScrollContainer = styled.div`
   width: 100%;
@@ -52,15 +53,6 @@ const Header = styled.div`
   width: 100%;
 `;
 
-// interface FormValues {
-//   name: string;
-//   date: string;
-//   time: string;
-//   location: string;
-//   writing: string;
-//   googleFormLink: string;
-// }
-
 export default function Event() {
   const [notices, setNotices] = useState<majorEventList[]>([]);
 
@@ -88,6 +80,7 @@ export default function Event() {
     <ContainerWrapper>
       <ContentContainer>
         <Header>과행사 공지 확인하기</Header>
+        <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
         <ContentNoticeBox>
           <ScrollContainer>
             {notices.map((notice, index) => {

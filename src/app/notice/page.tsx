@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getEmployNotice, getMajorEvent, getMajorNotice } from "@/apis/notice";
 import { majorEventList, majorNoticeList } from "@/apis/notice.type";
-import ToggleBtn from "@/components/button/toggleBtn";
 import axios from "axios";
+import { IoChevronForwardCircle, IoDuplicate } from "react-icons/io5";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -69,7 +69,7 @@ export default function Notice() {
         );
         const baseURL = process.env.NEXT_PUBLIC_API_URL;
         const response = await axios.get(`${baseURL}/api/v1/member`, {
-          withCredentials: true, // 요청 시 쿠키 포함
+          withCredentials: true,
         });
         console.log("서버에서 받은 memberData:", response.data); //
         const memberData = response.data;
@@ -124,11 +124,13 @@ export default function Notice() {
       <SlideHeader />
 
       <ContentContainer>
-        {/* <ScrollContainer> */}
         <HeaderContainer>
           <Header>
-            <p onClick={handleEventClick}>과행사 공지 확인하기</p>
-            <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
+            <p onClick={handleEventClick}>
+              과행사 공지 확인하기
+              <IoDuplicate />
+            </p>
+
             <WritingBtnWrapper>
               {(role === "ROLE_ADMIN" ||
                 role === "ROLE_MAJOR_PRESIDENT" ||
@@ -144,19 +146,23 @@ export default function Notice() {
 
         <ContentNoticeBox>
           <ScrollContainer>
-            {eventNotices && (
-              <NoticeCard
-                notice={{
-                  ...eventNotices,
-                  dDay: calculateDDay(eventNotices.date),
-                }}
-              />
-            )}
+            {eventNotices &&
+              eventNotices.map((notice, index) => (
+                <NoticeCard
+                  key={index}
+                  notice={{
+                    ...notice,
+                    dDay: calculateDDay(notice.date),
+                  }}
+                />
+              ))}
           </ScrollContainer>
         </ContentNoticeBox>
         <HeaderContainer>
-          <Header onClick={handleCollegeClick}>학부 공지 확인하기</Header>
-          <ToggleBtn keyName="alarmMajorNotice" initialState={false} />
+          <Header onClick={handleCollegeClick}>
+            학부 공지 확인하기
+            <IoChevronForwardCircle />
+          </Header>
         </HeaderContainer>
         <ContentNoticeBox>
           <ScrollContainer>
@@ -168,8 +174,8 @@ export default function Notice() {
         <HeaderContainer>
           <Header onClick={handleEmploymentClick}>
             취업정보 공지 확인하기
+            <IoChevronForwardCircle />
           </Header>
-          <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} />
         </HeaderContainer>
         <ContentNoticeBox>
           <ScrollContainer>
@@ -178,7 +184,6 @@ export default function Notice() {
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
-        {/* </ScrollContainer> */}
       </ContentContainer>
     </ContainerWrapper>
   );
@@ -198,7 +203,15 @@ const Header = styled.div`
   //padding-top: 0.5rem;
   display: flex;
   justify-content: space-start;
+  align-items: center;
   width: 100%;
+  p {
+    width: 16rem;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    gap: 1rem;
+  }
 `;
 const WritingBtnWrapper = styled.div`
   display: flex;

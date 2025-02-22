@@ -1,10 +1,14 @@
-export interface majorEventList {
+export interface majorEventItem {
   //과행사 공지사항 목록 api
   eventName: string;
   date: string;
   time: Time;
   googleFormLink: string;
+  firstImageUrl: string;
 }
+
+export type majorEventList = majorEventItem[];
+
 export interface Time {
   hour: number;
   minute: number;

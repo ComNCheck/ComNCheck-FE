@@ -3,12 +3,11 @@ import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { useRouter } from "next/navigation";
-import { majorEventList } from "@/apis/notice.type";
+import { majorEventItem } from "@/apis/notice.type";
 
 interface NoticeCardProps {
-  notice: majorEventList & {
+  notice: majorEventItem & {
     dDay: string;
-    googleFormLink?: string;
   };
 }
 const NoticeCard = ({ notice }: NoticeCardProps) => {

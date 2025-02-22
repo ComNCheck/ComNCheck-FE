@@ -8,6 +8,7 @@ import NoticeCommonCard from "../Component/NoticeCommonCard";
 import { useEffect, useState } from "react";
 import { getMajorNotice } from "@/apis/notice";
 import { majorNoticeList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
 
 const ScrollContainer = styled.div`
   width: 100%;
@@ -82,6 +83,7 @@ export default function College() {
     <ContainerWrapper>
       <ContentContainer>
         <Header>학부공지 확인하기</Header>
+        <ToggleBtn keyName="alarmMajorNotice" initialState={false} />
         <ContentNoticeBox>
           <ScrollContainer>
             {notices?.content?.map((notice) => (

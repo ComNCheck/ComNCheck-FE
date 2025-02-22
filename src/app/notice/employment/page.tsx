@@ -7,6 +7,7 @@ import NoticeCommonCard from "../Component/NoticeCommonCard";
 import { useEffect, useState } from "react";
 import { getEmployNotice } from "@/apis/notice";
 import { majorNoticeList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
 
 const ScrollContainer = styled.div`
   width: 100%;
@@ -72,6 +73,7 @@ export default function Employment() {
     <ContainerWrapper>
       <ContentContainer>
         <Header>취업공지 확인하기</Header>
+        <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} />
         <ContentNoticeBox>
           <ScrollContainer>
             {notices?.content?.map((notice) => (
