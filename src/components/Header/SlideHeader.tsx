@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef, TouchEvent } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { theme } from "@/app/styles/theme";
 import bannerBackground from "../../../public/bannerBackground.png";
 import { majorEventList } from "@/apis/notice.type";
 import { getMajorEvent } from "@/apis/notice";
-import Image from "next/image";
 
 export default function SlideHeader() {
   const [eventNotices, setEventNotices] = useState<majorEventList | null>(null);
@@ -180,21 +179,6 @@ const Indicator = styled.div<{ active: boolean }>`
   transition: background-color 0.3s ease;
 `;
 
-const Header = styled.div`
-  position: relative;
-  width: 23rem;
-  height: 10rem;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-radius: 1rem;
-  color: white;
-  background: url(${bannerBackground.src}) #0077ff 10%;
-  background-color: ${theme.colors.primary};
-  overflow: hidden;
-`;
-
 const Overlay = styled.div`
   position: absolute;
   top: 0;
@@ -226,14 +210,6 @@ const Date = styled.p`
   font-size: 1rem;
 `;
 
-const Location = styled.p`
-  color: ${theme.colors.contrast};
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-`;
-
 const ApplyButton = styled.button`
   display: inline-flex;
   width: 87px;
@@ -256,9 +232,4 @@ const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding-right: 1rem;
-`;
-
-const StyledImage = styled(Image)`
-  border-radius: 0.5rem;
-  object-fit: cover;
 `;
