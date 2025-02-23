@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getEmployNotice, getMajorEvent, getMajorNotice } from "@/apis/notice";
 import { majorEventList, majorNoticeList } from "@/apis/notice.type";
 import axios from "axios";
-import { IoChevronForwardCircle, IoDuplicate } from "react-icons/io5";
+import { IoChevronForwardCircle, IoChevronForwardCircleOutline, IoDuplicate } from "react-icons/io5";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -161,7 +161,7 @@ export default function Notice() {
         <HeaderContainer>
           <Header onClick={handleCollegeClick}>
             학부 공지 확인하기
-            <IoChevronForwardCircle />
+            <IoChevronForwardCircleOutline />
           </Header>
         </HeaderContainer>
         <ContentNoticeBox>
@@ -174,7 +174,7 @@ export default function Notice() {
         <HeaderContainer>
           <Header onClick={handleEmploymentClick}>
             취업정보 공지 확인하기
-            <IoChevronForwardCircle />
+            <IoChevronForwardCircleOutline />
           </Header>
         </HeaderContainer>
         <ContentNoticeBox>
