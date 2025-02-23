@@ -54,13 +54,13 @@ const Header = styled.div`
 `;
 
 export default function Event() {
-  const [notices, setNotices] = useState<majorEventList[]>([]);
+  const [notices, setNotices] = useState<majorEventList>([]);
 
   useEffect(() => {
     const fetchNotices = async () => {
       try {
         const data = await getMajorEvent();
-        setNotices([data]);
+        setNotices(data);
       } catch (error) {
         console.log("과행사 공지 에러: ", error);
       }
