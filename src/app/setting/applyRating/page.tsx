@@ -143,6 +143,33 @@ export default function ApplyRating() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const mapRoleToDisplay = (role: string) => {
+    switch (role) {
+      case "ROLE_STUDENT":
+        return "학생";
+      case "ROLE_MAJOR_PRESIDENT":
+        return "학생회";
+      case "ROLE_GRADUATE_STUDENT":
+        return "과회장";
+      default:
+        return "학생"; // 기본값
+    }
+  };
+
+  useEffect(() => {
+    // 로컬스토리지에서 memberData 가져오기
+    const memberData = JSON.parse(localStorage.getItem("memberData") || "{}");
+    if (memberData) {
+      setValues({
+        name: memberData.name || "",
+        id: memberData.studentNumber || "",
+        unit: memberData.major || "",
+        position: memberData.position || "",
+        role: memberData.role || "ROLE_STUDENT", // 기본값 설정
+      });
+      setSelectedRole(mapRoleToDisplay(memberData.role || "ROLE_STUDENT"));
+    }
+  }, []);
   const handleRoleChange = (role: string) => {
     let roleMapping: string;
 
@@ -152,10 +179,10 @@ export default function ApplyRating() {
         roleMapping = "ROLE_STUDENT";
         break;
       case "학생회":
-        roleMapping = "ROLE_MAJOR_PRESIDENT"; // 예시, 실제 서버에서 원하는 값으로 수정
+        roleMapping = "ROLE_MAJOR_PRESIDENT"; 
         break;
       case "과회장":
-        roleMapping = "ROLE_GRADUATE_STUDENT"; // 예시, 실제 서버에서 원하는 값으로 수정
+        roleMapping = "ROLE_GRADUATE_STUDENT"; 
         break;
       default:
         roleMapping = "ROLE_STUDENT"; // 기본값 설정
