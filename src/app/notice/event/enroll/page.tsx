@@ -9,6 +9,7 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import EventBtn from "../../Component/EventBtn";
 import { useRouter } from "next/navigation";
 import { writeEvent } from "@/apis/notice";
+import InputForm from "@/components/notice/inputForm";
 
 const Wrapper = styled.div`
   display: flex;
@@ -108,7 +109,13 @@ export default function EventEnroll() {
     const textarea = e.target;
     setValues({ ...values, [field]: textarea.value });
   };
-
+  const handleDateInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    const input = e.target;
+    setValues({ ...values, [field]: input.value });
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = e.target.files;
@@ -185,11 +192,22 @@ export default function EventEnroll() {
             />
           </FormWrapper>
 
-          <FormWrapper>
+          {/* <FormWrapper>
             <Label>📍일시</Label>
             <Form
               placeholder="행사가 진행될 날짜를 입력해주세요"
               onChange={(e) => handleInput(e, "date")}
+              value={values.date}
+              hasPlaceholder={false}
+              isFilled={values.date.length > 0}
+            />
+          </FormWrapper> */}
+          <FormWrapper>
+            <Label>📍일시</Label>
+            <InputForm
+            type="date"
+              placeholder="행사가 진행될 날짜를 입력해주세요"
+              onChange={(e) => handleDateInput(e, "date")}
               value={values.date}
               hasPlaceholder={false}
               isFilled={values.date.length > 0}
@@ -199,14 +217,24 @@ export default function EventEnroll() {
           <FormWrapper>
             <Label>📍시간</Label>
             <Form
-              placeholder={`행사가 진행될 시간을 입력해주세요`}
+              placeholder={`행사가 진행될 시간을 입력해주세요(ex)18:00`}
               onChange={(e) => handleInput(e, "time")}
               value={values.time}
               hasPlaceholder={true}
               isFilled={values.time.length > 0}
             />
           </FormWrapper>
-
+          {/* <FormWrapper>
+            <Label>📍시간</Label>
+            <InputForm
+              type="time"
+              placeholder="행사가 진행될 시간을 입력해주세요"
+              onChange={(e) => handleDateInput(e, "time")}
+              value={values.time}
+              hasPlaceholder={false}
+              isFilled={values.time.length > 0}
+            />
+          </FormWrapper> */}
           <FormWrapper>
             <Label>📍장소</Label>
             <Form
