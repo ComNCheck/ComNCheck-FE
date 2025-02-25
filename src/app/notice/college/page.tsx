@@ -82,8 +82,8 @@ export default function College() {
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>학부공지 확인하기</Header>
-        <ToggleBtn keyName="alarmMajorNotice" initialState={false} />
+        <Header>학부공지 확인하기  <ToggleBtn keyName="alarmMajorNotice" initialState={false} /></Header>
+       
         <ContentNoticeBox>
           <ScrollContainer>
             {notices?.content?.map((notice) => (

@@ -72,8 +72,8 @@ export default function Employment() {
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>취업공지 확인하기</Header>
-        <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} />
+        <Header>취업공지 확인하기  <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} /></Header>
+       
         <ContentNoticeBox>
           <ScrollContainer>
             {notices?.content?.map((notice) => (

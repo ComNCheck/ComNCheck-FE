@@ -1,8 +1,8 @@
-import axios from "axios";
+import instance from "./instance";
 
 export const eventAlarmToggle = async (keyName: string, status: boolean) => {
   try {
-    const response = await axios.post(`/api/v1/member/alarm/major/events`, {
+    const response = await instance.post(`/api/v1/member/alarm/major/events`, {
       keyName,
       status,
     });
@@ -14,7 +14,7 @@ export const eventAlarmToggle = async (keyName: string, status: boolean) => {
 
 export const majorAlarmToggle = async (keyName: string, status: boolean) => {
   try {
-    const response = await axios.post(`/api/v1/member/alarm/major/notices`, {
+    const response = await instance.post(`/api/v1/member/alarm/major/notices`, {
       keyName,
       status,
     });
@@ -26,7 +26,7 @@ export const majorAlarmToggle = async (keyName: string, status: boolean) => {
 
 export const employAlarmToggle = async (keyName: string, status: boolean) => {
   try {
-    const response = await axios.post(
+    const response = await instance.post(
       `/api/v1/member/alarm/employment/notices`,
       {
         keyName,
