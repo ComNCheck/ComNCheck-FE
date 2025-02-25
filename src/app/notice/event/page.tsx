@@ -79,8 +79,8 @@ export default function Event() {
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>과행사 공지 확인하기</Header>
-        <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
+        <Header>과행사 공지 확인하기  <ToggleBtn keyName="alarmMajorEvent" initialState={false} /></Header>
+       
         <ContentNoticeBox>
           <ScrollContainer>
             {notices.map((notice, index) => {

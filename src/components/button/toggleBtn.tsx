@@ -64,9 +64,9 @@ const ToggleBtn: React.FC<ToggleBtnProps> = ({ keyName, initialState }) => {
   return (
     <ToggleContainer onClick={handleToggle}>
       {isActive ? (
-        <BiSolidToggleRight size={30} color={theme.colors.primary} />
+        <BiSolidToggleRight size={40} color={theme.colors.primary} />
       ) : (
-        <BiToggleLeft size={30} color={theme.colors.mutedText} />
+        <BiToggleLeft size={40} color={theme.colors.mutedText} />
       )}
     </ToggleContainer>
   );
