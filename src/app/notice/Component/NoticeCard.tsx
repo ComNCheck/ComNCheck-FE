@@ -30,8 +30,11 @@ const NoticeCard = ({ notice }: NoticeCardProps) => {
           <Title>{notice.eventName}</Title>
           <Date>{notice.date}</Date>
         </Info>
-        <DDay>{notice.dDay}</DDay>
+        <SmallContainer>
+          <DDay>{notice.dDay}</DDay>
         <ApplyButton onClick={handleApplyClick}>구글폼 신청</ApplyButton>
+        </SmallContainer>
+        
       </CardContent>
     </Card>
   );
@@ -91,4 +94,10 @@ const ApplyButton = styled.button`
   }
 `;
 
+const SmallContainer = styled.div`
+  display:flex;
+  flex-direction: table-row;
+  align-items: center;
+  gap: 1rem;
+`
 export default NoticeCard;
