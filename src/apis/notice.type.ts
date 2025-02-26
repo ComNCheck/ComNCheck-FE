@@ -1,5 +1,6 @@
 export interface majorEventItem {
   //과행사 공지사항 목록 api
+  id:number;//추가될 예정
   eventName: string;
   date: string;
   time: Time;
