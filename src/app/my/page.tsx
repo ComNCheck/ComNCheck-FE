@@ -59,7 +59,17 @@ export default function My() {
         const parsedData: UserInfo = JSON.parse(memberData);
         setRole(parsedData.role as UserRole);
         setName(parsedData.name);
-        setId(parsedData.studentNumber.toString());
+
+        // 학번이 있고 123456789가 아닌 경우에만 정상 표시
+        if (
+          parsedData.studentNumber &&
+          parsedData.studentNumber !== 123456789
+        ) {
+          setId(parsedData.studentNumber.toString());
+        } else {
+          // 학번이 없거나 123456789인 경우 특별한 값 설정
+          setId("학번 없음");
+        }
       } catch (error) {
         console.error("로컬 스토리지 값 안보여짐 에러 :", error);
       }
@@ -67,7 +77,7 @@ export default function My() {
   }, []);
 
   const logoutClick = async () => {
-    //로그아웃 버튼클릭시시
+    //로그아웃 버튼클릭시
     await postLogout();
     router.push("/login");
   };
@@ -211,7 +221,16 @@ export default function My() {
       </ProfileIcon>
       <Role>{roleLabels[role]}</Role>
       <Name>{name}</Name>
-      <ID>{id}</ID>
+      {id === "학번 없음" ? (
+        <StatusContainer>
+          <AnsAccount>학번이 존재하지 않아요!</AnsAccount>
+          <AskManager onClick={() => router.push("/login/first")}>
+            학번 넣으러 가기&gt;
+          </AskManager>
+        </StatusContainer>
+      ) : (
+        <ID>{id}</ID>
+      )}
       <ButtonContainer>{renderButtons()}</ButtonContainer>
       {isModalOpen && (
         <SeminarAlert isOpen={isModalOpen} closeModal={closeModal} />
@@ -331,4 +350,24 @@ const Button = styled.button<ButtonProps>`
     width: 1.5rem;
     margin-bottom: 0.5rem;
   }
+`;
+
+const StatusContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.44rem;
+  margin: 1rem;
+`;
+const AnsAccount = styled.div`
+  color: ${theme.colors.mutedText};
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: Inter;
+`;
+const AskManager = styled.div`
+  color: ${theme.colors.text};
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: Inter;
 `;
