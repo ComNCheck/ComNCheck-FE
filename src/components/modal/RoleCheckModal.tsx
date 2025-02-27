@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { IoMdCloseCircle, IoIosArrowDown } from "react-icons/io";
-import { getRoleChangeDetail } from "../../apis/roleChange";
 import { roleChangeDetailType } from "../../apis/roleChange.type";
 interface RoleCheckModalProps {
   role: roleChangeDetailType[] | null;
@@ -15,15 +14,15 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
   onClose,
   onUpdate,
 }) => {
+  const [selectedPosition, setSelectedPosition] = useState(
+    role?.[0]?.position || ""
+  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   if (!role || role.length === 0) return null;
 
   const currentRole = role[0];
   if (!currentRole) return null;
-
-  const [selectedPosition, setSelectedPosition] = useState(
-    currentRole.position || ""
-  );
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   console.log("currentRole:", currentRole);
 

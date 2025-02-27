@@ -2,35 +2,13 @@
 
 import { theme } from "@/app/styles/theme";
 import styled from "styled-components";
-import TitleContainer from "@/components/setting/TitleContainer";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import NoticeCard from "../Component/NoticeCard";
-import NoticeCommonCard from "../Component/NoticeCommonCard";
-import SubHeader from "@/components/Header/SubHeader";
+import { useEffect, useState } from "react";
+import { getMajorEvent } from "@/apis/notice";
+import { majorEventList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
 
-const mockNotices = [
-  {
-    id: 1,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 2,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 3,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-];
 const ScrollContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -75,25 +53,48 @@ const Header = styled.div`
   width: 100%;
 `;
 
-interface FormValues {
-  name: string;
-  date: string;
-  time: string;
-  location: string;
-  writing: string;
-  googleFormLink: string;
-}
-
 export default function Event() {
+  const [notices, setNotices] = useState<majorEventList>([]);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await getMajorEvent();
+        setNotices(data);
+      } catch (error) {
+        console.log("과행사 공지 에러: ", error);
+      }
+    };
+    fetchNotices();
+  }, []);
+
+  const calculateDDay = (date: string) => {
+    const eventDate = new Date(date);
+    const today = new Date();
+    const diff = Math.ceil(
+      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    return diff >= 0 ? `D-${diff}` : "종료됨";
+  };
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>과행사 공지 확인하기</Header>
+        <Header>과행사 공지 확인하기  <ToggleBtn keyName="alarmMajorEvent" initialState={false} /></Header>
+       
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
-              <NoticeCard key={notice.id} notice={notice} />
-            ))}
+            {notices.map((notice, index) => {
+              const dDay = calculateDDay(notice.date);
+              return (
+                <NoticeCard
+                  key={index}
+                  notice={{
+                    ...notice,
+                    dDay,
+                  }}
+                />
+              );
+            })}
           </ScrollContainer>
         </ContentNoticeBox>
       </ContentContainer>

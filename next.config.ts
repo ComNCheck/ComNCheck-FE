@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
   compiler: {
     styledComponents: true,
   },
+  images: {
+    domains: ["storage.googleapis.com"],
+  },
 };
 
 // PWA 설정을 nextConfig에 합침

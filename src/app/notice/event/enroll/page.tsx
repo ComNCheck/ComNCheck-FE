@@ -8,6 +8,8 @@ import Form from "@/components/setting/form";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import EventBtn from "../../Component/EventBtn";
 import { useRouter } from "next/navigation";
+import { writeEvent } from "@/apis/notice";
+import InputForm from "@/components/notice/inputForm";
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,27 +52,55 @@ const Label = styled.label`
 `;
 
 interface FormValues {
-  name: string;
+  eventName: string;
   date: string;
   time: string;
   location: string;
-  writing: string;
+  notice: string;
   googleFormLink: string;
+  cardNewsImages: string[]; // 이미지 URL 배열
+  parsedDate: string; // 날짜
+  parsedTime: {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  }; // 시간
 }
 
 export default function EventEnroll() {
   const router = useRouter();
   const [values, setValues] = useState<FormValues>({
-    name: "",
+    eventName: "",
     date: "",
     time: "",
     location: "",
-    writing: "",
+    notice: "",
     googleFormLink: "",
+    cardNewsImages: [],
+    parsedDate: "",
+    parsedTime: {
+      hour: 0,
+      minute: 0,
+      second: 0,
+      nano: 0,
+    },
   });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileList | null>(null);
   const [isUploadSuccess, setIsUploadSuccess] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    setIsFormValid(
+      values.eventName !== "" &&
+        values.date !== "" &&
+        values.time !== "" &&
+        values.location !== "" &&
+        values.notice !== "" &&
+        values.googleFormLink !== "" &&
+        values.cardNewsImages.length > 0
+    );
+  }, [values]);
 
   const handleInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -79,35 +109,69 @@ export default function EventEnroll() {
     const textarea = e.target;
     setValues({ ...values, [field]: textarea.value });
   };
-
+  const handleDateInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    const input = e.target;
+    setValues({ ...values, [field]: input.value });
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-      // 여기에 파일 업로드 로직을 추가
-      // 업로드 성공 시 setIsUploadSuccess(true);
-      setIsUploadSuccess(true); // 예시를 위해 항상 true로 설정
+    if (e.target.files) {
+      const files = e.target.files;
+      setSelectedFile(files);
+      setIsUploadSuccess(true); // 업로드 성공 처리
+      const fileUrls: string[] = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      ); // 파일을 URL로 변환
+      setValues((prevValues) => ({
+        ...prevValues,
+        cardNewsImages: fileUrls, // URL 배열로 업데이트
+      }));
     }
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     if (isFormValid && selectedFile && isUploadSuccess) {
-      console.log("Form submitted:", values);
-      console.log("File uploaded:", selectedFile);
-      // 여기에 다음 페이지로 이동하는 로직을 추가하기
-      router.back;
+      try {
+        const formData = new FormData();
+        console.log("폼 데이터:", { ...values });
+
+        // eventName만 사용
+        formData.append("eventName", values.eventName);
+
+        // 나머지 데이터도 포함
+        formData.append("date", values.date);
+        formData.append("time", values.time);
+        formData.append("location", values.location);
+        formData.append("notice", values.notice);
+        formData.append("googleFormLink", values.googleFormLink);
+
+        // 이미지 파일 추가 (파일을 formData에 추가)
+        if (selectedFile) {
+          Array.from(selectedFile).forEach((file) => {
+            formData.append("cardNewsImages", file); // 실제 파일을 cardNewsImages라는 이름으로 추가
+          });
+        }
+
+        // 날짜와 시간 데이터 추가
+        formData.append("parsedDate", values.parsedDate); // parsedDate 추가
+        formData.append(
+          "parsedTime",
+          JSON.stringify(values.parsedTime) // parsedTime 추가
+        );
+
+        const uploadSuccess = await writeEvent(formData); // FormData를 서버로 전송
+        console.log("서버 응답:", uploadSuccess);
+
+        if (uploadSuccess) {
+          router.back();
+        }
+      } catch (error) {
+        console.log("제출에러", error);
+      }
     }
   };
-
-  useEffect(() => {
-    setIsFormValid(
-      values.name !== "" &&
-        values.date !== "" &&
-        values.time !== "" &&
-        values.location !== "" &&
-        values.writing !== "" &&
-        values.googleFormLink !== ""
-    );
-  }, [values]);
 
   return (
     <Wrapper>
@@ -121,18 +185,29 @@ export default function EventEnroll() {
             <Label>📍행사명</Label>
             <Form
               placeholder="ex) 2025학년도 1학기 개강총회"
-              onChange={(e) => handleInput(e, "name")}
-              value={values.name}
+              onChange={(e) => handleInput(e, "eventName")}
+              value={values.eventName}
               hasPlaceholder={false}
-              isFilled={values.name.length > 0}
+              isFilled={values.eventName.length > 0}
             />
           </FormWrapper>
 
-          <FormWrapper>
+          {/* <FormWrapper>
             <Label>📍일시</Label>
             <Form
               placeholder="행사가 진행될 날짜를 입력해주세요"
               onChange={(e) => handleInput(e, "date")}
+              value={values.date}
+              hasPlaceholder={false}
+              isFilled={values.date.length > 0}
+            />
+          </FormWrapper> */}
+          <FormWrapper>
+            <Label>📍일시</Label>
+            <InputForm
+            type="date"
+              placeholder="행사가 진행될 날짜를 입력해주세요"
+              onChange={(e) => handleDateInput(e, "date")}
               value={values.date}
               hasPlaceholder={false}
               isFilled={values.date.length > 0}
@@ -142,14 +217,24 @@ export default function EventEnroll() {
           <FormWrapper>
             <Label>📍시간</Label>
             <Form
-              placeholder={`행사가 진행될 시간을 입력해주세요`}
+              placeholder={`행사가 진행될 시간을 입력해주세요(ex)18:00`}
               onChange={(e) => handleInput(e, "time")}
               value={values.time}
               hasPlaceholder={true}
               isFilled={values.time.length > 0}
             />
           </FormWrapper>
-
+          {/* <FormWrapper>
+            <Label>📍시간</Label>
+            <InputForm
+              type="time"
+              placeholder="행사가 진행될 시간을 입력해주세요"
+              onChange={(e) => handleDateInput(e, "time")}
+              value={values.time}
+              hasPlaceholder={false}
+              isFilled={values.time.length > 0}
+            />
+          </FormWrapper> */}
           <FormWrapper>
             <Label>📍장소</Label>
             <Form
@@ -165,10 +250,10 @@ export default function EventEnroll() {
             <Label>🍀 공지글</Label>
             <Form
               placeholder={`행사 공지글을 입력해주세요`}
-              onChange={(e) => handleInput(e, "writing")}
-              value={values.writing}
+              onChange={(e) => handleInput(e, "notice")}
+              value={values.notice}
               hasPlaceholder={true}
-              isFilled={values.writing.length > 0}
+              isFilled={values.notice.length > 0}
             />
           </FormWrapper>
 
@@ -185,12 +270,18 @@ export default function EventEnroll() {
 
           <FormWrapper>
             <Label>🔗 카드뉴스 이미지파일 업로드</Label>
-            <input type="file" onChange={handleFileChange} accept="image/*" />
+            <input
+              type="file"
+              onChange={handleFileChange}
+              accept="image/* "
+              multiple
+            />
           </FormWrapper>
         </FormContainer>
         <EventBtn
           onClick={handleNextClick}
           disabled={!isFormValid || !selectedFile || !isUploadSuccess}
+          text="행사 신청 완료하기"
         />
       </ContainerWrapper>
     </Wrapper>

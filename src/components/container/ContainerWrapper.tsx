@@ -5,17 +5,16 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   padding: 0rem 0.5rem;
-  height: 100%;
+  height: 80vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   background-color: ${theme.colors.background};
-  // overflow-y: auto;
-  // &::-webkit-scrollbar {
-  //   display: none;
-  // }
+  position: relative;
+  overflow-y: auto;
+  overflow: hidden;
 `;
 
 export default function ContainerWrapper({

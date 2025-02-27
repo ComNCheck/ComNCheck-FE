@@ -2,35 +2,14 @@
 
 import { theme } from "@/app/styles/theme";
 import styled from "styled-components";
-import TitleContainer from "@/components/setting/TitleContainer";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
-import NoticeCard from "../Component/NoticeCard";
-import NoticeCommonCard from "../Component/NoticeCommonCard";
-import SubHeader from "@/components/Header/SubHeader";
 
-const mockNotices = [
-  {
-    id: 1,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 2,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 3,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-];
+import NoticeCommonCard from "../Component/NoticeCommonCard";
+import { useEffect, useState } from "react";
+import { getMajorNotice } from "@/apis/notice";
+import { majorNoticeList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
+
 const ScrollContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -75,24 +54,40 @@ const Header = styled.div`
   width: 100%;
 `;
 
-interface FormValues {
-  name: string;
-  date: string;
-  time: string;
-  location: string;
-  writing: string;
-  googleFormLink: string;
-}
+// interface FormValues {
+//   name: string;
+//   date: string;
+//   time: string;
+//   location: string;
+//   writing: string;
+//   googleFormLink: string;
+// }
 
 export default function College() {
+  const [notices, setNotices] = useState<majorNoticeList | null>(null);
+  // const [size, setSize] = useState<number>(8);
+  const size = 8;
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await getMajorNotice(size);
+        setNotices(data);
+      } catch (error) {
+        console.error("Failed to fetch notices", error);
+      }
+    };
+    fetchNotices();
+  }, []);
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>학부공지 확인하기</Header>
+        <Header>학부공지 확인하기  <ToggleBtn keyName="alarmMajorNotice" initialState={false} /></Header>
+       
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
-              <NoticeCommonCard key={notice.id} notice={notice} />
+            {notices?.content?.map((notice) => (
+              <NoticeCommonCard key={notice.notice_id} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>

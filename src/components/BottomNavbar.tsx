@@ -1,6 +1,7 @@
 "use client";
 
 import { theme } from "@/app/styles/theme";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -45,30 +46,70 @@ const IconWrapper = styled.div.withConfig({
 const getIcon = (path: string, isActive: boolean) => {
   if (path.startsWith("/faq")) {
     return isActive ? (
-      <img src="/icons/comment-quote-full.svg" alt="faq icon" />
+      <Image
+        src="/icons/comment-quote-full.svg"
+        alt="faq icon"
+        width={30}
+        height={30}
+      />
     ) : (
-      <img src="/icons/comment-quote-outline.svg" alt="faq icon" />
+      <Image
+        src="/icons/comment-quote-outline.svg"
+        alt="faq icon"
+        width={30}
+        height={30}
+      />
     );
   }
   if (path.startsWith("/notice")) {
     return isActive ? (
-      <img src="/icons/announce-full.svg" alt="notice icon" />
+      <Image
+        src="/icons/announce-full.svg"
+        alt="notice icon"
+        width={30}
+        height={30}
+      />
     ) : (
-      <img src="/icons/announce-outline.svg" alt="notice icon" />
+      <Image
+        src="/icons/announce-outline.svg"
+        alt="notice icon"
+        width={30}
+        height={30}
+      />
     );
   }
   if (path.startsWith("/seminarRoom")) {
     return isActive ? (
-      <img src="/icons/seminar-full.svg" alt="seminar icon" />
+      <Image
+        src="/icons/seminar-full.svg"
+        alt="seminar icon"
+        width={30}
+        height={30}
+      />
     ) : (
-      <img src="/icons/seminar-outline.svg" alt="seminar icon" />
+      <Image
+        src="/icons/seminar-outline.svg"
+        alt="seminar icon"
+        width={30}
+        height={30}
+      />
     );
   }
   if (path.startsWith("/my")) {
     return isActive ? (
-      <img src="/icons/account-circle-full.svg" alt="my icon" />
+      <Image
+        src="/icons/account-circle-full.svg"
+        alt="my icon"
+        width={30}
+        height={30}
+      />
     ) : (
-      <img src="/icons/account-circle-outline.svg" alt="my icon" />
+      <Image
+        src="/icons/account-circle-outline.svg"
+        alt="my icon"
+        width={30}
+        height={30}
+      />
     );
   }
   return "";

@@ -5,10 +5,12 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { theme } from "../styles/theme";
 import { MdCameraEnhance } from "react-icons/md";
 import { useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import NextBtn from "@/components/button/nextBtn";
 import ExampleImg from "@/components/modal/exampleImg";
-import axios from "axios";
+import Image from "next/image";
+import { MemberResponse } from "@/apis/member";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 interface PictureSpaceProps {
   isActive: boolean;
@@ -94,11 +96,9 @@ const Loader = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.25rem;
-  color: ${theme.colors.primary};
 `;
 export default function Signup() {
   const [isActive, setIsActive] = useState(false);
@@ -111,9 +111,8 @@ export default function Signup() {
   const handlePictureClick = () => {
     fileInputRef.current?.click();
   };
-  const searchParams = useSearchParams();
-  const memberId = searchParams.get("id");
-  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+
+  //const [isUploadSuccess, setIsUploadSuccess] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -134,24 +133,14 @@ export default function Signup() {
     formData.append("studentCardImage", selectedFile);
 
     try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/member/student/number`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true, //쿠키 허용
-        }
-      );
-
-      console.log("서버 응답:", response.data);
-      setIsUploadSuccess(true);
+      const response = await MemberResponse(formData);
+      console.log("서버 응답:", response);
+      //setIsUploadSuccess(true);
       router.push("/signup/complete");
     } catch (error) {
       console.error("업로드 에러:", error);
       setIsLoading(false);
-      setIsUploadSuccess(false);
+      //setIsUploadSuccess(false);
     } finally {
       // 로딩 종료
       setIsLoading(false);
@@ -160,13 +149,7 @@ export default function Signup() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const handleNextClick = () => {
-    if (selectedFile && isUploadSuccess) {
-      router.push("/signup/complete");
-    } else {
-      alert("이미지를 업로드 해주세요.");
-    }
-  };
+
   return (
     <Wrapper>
       <Header>
@@ -184,9 +167,11 @@ export default function Signup() {
       </SubTitleContainer>
       <PictureSpace isActive={isActive} onClick={handlePictureClick}>
         {selectedFile ? (
-          <img
+          <Image
             src={URL.createObjectURL(selectedFile)}
             alt="선택된 이미지"
+            width={500} // 원하는 기본 크기 설정
+            height={50}
             style={{ width: "100%", height: "90%", objectFit: "contain" }}
           />
         ) : (
@@ -206,7 +191,11 @@ export default function Signup() {
         onClick={handleFileUpload}
         disabled={!selectedFile || isLoading}
       />
-      {isLoading && <Loader>로딩 중...</Loader>}
+      {isLoading && (
+        <Loader>
+          <LoadingSpinner />
+        </Loader>
+      )}
       {isModalOpen && <ExampleImg onClose={toggleModal}></ExampleImg>}
     </Wrapper>
   );

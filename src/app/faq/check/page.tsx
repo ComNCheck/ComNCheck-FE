@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
@@ -8,20 +8,52 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
+import { getQuestion } from "../../../apis/question";
+import { AllQuestionResponse } from "../../../apis/question.type";
 
 export default function FAQCheck() {
-  const [isToggleOn, setIsToggleOn] = useState(true);
-  const [question, setQuestion] = useState({ title: "", content: "" });
-  const [answer, setAnswer] = useState("");
+  const [shared, setShared] = useState(true);
+  const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const router = useRouter();
 
-  const toggleHandler = () => {
-    setIsToggleOn(!isToggleOn);
+  useEffect(() => {
+    if (id) {
+      fetchQuestion(parseInt(id));
+    }
+  }, [id]);
+
+  const fetchQuestion = async (questionId: number) => {
+    try {
+      const fetchedQuestions = await getQuestion();
+
+      const formattedQuestions = fetchedQuestions.map((q) => ({
+        ...q,
+        answer: q.answer ? [q.answer] : null,
+      })) as AllQuestionResponse[];
+
+      console.log("변환된 질문 목록:", formattedQuestions);
+
+      const currentQuestion = formattedQuestions.find(
+        (q) => q.id === questionId
+      );
+      if (currentQuestion) {
+        setQuestion(currentQuestion);
+        setShared(currentQuestion.shared);
+      } else {
+        console.error("질문을 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("질문 불러오기 실패:", error);
+    }
   };
 
-  const handleSubmit = () => {
+  const toggleHandler = () => {
+    setShared(!shared);
+  };
+
+  const handleSubmit = async () => {
     router.back();
   };
 
@@ -42,17 +74,17 @@ export default function FAQCheck() {
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
             <ToggleWrapper onClick={toggleHandler}>
-              {isToggleOn ? (
+              {shared ? (
                 <BiSolidToggleRight size={30} color={theme.colors.primary} />
               ) : (
                 <BiToggleLeft size={30} color={theme.colors.mutedText} />
               )}
             </ToggleWrapper>
           </LabelWrapper>
-          <ContentTitle>{question.title}질문 제목</ContentTitle>
+          <ContentTitle>{question?.title ?? "로딩 중..."}</ContentTitle>
           <Label htmlFor="question">궁금한 점</Label>
           <ContentDetail id="question">
-            {question.content}궁금한 점으로 들어있던 원래 궁금한점.
+            {question?.content ?? "로딩 중..."}
           </ContentDetail>
         </ContentBoxSmall>
         <ContentBoxSmall>
@@ -60,7 +92,9 @@ export default function FAQCheck() {
             <Label htmlFor="title">답변</Label>
           </LabelWrapper>
           <ContentAnswer id="question">
-            {answer}상세 궁금한 점으로 들어있던 원래 질문내용.
+            {question?.answer?.length
+              ? question.answer[0].content
+              : "아직 답변이 없습니다."}
           </ContentAnswer>
           <ButtonWapper>
             <SubmitButton type="button" onClick={handleSubmit}>

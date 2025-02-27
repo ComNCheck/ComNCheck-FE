@@ -1,12 +1,7 @@
 "use client";
 import { theme } from "@/app/styles/theme";
 import { useEffect, useState } from "react";
-import {
-  FaCheckCircle,
-  FaPlusCircle,
-  FaRegTimesCircle,
-  FaTimesCircle,
-} from "react-icons/fa";
+import { FaCheckCircle, FaPlusCircle, FaTimesCircle } from "react-icons/fa";
 import styled from "styled-components";
 
 const InputContainer = styled.div`

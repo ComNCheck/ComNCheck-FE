@@ -28,7 +28,6 @@ export default function Check() {
     try {
       const fetchedQuestions = await getQuestion();
 
-      // answer가 존재하는 경우 배열로 변환
       const formattedQuestions = fetchedQuestions.map((q) => ({
         ...q,
         answer: q.answer ? [q.answer] : null,

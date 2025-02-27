@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   display: flex;
@@ -83,7 +84,8 @@ export default function Login() {
 
   const handleLogin = () => {
     console.log("Google 로그인 시도 중...");
-    window.location.href = "http://localhost:8080/oauth2/authorize/google";
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
+    window.location.href = `${baseURL}/oauth2/authorize/google`;
   };
 
   return (
@@ -99,7 +101,7 @@ export default function Login() {
         )}
       </AlertContainer>
       <GoogleBtn onClick={handleLogin}>
-        <img src="/GoogleLogo.svg" alt="구글 로고" />
+        <Image src="/GoogleLogo.svg" alt="구글 로고" width={20} height={20} />
         Sign up with Google
       </GoogleBtn>
       <StatusContainer>

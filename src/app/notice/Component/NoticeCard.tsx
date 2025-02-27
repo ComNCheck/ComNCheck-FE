@@ -3,18 +3,14 @@ import React from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { useRouter } from "next/navigation";
+import { majorEventItem } from "@/apis/notice.type";
 
-const NoticeCard = ({
-  notice,
-}: {
-  notice: {
-    id: number;
-    title: string;
-    date: string;
+interface NoticeCardProps {
+  notice: majorEventItem & {
     dDay: string;
-    googleFormLink: string;
   };
-}) => {
+}
+const NoticeCard = ({ notice }: NoticeCardProps) => {
   const router = useRouter();
   const handleApplyClick = () => {
     if (notice.googleFormLink) {
@@ -31,11 +27,14 @@ const NoticeCard = ({
     <Card onClick={handleCardClick}>
       <CardContent>
         <Info>
-          <Title>{notice.title}</Title>
+          <Title>{notice.eventName}</Title>
           <Date>{notice.date}</Date>
         </Info>
-        <DDay>{notice.dDay}</DDay>
+        <SmallContainer>
+          <DDay>{notice.dDay}</DDay>
         <ApplyButton onClick={handleApplyClick}>구글폼 신청</ApplyButton>
+        </SmallContainer>
+        
       </CardContent>
     </Card>
   );
@@ -95,4 +94,10 @@ const ApplyButton = styled.button`
   }
 `;
 
+const SmallContainer = styled.div`
+  display:flex;
+  flex-direction: table-row;
+  align-items: center;
+  gap: 1rem;
+`
 export default NoticeCard;

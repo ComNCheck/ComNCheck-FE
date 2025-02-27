@@ -23,3 +23,12 @@ export interface AllQuestionResponse {
   shared: boolean;
   answer: AnswerType[] | null;
 }
+
+export interface AllFAQQuestionResponse {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  shared: boolean;
+  answer: AnswerType | null;
+}

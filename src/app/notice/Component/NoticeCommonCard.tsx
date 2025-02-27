@@ -7,10 +7,10 @@ const NoticeCommonCard = ({
   notice,
 }: {
   notice: {
-    id: number;
+    notice_id: number;
     title: string;
     date: string;
-    dDay: string;
+    //dDay: string;
   };
 }) => {
   return (
@@ -54,25 +54,6 @@ const Title = styled.div`
 const Date = styled.div`
   font-size: 0.9rem;
   color: ${theme.colors.mutedText};
-`;
-
-const DDay = styled.div`
-  font-size: 1rem;
-  font-weight: bold;
-  color: ${theme.colors.primary};
-`;
-
-const ApplyButton = styled.button`
-  background-color: white;
-  border: 1px solid ${theme.colors.mutedText};
-  border-radius: 5px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: bold;
-  cursor: pointer;
-  &:hover {
-    background-color: ${theme.colors.background};
-  }
 `;
 
 export default NoticeCommonCard;

@@ -2,35 +2,13 @@
 
 import { theme } from "@/app/styles/theme";
 import styled from "styled-components";
-import TitleContainer from "@/components/setting/TitleContainer";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
-import NoticeCard from "../Component/NoticeCard";
 import NoticeCommonCard from "../Component/NoticeCommonCard";
-import SubHeader from "@/components/Header/SubHeader";
+import { useEffect, useState } from "react";
+import { getEmployNotice } from "@/apis/notice";
+import { majorNoticeList } from "@/apis/notice.type";
+import ToggleBtn from "@/components/button/toggleBtn";
 
-const mockNotices = [
-  {
-    id: 1,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 2,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-  {
-    id: 3,
-    title: "2025학년도 1학기 개강총회",
-    date: "2025.09.10(화)",
-    dDay: "D-5",
-    googleFormLink: "https://www.naver.com/",
-  },
-];
 const ScrollContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -75,24 +53,31 @@ const Header = styled.div`
   width: 100%;
 `;
 
-interface FormValues {
-  name: string;
-  date: string;
-  time: string;
-  location: string;
-  writing: string;
-  googleFormLink: string;
-}
-
 export default function Employment() {
+  const [notices, setNotices] = useState<majorNoticeList | null>(null);
+  // const [size, setSize] = useState<number>(8);
+  // const [page, setPage] = useState<number>(1);
+  const size = 8;
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const data = await getEmployNotice(size);
+        setNotices(data);
+      } catch (error) {
+        console.error("Failed to fetch notices", error);
+      }
+    };
+    fetchNotices();
+  }, []);
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>취업공지 확인하기</Header>
+        <Header>취업공지 확인하기  <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} /></Header>
+       
         <ContentNoticeBox>
           <ScrollContainer>
-            {mockNotices.map((notice) => (
-              <NoticeCommonCard key={notice.id} notice={notice} />
+            {notices?.content?.map((notice) => (
+              <NoticeCommonCard key={notice.notice_id} notice={notice} />
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
