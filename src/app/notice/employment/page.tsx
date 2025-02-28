@@ -53,27 +53,110 @@ const Header = styled.div`
   width: 100%;
 `;
 
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+  gap: 0.5rem;
+`;
+
+const PageButton = styled.button<{ isActive?: boolean }>`
+  width: 2rem;
+  height: 2rem;
+  border-radius: 4px;
+  background-color: ${(props) =>
+    props.isActive ? theme.colors.primary : "transparent"};
+  color: ${(props) => (props.isActive ? "white" : theme.colors.text)};
+  border: ${(props) =>
+    props.isActive ? "none" : `1px solid ${theme.colors.mutedText}`};
+  font-weight: ${(props) => (props.isActive ? "700" : "400")};
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.isActive ? theme.colors.primary : "#f5f5f5"};
+  }
+`;
+
+const ArrowButton = styled.button`
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background-color: transparent;
+  color: ${theme.colors.text};
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:disabled {
+    color: ${theme.colors.mutedText};
+    cursor: not-allowed;
+  }
+`;
+
 export default function Employment() {
   const [notices, setNotices] = useState<majorNoticeList | null>(null);
-  // const [size, setSize] = useState<number>(8);
-  // const [page, setPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const size = 8;
+
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const data = await getEmployNotice(size);
+        const data = await getEmployNotice(size, currentPage);
         setNotices(data);
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error("Failed to fetch notices", error);
       }
     };
     fetchNotices();
-  }, []);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+    const maxVisiblePages = 3;
+
+    let startPage = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(0, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(
+        <PageButton
+          key={i}
+          isActive={i === currentPage}
+          onClick={() => handlePageChange(i)}
+        >
+          {i + 1}
+        </PageButton>
+      );
+    }
+
+    return buttons;
+  };
+
   return (
     <ContainerWrapper>
       <ContentContainer>
-        <Header>취업공지 확인하기  <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} /></Header>
-       
+        <Header>
+          취업공지 확인하기{" "}
+          <ToggleBtn keyName="alarmEmploymentNotice" initialState={false} />
+        </Header>
+
         <ContentNoticeBox>
           <ScrollContainer>
             {notices?.content?.map((notice) => (
@@ -81,6 +164,31 @@ export default function Employment() {
             ))}
           </ScrollContainer>
         </ContentNoticeBox>
+
+        {totalPages > 0 && (
+          <PaginationContainer>
+            <ArrowButton
+              onClick={() =>
+                currentPage > 0 && handlePageChange(currentPage - 1)
+              }
+              disabled={currentPage === 0}
+            >
+              &lt;
+            </ArrowButton>
+
+            {renderPaginationButtons()}
+
+            <ArrowButton
+              onClick={() =>
+                currentPage < totalPages - 1 &&
+                handlePageChange(currentPage + 1)
+              }
+              disabled={currentPage === totalPages - 1}
+            >
+              &gt;
+            </ArrowButton>
+          </PaginationContainer>
+        )}
       </ContentContainer>
     </ContainerWrapper>
   );
