@@ -88,7 +88,12 @@ export default function SettingInput({
     console.log(status);
     onSubmit(text);
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // 기본 엔터 동작 방지
+      handleSubmit();
+    }
+  };
   return (
     <InputContainer>
       <Icon>
@@ -103,6 +108,7 @@ export default function SettingInput({
       <Input
         value={text}
         onChange={handleTextChange}
+        onKeyDown={handleKeyDown}
         hasText={text.length > 0}
         placeholder="개발자에게 원하는 점을 적어주세요"
         disabled={isSubmitted} //제출되면 비활성화
