@@ -18,7 +18,7 @@ export interface Time {
 }
 
 export interface majorNoticeList {
-  //학부 공지사항 목록 api
+  //학부 공지사항,취업정보 목록 api
   currentPage: number;
   totalPages: number;
   totalElements: number;
@@ -26,14 +26,14 @@ export interface majorNoticeList {
   content: Content[];
 }
 
-export interface employmentNoticeList {
-  //취업정보 공지사항 목록 api
-  currentPage: number;
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  content: Content[];
-}
+// export interface employmentNoticeList {
+//   //취업정보 공지사항 목록 api
+//   currentPage: number;
+//   totalPages: number;
+//   totalElements: number;
+//   size: number;
+//   content: Content[];
+// }
 
 export interface Content {
   title: string;
