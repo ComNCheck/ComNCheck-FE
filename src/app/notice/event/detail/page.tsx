@@ -134,7 +134,7 @@ export default function EventDetail() {
   }, []);
 
   const handleWriteClick = () => {
-    router.push("/notice/event/enroll");
+    router.push(`/notice/event/modify?id=${event.id}`);
   };
   const handleNextClick = () => {
     if (event.googleFormLink) {

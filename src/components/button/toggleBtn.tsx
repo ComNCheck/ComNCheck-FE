@@ -6,7 +6,6 @@ import {
 import { theme } from "@/app/styles/theme";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { BiSolidToggleRight, BiToggleLeft } from "react-icons/bi";
 import { HiBellAlert, HiOutlineBellAlert } from "react-icons/hi2";
 
 const ToggleContainer = styled.div`
