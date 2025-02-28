@@ -123,7 +123,7 @@ export default function College() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
+  //페이지네이션 추가
   const renderPaginationButtons = () => {
     const buttons = [];
     const maxVisiblePages = 3;
