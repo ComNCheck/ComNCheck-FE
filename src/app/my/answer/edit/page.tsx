@@ -97,7 +97,7 @@ export default function EditAnswer() {
         <ContentBoxSmall>
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
-            <ToggleWrapper onClick={toggleHandler}>
+            <ToggleWrapper>
               {shared ? (
                 <BiSolidToggleRight size={30} color={theme.colors.primary} />
               ) : (

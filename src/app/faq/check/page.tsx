@@ -8,12 +8,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
-import { getQuestion } from "../../../apis/question";
+import { getQuestionById } from "../../../apis/question";
 import { AllQuestionResponse } from "../../../apis/question.type";
 
 export default function FAQCheck() {
   const [shared, setShared] = useState(true);
   const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
+  const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const router = useRouter();
@@ -26,26 +27,20 @@ export default function FAQCheck() {
 
   const fetchQuestion = async (questionId: number) => {
     try {
-      const fetchedQuestions = await getQuestion();
+      setLoading(true);
+      const fetchedQuestion = await getQuestionById(questionId);
 
-      const formattedQuestions = fetchedQuestions.map((q) => ({
-        ...q,
-        answer: q.answer ? [q.answer] : null,
-      })) as AllQuestionResponse[];
+      const formattedQuestion = {
+        ...fetchedQuestion,
+        answer: fetchedQuestion.answer ? [fetchedQuestion.answer] : null,
+      } as AllQuestionResponse;
 
-      console.log("변환된 질문 목록:", formattedQuestions);
-
-      const currentQuestion = formattedQuestions.find(
-        (q) => q.id === questionId
-      );
-      if (currentQuestion) {
-        setQuestion(currentQuestion);
-        setShared(currentQuestion.shared);
-      } else {
-        console.error("질문을 찾을 수 없습니다.");
-      }
+      setQuestion(formattedQuestion);
+      setShared(formattedQuestion.shared);
     } catch (error) {
       console.error("질문 불러오기 실패:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,7 +68,7 @@ export default function FAQCheck() {
         <ContentBoxSmall>
           <LabelWrapper>
             <Label htmlFor="title">제목</Label>
-            <ToggleWrapper onClick={toggleHandler}>
+            <ToggleWrapper>
               {shared ? (
                 <BiSolidToggleRight size={30} color={theme.colors.primary} />
               ) : (
@@ -81,10 +76,12 @@ export default function FAQCheck() {
               )}
             </ToggleWrapper>
           </LabelWrapper>
-          <ContentTitle>{question?.title ?? "로딩 중..."}</ContentTitle>
+          <ContentTitle>
+            {loading ? "로딩 중..." : question?.title}
+          </ContentTitle>
           <Label htmlFor="question">궁금한 점</Label>
           <ContentDetail id="question">
-            {question?.content ?? "로딩 중..."}
+            {loading ? "로딩 중..." : question?.content}
           </ContentDetail>
         </ContentBoxSmall>
         <ContentBoxSmall>
@@ -92,9 +89,11 @@ export default function FAQCheck() {
             <Label htmlFor="title">답변</Label>
           </LabelWrapper>
           <ContentAnswer id="question">
-            {question?.answer?.length
-              ? question.answer[0].content
-              : "아직 답변이 없습니다."}
+            {loading
+              ? "로딩 중..."
+              : question?.answer?.length
+                ? question.answer[0].content
+                : "아직 답변이 없습니다."}
           </ContentAnswer>
           <ButtonWapper>
             <SubmitButton type="button" onClick={handleSubmit}>
@@ -131,11 +130,9 @@ const ToggleWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   width: 30px;
   height: 30px;
 `;
-
 const ContentTitle = styled.div`
   width: 100%;
   margin: 8px 0px 16px 0px;
