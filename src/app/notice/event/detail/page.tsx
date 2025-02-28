@@ -136,7 +136,13 @@ export default function EventDetail() {
   const handleWriteClick = () => {
     router.push("/notice/event/enroll");
   };
-  const handleNextClick = () => {};
+  const handleNextClick = () => {
+    if (event.googleFormLink) {
+      window.open(event.googleFormLink, "_blank");
+    } else {
+      alert("구글폼 링크가 존재하지 않습니다.");
+    }
+  };
 
   return (
     <ContainerWrapper>
