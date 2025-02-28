@@ -36,9 +36,9 @@ export default function WriteAnswer() {
     }
   };
 
-  const toggleHandler = () => {
-    setShared(!shared);
-  };
+  // const toggleHandler = () => {
+  //   setShared(!shared);
+  // };
 
   const handleSubmit = async () => {
     if (!question) {

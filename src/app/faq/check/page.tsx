@@ -44,9 +44,9 @@ export default function FAQCheck() {
     }
   };
 
-  const toggleHandler = () => {
-    setShared(!shared);
-  };
+  // const toggleHandler = () => {
+  //   setShared(!shared);
+  // };
 
   const handleSubmit = async () => {
     router.back();
