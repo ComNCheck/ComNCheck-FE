@@ -207,10 +207,11 @@ const Header = styled.div`
   width: 100%;
   p {
     width: 16rem;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    align-content: center;
-    gap: 1rem;
+    // justify-content: center;
+    // align-content: center;
+    gap: 0.3rem;
   }
 `;
 const WritingBtnWrapper = styled.div`
