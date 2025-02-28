@@ -20,7 +20,7 @@ const NoticeCard = ({ notice }: NoticeCardProps) => {
     }
   };
   const handleCardClick = () => {
-    router.push("/notice/event/detail");
+    router.push(`/notice/event/detail?id=${notice.id}`);
   };
 
   return (
@@ -32,9 +32,8 @@ const NoticeCard = ({ notice }: NoticeCardProps) => {
         </Info>
         <SmallContainer>
           <DDay>{notice.dDay}</DDay>
-        <ApplyButton onClick={handleApplyClick}>구글폼 신청</ApplyButton>
+          <ApplyButton onClick={handleApplyClick}>구글폼 신청</ApplyButton>
         </SmallContainer>
-        
       </CardContent>
     </Card>
   );
@@ -90,14 +89,16 @@ const ApplyButton = styled.button`
   &:hover {
     background-color: ${theme.colors.background};
     color: ${theme.colors.text};
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 `;
 
 const SmallContainer = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: table-row;
   align-items: center;
   gap: 1rem;
-`
+`;
 export default NoticeCard;

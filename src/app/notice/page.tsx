@@ -147,9 +147,9 @@ export default function Notice() {
         <ContentNoticeBox>
           <ScrollContainer>
             {eventNotices &&
-              eventNotices.map((notice, index) => (
+              eventNotices.map((notice) => (
                 <NoticeCard
-                  key={index}
+                  key={notice.id}
                   notice={{
                     ...notice,
                     dDay: calculateDDay(notice.date),

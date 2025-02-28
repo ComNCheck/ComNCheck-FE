@@ -31,36 +31,36 @@
 //   ...pwaConfig, // PWA 관련 설정을 분리해서 추가
 // });
 
-// import type { NextConfig } from "next";
-// const withPWA = require("next-pwa");
+import type { NextConfig } from "next";
+const withPWA = require("next-pwa");
 
-// const pwaConfig = {
-//   dest: "public",
-//   register: true,
-//   skipWaiting: true,
-//   disable: process.env.NODE_ENV === "development",
-// };
-
-// const nextConfig: NextConfig = {
-//   reactStrictMode: true,
-//   compiler: {
-//     styledComponents: true,
-//   },
-//   images: {
-//     domains: ["storage.googleapis.com"],
-//   },
-// };
-
-// module.exports = withPWA(pwaConfig)(nextConfig);\
-
-const withPWA = require("next-pwa")({
+const pwaConfig = {
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
   register: true,
   skipWaiting: true,
-});
+  disable: process.env.NODE_ENV === "development",
+};
 
-module.exports = withPWA({
-  // 다른 Next.js 설정들
+const nextConfig: NextConfig = {
   reactStrictMode: true,
-});
+  compiler: {
+    styledComponents: true,
+  },
+  images: {
+    domains: ["storage.googleapis.com"],
+  },
+};
+
+module.exports = withPWA(pwaConfig)(nextConfig);
+
+// const withPWA = require("next-pwa")({
+//   dest: "public",
+//   disable: process.env.NODE_ENV === "development",
+//   register: true,
+//   skipWaiting: true,
+// });
+
+// module.exports = withPWA({
+//   // 다른 Next.js 설정들
+//   reactStrictMode: true,
+// });
