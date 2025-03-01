@@ -8,9 +8,46 @@ import { getFAQ } from "@/apis/question";
 import { AllFAQQuestionResponse } from "@/apis/question.type";
 import FAQQuestionList from "../my/myComponents/FAQQuestionList";
 
+type UserRole =
+  | "ROLE_ADMIN"
+  | "ROLE_MAJOR_PRESIDENT"
+  | "ROLE_STUDENT_COUNCIL"
+  | "ROLE_STUDENT"
+  | "ROLE_GRADUATE_STUDENT";
+
+interface UserInfo {
+  memberId: number;
+  name: string;
+  major: string;
+  studentNumber: number;
+  role: UserRole;
+  checkStudentCard: boolean;
+}
+
 export default function FAQ() {
   const router = useRouter();
   const [questions, setQuestions] = useState<AllFAQQuestionResponse[]>([]);
+  const [role, setRole] = useState<UserRole>("ROLE_STUDENT");
+  const [canDelete, setCanDelete] = useState<boolean>(false);
+
+  useEffect(() => {
+    const memberData = localStorage.getItem("memberData");
+    if (memberData) {
+      try {
+        const parsedData: UserInfo = JSON.parse(memberData);
+        setRole(parsedData.role as UserRole);
+        const allowedRoles: UserRole[] = [
+          "ROLE_ADMIN",
+          "ROLE_MAJOR_PRESIDENT",
+          "ROLE_STUDENT_COUNCIL",
+        ];
+        setCanDelete(allowedRoles.includes(parsedData.role));
+        console.log("멤버데이터 출력하기~~~~!!!:", parsedData);
+      } catch (error) {
+        console.error("로컬 스토리지 값 안보여짐 에러 :", error);
+      }
+    }
+  }, []);
 
   const fetchFAQ = async () => {
     try {
@@ -61,6 +98,7 @@ export default function FAQ() {
         questions={formattedQuestions}
         onDelete={handleDelete}
         onCardClick={handleCardClick}
+        canDelete={canDelete}
       />
     </ContainerWrapper>
   );
