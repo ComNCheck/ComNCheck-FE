@@ -16,7 +16,7 @@ interface QuestionCardProps {
   index: number;
   onDelete: (id: number) => void;
   onCardClick: (id: number, isAnswered: boolean) => void;
-  canDelete: boolean;
+  canDelete?: boolean;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({

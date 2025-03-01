@@ -27,7 +27,7 @@ interface UserInfo {
 export default function FAQ() {
   const router = useRouter();
   const [questions, setQuestions] = useState<AllFAQQuestionResponse[]>([]);
-  const [role, setRole] = useState<UserRole>("ROLE_STUDENT");
+  const [role, setRole] = useState<UserRole | undefined>(undefined); // 초기값을 undefined로
   const [canDelete, setCanDelete] = useState<boolean>(false);
 
   useEffect(() => {
@@ -42,12 +42,19 @@ export default function FAQ() {
           "ROLE_STUDENT_COUNCIL",
         ];
         setCanDelete(allowedRoles.includes(parsedData.role));
-        console.log("멤버데이터 출력하기~~~~!!!:", parsedData);
       } catch (error) {
         console.error("로컬 스토리지 값 안보여짐 에러 :", error);
       }
+    } else {
+      setRole("ROLE_STUDENT"); // 기본값 설정
     }
   }, []);
+
+  useEffect(() => {
+    if (role) {
+      fetchFAQ();
+    }
+  }, [role]); // role 값이 설정된 후에 fetchFAQ 실행
 
   const fetchFAQ = async () => {
     try {
@@ -59,28 +66,19 @@ export default function FAQ() {
     }
   };
 
-  useEffect(() => {
-    fetchFAQ();
-  }, []);
-
   const handleCardClick = (id: number, isAnswered: boolean) => {
     if (isAnswered) {
       router.push(`/faq/check?id=${id}`);
     }
   };
+
   const handleDelete = (id: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
       setQuestions((prev) => prev.filter((q) => q.id !== id));
     }
   };
 
-  const formattedQuestions = questions.map((q) => ({
-    id: q.id,
-    title: q.title,
-    date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
-    answer: q.answer?.content || "",
-    isAnswered: !!q.answer?.content,
-  }));
+  if (!role) return <p>Loading...</p>; // role이 undefined면 로딩 표시
 
   return (
     <ContainerWrapper>
@@ -95,7 +93,13 @@ export default function FAQ() {
         }
       />
       <FAQQuestionList
-        questions={formattedQuestions}
+        questions={questions.map((q) => ({
+          id: q.id,
+          title: q.title,
+          date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
+          answer: q.answer?.content || "",
+          isAnswered: !!q.answer?.content,
+        }))}
         onDelete={handleDelete}
         onCardClick={handleCardClick}
         canDelete={canDelete}
