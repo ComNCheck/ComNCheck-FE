@@ -2,6 +2,8 @@ import React from "react";
 import QuestionCard from "./QuestionCard";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import FormWrapper from "@/components/container/FormWrapper";
+import styled from "styled-components";
+import { theme } from "@/app/styles/theme";
 
 interface Question {
   id: number;
@@ -25,7 +27,7 @@ const FAQQuestionList: React.FC<CommonQuestionListProps> = ({
   canDelete,
 }) => {
   return (
-    <ContainerWrapper>
+    <Wrapper>
       <FormWrapper>
         {questions.map((question, index) => (
           <QuestionCard
@@ -38,8 +40,22 @@ const FAQQuestionList: React.FC<CommonQuestionListProps> = ({
           />
         ))}
       </FormWrapper>
-    </ContainerWrapper>
+    </Wrapper>
   );
 };
 
 export default FAQQuestionList;
+const Wrapper = styled.div`
+  padding: 0rem 0.5rem 0.5rem 0.5rem;
+  height: 80vh;
+  //height: calc(100vh - 11rem); //test
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: ${theme.colors.background};
+  position: relative;
+  overflow-y: auto;
+  overflow: hidden;
+`;
