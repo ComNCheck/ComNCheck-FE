@@ -5,7 +5,8 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   padding: 0rem 0.5rem;
-  height: 80vh;
+  //height: 80vh;
+  height: calc(100vh - 11rem); //test
   width: 100%;
   display: flex;
   flex-direction: column;
