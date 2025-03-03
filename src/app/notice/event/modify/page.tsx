@@ -232,13 +232,14 @@ export default function EventModify() {
           </FormWrapper>
 
           <FormWrapper>
-            <Label>📍시간</Label>
-            <Form
-              placeholder={`행사가 진행될 시간을 입력해주세요(ex)18:00`}
-              onChange={(e) => handleInput(e, "time")}
-              value={values.time}
-              hasPlaceholder={true}
-              isFilled={!!values.time}
+            <Label>📍일시</Label>
+            <InputForm
+              type="date"
+              placeholder="행사가 진행될 날짜를 입력해주세요"
+              onChange={(e) => handleDateInput(e, "date")}
+              value={values.date}
+              hasPlaceholder={false}
+              isFilled={values.date.length > 0}
             />
           </FormWrapper>
 

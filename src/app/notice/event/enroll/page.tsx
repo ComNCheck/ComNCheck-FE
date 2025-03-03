@@ -205,7 +205,7 @@ export default function EventEnroll() {
           <FormWrapper>
             <Label>📍일시</Label>
             <InputForm
-            type="date"
+              type="date"
               placeholder="행사가 진행될 날짜를 입력해주세요"
               onChange={(e) => handleDateInput(e, "date")}
               value={values.date}
@@ -214,7 +214,7 @@ export default function EventEnroll() {
             />
           </FormWrapper>
 
-          <FormWrapper>
+          {/* <FormWrapper>
             <Label>📍시간</Label>
             <Form
               placeholder={`행사가 진행될 시간을 입력해주세요(ex)18:00`}
@@ -223,8 +223,8 @@ export default function EventEnroll() {
               hasPlaceholder={true}
               isFilled={values.time.length > 0}
             />
-          </FormWrapper>
-          {/* <FormWrapper>
+          </FormWrapper> */}
+          <FormWrapper>
             <Label>📍시간</Label>
             <InputForm
               type="time"
@@ -234,7 +234,7 @@ export default function EventEnroll() {
               hasPlaceholder={false}
               isFilled={values.time.length > 0}
             />
-          </FormWrapper> */}
+          </FormWrapper>
           <FormWrapper>
             <Label>📍장소</Label>
             <Form
