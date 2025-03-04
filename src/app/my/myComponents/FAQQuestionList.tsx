@@ -1,6 +1,5 @@
 import React from "react";
 import QuestionCard from "./QuestionCard";
-import ContainerWrapper from "@/components/container/ContainerWrapper";
 import FormWrapper from "@/components/container/FormWrapper";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
