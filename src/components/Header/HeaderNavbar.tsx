@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import styled from "styled-components";
 
 const NavbarContainer = styled.div`
-  padding: 4rem 0rem 0rem 2rem;
+  padding: 4rem 0rem 0rem 1.5rem; //왼쪽 정렬
   width: 100%;
   max-width: 31rem;
   height: 6rem; //test
