@@ -102,7 +102,7 @@ const ArrowButton = styled.button`
 
 export default function Employment() {
   const [notices, setNotices] = useState<majorNoticeList | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const size = 8;
 
@@ -123,15 +123,16 @@ export default function Employment() {
     setCurrentPage(page);
   };
 
+  // 3개만 표시하는 페이지네이션으로 변경
   const renderPaginationButtons = () => {
     const buttons = [];
-    const maxVisiblePages = 3;
+    const maxVisiblePages = 3; // 한 번에 보이는 페이지 버튼 수를 3개로 제한
 
-    let startPage = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
-    const endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(0, endPage - maxVisiblePages + 1);
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -141,7 +142,7 @@ export default function Employment() {
           isActive={i === currentPage}
           onClick={() => handlePageChange(i)}
         >
-          {i + 1}
+          {i}
         </PageButton>
       );
     }
@@ -169,9 +170,9 @@ export default function Employment() {
           <PaginationContainer>
             <ArrowButton
               onClick={() =>
-                currentPage > 0 && handlePageChange(currentPage - 1)
+                currentPage > 1 && handlePageChange(currentPage - 1)
               }
-              disabled={currentPage === 0}
+              disabled={currentPage === 1}
             >
               &lt;
             </ArrowButton>
@@ -180,10 +181,9 @@ export default function Employment() {
 
             <ArrowButton
               onClick={() =>
-                currentPage < totalPages - 1 &&
-                handlePageChange(currentPage + 1)
+                currentPage < totalPages && handlePageChange(currentPage + 1)
               }
-              disabled={currentPage === totalPages - 1}
+              disabled={currentPage === totalPages}
             >
               &gt;
             </ArrowButton>

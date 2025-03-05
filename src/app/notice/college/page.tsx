@@ -110,7 +110,7 @@ export default function College() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const data = await getMajorNotice(size, currentPage - 1);
+        const data = await getMajorNotice(size, currentPage);
         setNotices(data);
         setTotalPages(data.totalPages);
       } catch (error) {
@@ -123,10 +123,11 @@ export default function College() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  //페이지네이션 추가
+
+  // 3개만 표시하는 페이지네이션으로 변경
   const renderPaginationButtons = () => {
     const buttons = [];
-    const maxVisiblePages = 3;
+    const maxVisiblePages = 3; // 한 번에 보이는 페이지 버튼 수를 3개로 제한
 
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
