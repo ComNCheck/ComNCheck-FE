@@ -12,6 +12,8 @@ import styled from "styled-components";
 
 const WrapperContainer = styled.div`
   overflow-y: auto;
+  width: 100%;
+  height: 80vh;
 `
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);

@@ -136,6 +136,8 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 90%;
+  overflow-y: auto;
+  height: 90vh;
 `;
 
 const LabelWrapper = styled.div`
