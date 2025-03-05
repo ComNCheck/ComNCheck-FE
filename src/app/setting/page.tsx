@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 31rem;
+  height: 100vh;//test
 `;
 const ItemContainer = styled.div`
   display: flex;
@@ -81,12 +82,12 @@ export default function Setting() {
           </Icon>
         </Content>
         <Content onClick={() => handleClick("/privacy-policy.html")}>
-          <Items>서비스 이용약관</Items>
+          <Items>개인정보처리방침</Items>
           <Icon>
             <IoChevronForward />
           </Icon>
         </Content><Content onClick={() => handleClick("/terms-of-service.html")}>
-          <Items>개인정보처리방침</Items>
+          <Items>서비스 이용약관</Items>
           <Icon>
             <IoChevronForward />
           </Icon>
