@@ -86,7 +86,8 @@ export default function Setting() {
           <Icon>
             <IoChevronForward />
           </Icon>
-        </Content><Content onClick={() => handleClick("/terms-of-service.html")}>
+        </Content>
+        <Content onClick={() => handleClick("/terms-of-service.html")}>
           <Items>서비스 이용약관</Items>
           <Icon>
             <IoChevronForward />
