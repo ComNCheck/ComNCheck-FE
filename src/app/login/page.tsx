@@ -47,6 +47,15 @@ const GoogleBtn = styled.div`
   margin-top: 4rem;
   display: inline-flex;
   align-items: center;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+
+  &:active {
+    background-color: #e0e0e0;
+    transform: scale(0.97);
+  }
 `;
 const StatusContainer = styled.div`
   display: flex;
