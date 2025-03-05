@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 31rem;
+  height: 100vh;//test
 `;
 const ItemContainer = styled.div`
   display: flex;
