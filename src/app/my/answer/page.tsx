@@ -8,7 +8,11 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import { deleteQuestion, getQuestionAllList } from "../../../apis/question";
 import { AllQuestionResponse } from "../../../apis/question.type";
+import styled from "styled-components";
 
+const WrapperContainer = styled.div`
+  overflow-y: auto;
+`
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);
   const router = useRouter();
@@ -101,12 +105,14 @@ export default function Answer() {
         onToggle={handleToggle}
         labels={{ inactive: "답변 예정", active: "답변 완료" }}
       />
-
-      <CommonQuestionList
-        questions={filteredQuestions}
-        onDelete={handleDelete}
-        onCardClick={handleCardClick}
-      />
+      <WrapperContainer>
+        <CommonQuestionList
+                questions={filteredQuestions}
+                onDelete={handleDelete}
+                onCardClick={handleCardClick}
+              />
+      </WrapperContainer>
+      
     </ContainerWrapper>
   );
 }

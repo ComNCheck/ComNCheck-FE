@@ -125,6 +125,9 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 90%;
+  height: calc(100vh-6rem); //스크롤 test값
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 const LabelWrapper = styled.div`
