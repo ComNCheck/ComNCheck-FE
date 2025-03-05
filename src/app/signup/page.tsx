@@ -153,7 +153,7 @@ export default function Signup() {
   return (
     <Wrapper>
       <Header>
-        <Logo src="/logo.svg" alt="로고" />
+        <Logo src="/logo.svg" alt="로고" onClick={() => router.back()} />
         <Login onClick={() => router.push("/login")}>로그인</Login>
       </Header>
       <Title>회원가입</Title>

@@ -15,7 +15,7 @@ const NavbarContainer = styled.div`
   background-color: white;
   display: flex;
   justify-content: space-around;
-  padding: 0.8rem 1rem 0.8rem 1.5rem;
+  padding: 0.8rem 1rem 2rem 1.5rem;
   z-index: 10;
 `;
 
