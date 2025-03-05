@@ -81,13 +81,13 @@ export default function Setting() {
           </Icon>
         </Content>
         <Content onClick={() => handleClick("/privacy-policy.html")}>
-          <Items>서비스 이용약관</Items>
+          <Items>개인정보처리방침</Items>
           <Icon>
             <IoChevronForward />
           </Icon>
         </Content>
         <Content onClick={() => handleClick("/terms-of-service.html")}>
-          <Items>개인정보처리방침</Items>
+          <Items>서비스 이용약관</Items>
           <Icon>
             <IoChevronForward />
           </Icon>
