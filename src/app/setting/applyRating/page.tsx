@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 31rem;
+  height: 100vh; //높이 test
 `;
 const SettingContainer = styled.div`
   padding: 1.25rem;
@@ -27,8 +28,8 @@ const SettingContainer = styled.div`
 const FormContainer = styled.div`
   width: 85vw;
   max-width: 21.875rem;
-  height: 62vh;
-  max-height: 32rem;
+  height: 65vh;
+  //max-height: 32rem;
   padding: 0.625rem;
   border-radius: 0.625rem;
   background: #fff;
@@ -179,10 +180,10 @@ export default function ApplyRating() {
         roleMapping = "ROLE_STUDENT";
         break;
       case "학생회":
-        roleMapping = "ROLE_MAJOR_PRESIDENT"; 
+        roleMapping = "ROLE_MAJOR_PRESIDENT";
         break;
       case "과회장":
-        roleMapping = "ROLE_GRADUATE_STUDENT"; 
+        roleMapping = "ROLE_GRADUATE_STUDENT";
         break;
       default:
         roleMapping = "ROLE_STUDENT"; // 기본값 설정

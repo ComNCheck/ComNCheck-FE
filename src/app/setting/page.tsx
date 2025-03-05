@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 31rem;
+  height: 100vh;//test
 `;
 const ItemContainer = styled.div`
   display: flex;
@@ -23,7 +24,7 @@ const Content = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  height: 4.8rem;
+  height: 4rem;
   border-bottom: 1px solid ${theme.colors.warning};
 `;
 const Items = styled.div`
@@ -80,7 +81,18 @@ export default function Setting() {
             <IoChevronForward />
           </Icon>
         </Content>
-
+        <Content onClick={() => handleClick("/privacy-policy.html")}>
+          <Items>개인정보처리방침</Items>
+          <Icon>
+            <IoChevronForward />
+          </Icon>
+        </Content>
+        <Content onClick={() => handleClick("/terms-of-service.html")}>
+          <Items>서비스 이용약관</Items>
+          <Icon>
+            <IoChevronForward />
+          </Icon>
+        </Content>
         <Content>
           <Items onClick={logoutClick}>로그아웃</Items>
           <Icon>

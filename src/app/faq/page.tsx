@@ -7,6 +7,7 @@ import TitleContainer from "@/components/setting/TitleContainer";
 import { getFAQ } from "@/apis/question";
 import { AllFAQQuestionResponse } from "@/apis/question.type";
 import FAQQuestionList from "../my/myComponents/FAQQuestionList";
+import styled from "styled-components";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -92,18 +93,28 @@ export default function FAQ() {
           </>
         }
       />
-      <FAQQuestionList
-        questions={questions.map((q) => ({
-          id: q.id,
-          title: q.title,
-          date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
-          answer: q.answer?.content || "",
-          isAnswered: !!q.answer?.content,
-        }))}
-        onDelete={handleDelete}
-        onCardClick={handleCardClick}
-        canDelete={canDelete}
-      />
+      <FaqContainer>
+        <FAQQuestionList
+          questions={questions.map((q) => ({
+            id: q.id,
+            title: q.title,
+            date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
+            answer: q.answer?.content || "",
+            isAnswered: !!q.answer?.content,
+          }))}
+          onDelete={handleDelete}
+          onCardClick={handleCardClick}
+          canDelete={canDelete}
+        />
+      </FaqContainer>
+     
     </ContainerWrapper>
   );
 }
+
+const FaqContainer = styled.div`
+  width: 100%;
+  flex: 1; /* 남은 공간을 차지하도록 설정 */
+  overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  //margin-bottom: 6rem; 
+`;
