@@ -47,6 +47,15 @@ const GoogleBtn = styled.div`
   margin-top: 4rem;
   display: inline-flex;
   align-items: center;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+
+  &:active {
+    background-color: #e0e0e0;
+    transform: scale(0.97);
+  }
 `;
 const StatusContainer = styled.div`
   display: flex;
@@ -87,7 +96,9 @@ export default function Login() {
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
     window.location.href = `${baseURL}/oauth2/authorize/google`;
   };
-
+  const InstaLink= ()=>{
+    window.location.href="https://www.instagram.com/comncheck?igsh=dnRjOXdiaWpoN3Vo";
+  }
   return (
     <Wrapper>
       <Logo src={`/logo.png`} alt="로고" />
@@ -106,7 +117,7 @@ export default function Login() {
       </GoogleBtn>
       <StatusContainer>
         <AnsAccount>아직 학교 계정이 없으신가요?</AnsAccount>
-        <AskManager>관리자에게 문의하기</AskManager>
+        <AskManager onClick={InstaLink}>관리자에게 문의하기</AskManager>
       </StatusContainer>
     </Wrapper>
   );
