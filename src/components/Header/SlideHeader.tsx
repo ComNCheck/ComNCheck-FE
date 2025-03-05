@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef, TouchEvent } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { theme } from "@/app/styles/theme";
-import bannerBackground from "../../../public/bannerBackground.png";
 import { majorEventList } from "@/apis/notice.type";
 import { getMajorEvent } from "@/apis/notice";
+import bannerBackground from "../../../public/bannerBackground.png";
 
 export default function SlideHeader() {
   const [eventNotices, setEventNotices] = useState<majorEventList | null>(null);
@@ -76,37 +76,33 @@ export default function SlideHeader() {
 
   return (
     <Container>
-      <SlideHeaderWapper
+      <CardContainer
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         direction={slideDirection}
       >
-        <Overlay />
-        <Content>
-          <Title>{currentEvent.eventName}</Title>
-          <Date>{`${currentEvent.date} ${currentEvent.time}`}</Date>
-          <ApplyButton
-            onClick={() => window.open(currentEvent.googleFormLink, "_blank")}
-          >
-            신청하기
-          </ApplyButton>
-        </Content>
-        <ImageContainer>
-          {currentEvent.firstImageUrl && (
-            <img
-              src={currentEvent.firstImageUrl}
-              alt={currentEvent.eventName}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                borderRadius: "0.5rem",
-              }}
-            />
-          )}
-        </ImageContainer>
-      </SlideHeaderWapper>
+        <Card>
+          <CardContent>
+            <EventTitle>{currentEvent.eventName}</EventTitle>
+            <EventDate>{`${currentEvent.date} ${currentEvent.time}`}</EventDate>
+            <ApplyButton
+              onClick={() => window.open(currentEvent.googleFormLink, "_blank")}
+            >
+              신청하기
+            </ApplyButton>
+          </CardContent>
+          <CardImageContainer>
+            {currentEvent.firstImageUrl && (
+              <CardImage
+                src={currentEvent.firstImageUrl}
+                alt={currentEvent.eventName}
+              />
+            )}
+          </CardImageContainer>
+        </Card>
+      </CardContainer>
+
       <Indicators>
         {eventNotices.map((_, index) => (
           <Indicator
@@ -120,21 +116,25 @@ export default function SlideHeader() {
   );
 }
 
-const slideRight = keyframes`
+const slideRightAnimation = keyframes`
   from {
-    transform: translateX(-100%);
+    transform: translateX(-100%) rotateY(10deg);
+    opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: translateX(0) rotateY(0);
+    opacity: 1;
   }
 `;
 
-const slideLeft = keyframes`
+const slideLeftAnimation = keyframes`
   from {
-    transform: translateX(100%);
+    transform: translateX(100%) rotateY(-10deg);
+    opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: translateX(0) rotateY(0);
+    opacity: 1;
   }
 `;
 
@@ -143,30 +143,105 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  padding: 1rem 0;
 `;
 
-const SlideHeaderWapper = styled.div<{ direction: "right" | "left" }>`
-  position: relative;
+const CardContainer = styled.div<{ direction: "right" | "left" }>`
   width: 23rem;
-  height: 10rem;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-radius: 1rem;
-  color: white;
-  background: url(${bannerBackground.src}) #0077ff 10%;
-  background-color: ${theme.colors.primary};
-  overflow: hidden;
+  perspective: 1000px;
+
   animation: ${(props) =>
-      props.direction === "right" ? slideRight : slideLeft}
-    0.5s ease-in-out;
+    props.direction === "right"
+      ? css`
+          ${slideRightAnimation} 0.5s ease-out
+        `
+      : css`
+          ${slideLeftAnimation} 0.5s ease-out
+        `};
+`;
+
+const Card = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  // background: white;
+  // background: url(${bannerBackground.src}) #0077ff 10%;
+  // border: red solid 1px;
+  // background: #0077ff 90%;
+  // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 15px rgba(55, 109, 255, 0.2);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+`;
+
+const EventTitle = styled.h1`
+  color: ${theme.colors.primary};
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+`;
+
+const EventDate = styled.p`
+  color: ${theme.colors.text};
+  font-size: 0.9rem;
+  margin: 0;
+`;
+
+const ApplyButton = styled.button`
+  display: inline-flex;
+  padding: 0.5rem 1rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2rem;
+  border: none;
+  background: ${theme.colors.primary};
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: fit-content;
+
+  &:hover {
+    background: ${theme.colors.primary}dd;
+  }
+`;
+
+const CardImageContainer = styled.div`
+  width: 7rem;
+  height: 7rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const Indicators = styled.div`
   display: flex;
   gap: 0.5rem;
-  margin-top: -0.5rem;
+  margin-top: 0.5rem;
 `;
 
 const Indicator = styled.div<{ $active: boolean }>`
@@ -174,62 +249,11 @@ const Indicator = styled.div<{ $active: boolean }>`
   height: 8px;
   border-radius: 50%;
   background-color: ${(props) =>
-    props.$active ? theme.colors.primary : theme.colors.mutedText};
+    props.$active ? theme.colors.primary : "#E0E0E0"};
   cursor: pointer;
-  transition: background-color 0.3s ease;
-`;
+  transition: all 0.3s ease;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: ${theme.colors.primary};
-  mix-blend-mode: screen;
-`;
-
-const Content = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-`;
-
-const Title = styled.h1`
-  color: ${theme.colors.contrast};
-  font-family: Inter;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 900;
-  line-height: normal;
-`;
-
-const Date = styled.p`
-  font-size: 1rem;
-`;
-
-const ApplyButton = styled.button`
-  display: inline-flex;
-  width: 87px;
-  height: 30px;
-  padding: 0.5rem 1rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-  border-radius: 40px;
-  background: ${theme.colors.text};
-  cursor: pointer;
-`;
-
-const ImageContainer = styled.div`
-  display: flex;
-  position: relative;
-  width: 8rem;
-  height: 8rem;
-  justify-content: center;
-  align-items: center;
-  padding-right: 1rem;
+  &:hover {
+    transform: scale(1.2);
+  }
 `;
