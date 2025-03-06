@@ -236,6 +236,7 @@ export default function EventDetail() {
           onClick={handleWriteClick}
           style={{
             visibility:
+            role === "ROLE_ADMIN" ||
               role === "ROLE_MAJOR_PRESIDENT" ||
               role === "ROLE_GRADUATE_STUDENT"
                 ? "visible"
@@ -248,7 +249,11 @@ export default function EventDetail() {
         <CustomFormWrapper>
         {event?.cardNewsImageUrls && event.cardNewsImageUrls.length > 0 && (
           <ImageSliderContainer>
-            <SlideButton onClick={handlePrev}>〈</SlideButton> {/* 이전 버튼 */}
+            {/* 이전 버튼 (이미지가 2장 이상일 때만 보이도록) */}
+            {event.cardNewsImageUrls.length > 1 && (
+              <SlideButton onClick={handlePrev}>〈</SlideButton>
+            )}
+
             <ImageContainer>
               <StyledImage
                 src={event.cardNewsImageUrls[currentIndex]}
@@ -257,9 +262,14 @@ export default function EventDetail() {
                 height={400}
               />
             </ImageContainer>
-            <SlideButton onClick={handleNext}>〉</SlideButton> {/* 다음 버튼 */}
+
+            {/* 다음 버튼 (이미지가 2장 이상일 때만 보이도록) */}
+            {event.cardNewsImageUrls.length > 1 && (
+              <SlideButton onClick={handleNext}>〉</SlideButton>
+            )}
           </ImageSliderContainer>
         )}
+
 
           <EventText>{event.notice}</EventText>
         </CustomFormWrapper>
