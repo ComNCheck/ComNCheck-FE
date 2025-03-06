@@ -200,7 +200,7 @@ export default function EventDetail() {
         if (daysRemaining < 0) {
           setDday("종료");
         } else if (daysRemaining === 0) {
-          setDday("D-Day");
+          setDday("D-day");
         } else {
           setDday(`D-${daysRemaining}`);
         }
