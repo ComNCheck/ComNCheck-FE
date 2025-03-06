@@ -149,6 +149,8 @@ const Container = styled.div`
 const CardContainer = styled.div<{ direction: "right" | "left" }>`
   width: 23rem;
   perspective: 1000px;
+  display: flex;
+  justify-content: center;
 
   animation: ${(props) =>
     props.direction === "right"
@@ -167,12 +169,14 @@ const Card = styled.div`
   padding: 1.5rem;
   border-radius: 1rem;
   // background: white;
-  // background: url(${bannerBackground.src}) #0077ff 10%;
+  background: url(${bannerBackground.src});
   // border: red solid 1px;
   // background: #0077ff 90%;
   // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 4px 15px rgba(55, 109, 255, 0.2);
   transition: transform 0.3s ease;
+  width: 327px;
+  height: 142px;
 
   &:hover {
     transform: translateY(-5px);
@@ -188,14 +192,14 @@ const CardContent = styled.div`
 `;
 
 const EventTitle = styled.h1`
-  color: ${theme.colors.primary};
+  color: white;
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
 `;
 
 const EventDate = styled.p`
-  color: ${theme.colors.text};
+  color: white;
   font-size: 0.9rem;
   margin: 0;
 `;
@@ -207,7 +211,7 @@ const ApplyButton = styled.button`
   align-items: center;
   border-radius: 2rem;
   border: none;
-  background: ${theme.colors.primary};
+  background: #3a3a3a;
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
