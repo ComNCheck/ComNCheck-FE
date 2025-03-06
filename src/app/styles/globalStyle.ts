@@ -9,13 +9,13 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
   }
 
   html, body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Pretendard', sans-serif;
     overflow: hidden;
   }
 
@@ -23,6 +23,10 @@ const GlobalStyle = createGlobalStyle`
     max-width: 31rem;
     margin: 0 auto;
     background-color: white;
+  }
+
+  input, textarea, select, button, option {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
   }
 
   a {

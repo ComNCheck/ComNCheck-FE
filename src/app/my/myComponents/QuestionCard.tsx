@@ -85,6 +85,7 @@ const Card = styled.div`
   background-color: white;
   overflow: hidden;
   cursor: pointer;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const ContentWrapper = styled.div<{ $isSwiped: boolean }>`
@@ -96,11 +97,13 @@ const ContentWrapper = styled.div<{ $isSwiped: boolean }>`
   transform: ${({ $isSwiped }) =>
     $isSwiped ? "translateX(-3rem)" : "translateX(0)"};
   justify-content: space-between;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const QuestionWrapper = styled.div`
   display: flex;
   align-items: center;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const NumberCircle = styled.div`
@@ -115,11 +118,13 @@ const NumberCircle = styled.div`
   font-size: 0.9rem;
   font-weight: bold;
   margin-right: 15px;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const QuestionInfo = styled.div`
   display: flex;
   flex-direction: column;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const QuestionTitle = styled.h3`
@@ -129,11 +134,13 @@ const QuestionTitle = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: "Pretendard", sans-serif;
 `;
 
 const QuestionDate = styled.span`
   font-size: 0.8rem;
   color: ${theme.colors.mutedText};
+  font-family: "Pretendard", sans-serif;
 `;
 
 const AnswerStatus = styled.span<{ $isAnswered: boolean }>`
@@ -141,6 +148,7 @@ const AnswerStatus = styled.span<{ $isAnswered: boolean }>`
   font-weight: bold;
   color: ${({ $isAnswered }) =>
     $isAnswered ? theme.colors.success : theme.colors.warning};
+  font-family: "Pretendard", sans-serif;
 `;
 
 const DeleteButton = styled.button<{ $isSwiped: boolean }>`
@@ -160,6 +168,7 @@ const DeleteButton = styled.button<{ $isSwiped: boolean }>`
   opacity: ${({ $isSwiped }) => ($isSwiped ? 1 : 0)};
   pointer-events: ${({ $isSwiped }) => ($isSwiped ? "auto" : "none")};
   transition: opacity 0.3s ease;
+  font-family: "Pretendard", sans-serif;
 `;
 
 export default QuestionCard;
