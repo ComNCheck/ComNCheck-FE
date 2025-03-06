@@ -161,16 +161,27 @@ export default function ApplyRating() {
     // 로컬스토리지에서 memberData 가져오기
     const memberData = JSON.parse(localStorage.getItem("memberData") || "{}");
     if (memberData) {
-      setValues({
+      const initialValues = {
         name: memberData.name || "",
-        id: memberData.studentNumber || "",
+        id: memberData.studentNumber ? memberData.studentNumber.toString() : "",  // 학번을 문자열로 저장
         unit: memberData.major || "",
         position: memberData.position || "",
         role: memberData.role || "ROLE_STUDENT", // 기본값 설정
-      });
-      setSelectedRole(mapRoleToDisplay(memberData.role || "ROLE_STUDENT"));
+      };
+  
+      setValues(initialValues);
+      setSelectedRole(mapRoleToDisplay(initialValues.role));
+  
+      // 로컬스토리지 값에 맞춰 isFormValid 업데이트
+      setIsFormValid(
+        initialValues.name !== "" &&
+          initialValues.id !== "" &&
+          initialValues.id.length === 9 &&  // 학번 길이 검사
+          initialValues.unit !== "" &&
+          initialValues.position !== ""
+      );
     }
-  }, []);
+  }, []); 
   const handleRoleChange = (role: string) => {
     let roleMapping: string;
 
