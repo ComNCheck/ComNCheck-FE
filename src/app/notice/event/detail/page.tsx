@@ -79,17 +79,18 @@ const WritingBtn = styled.div`
 const ImageContainer = styled.div`
   display: flex;
   position: relative;
-  width: 100%;
-  height: auto;
+  width: 600px; // 카드뉴스 사이즈에 맞춰 바꾸기
+  height: 400px; 
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 `;
 
 const StyledImage = styled(Image)`
   border-radius: 0.5rem;
-  object-fit: cover;
-  max-width: 100%; /* 이미지가 컨테이너를 넘어가지 않도록 */
-  height: auto; /* 비율 유지 */
+  object-fit: contain; /* 비율 유지하면서 지정된 크기 안에 맞춤 */
+  width: 100%;
+  height: 100%;
 `;
 
 const EventText = styled.div`
@@ -105,6 +106,37 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin: 1rem 0;
+`;
+const ImageSliderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+`;
+
+const SlideButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 50%;
+  z-index: 10;
+
+  &:first-child {
+    left: 10px;
+  }
+
+  &:last-child {
+    right: 10px;
+  }
 `;
 
 export default function EventDetail() {
@@ -124,7 +156,16 @@ export default function EventDetail() {
 
   const [dday, setDday] = useState<number | string>("");
   const [role, setRole] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ?(event.cardNewsImageUrls || []).length - 1 : prev - 1));
+  };
+  
+  const handleNext = () => {
+    setCurrentIndex((prev) =>  (prev === (event.cardNewsImageUrls || []).length - 1 ? 0 : prev + 1));
+  };
+  
   useEffect(() => {
     if (id) {
       inquireEvent(parseInt(id))
@@ -205,16 +246,21 @@ export default function EventDetail() {
           <FaPenToSquare />
         </WritingBtn>
         <CustomFormWrapper>
-          {event?.cardNewsImageUrls && event.cardNewsImageUrls.length > 0 && (
+        {event?.cardNewsImageUrls && event.cardNewsImageUrls.length > 0 && (
+          <ImageSliderContainer>
+            <SlideButton onClick={handlePrev}>〈</SlideButton> {/* 이전 버튼 */}
             <ImageContainer>
               <StyledImage
-                src={event.cardNewsImageUrls[0]}
-                alt="이벤트 이미지"
+                src={event.cardNewsImageUrls[currentIndex]}
+                alt={`이벤트 이미지 ${currentIndex + 1}`}
                 width={600}
                 height={400}
               />
             </ImageContainer>
-          )}
+            <SlideButton onClick={handleNext}>〉</SlideButton> {/* 다음 버튼 */}
+          </ImageSliderContainer>
+        )}
+
           <EventText>{event.notice}</EventText>
         </CustomFormWrapper>
         <ButtonContainer>
