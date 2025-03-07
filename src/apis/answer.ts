@@ -18,6 +18,8 @@ export const putAnswer = async (
   data: AnswerRequest
 ): Promise<void> => {
   try {
+    console.log("요청 URL:", `/api/v1/major/answers/${questionId}`);
+    console.log("요청 데이터:", data);
     await instance.put(`/api/v1/major/answers/${questionId}`, data);
   } catch (error) {
     console.error("MY - 답변하기 put API 요청 실패:", error);

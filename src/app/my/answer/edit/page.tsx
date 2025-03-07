@@ -17,28 +17,29 @@ export default function EditAnswer() {
   const [shared, setShared] = useState(true);
   const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const [answer, setAnswer] = useState("");
+  const [questionId, setQuestionId] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const router = useRouter();
 
-  useEffect(() => {
-    if (id) {
-      fetchQuestionAndAnswer(parseInt(id));
-    }
-  }, [id]);
-
-  const fetchQuestionAndAnswer = async (questionId: number) => {
+  // 질문 데이터 불러오기
+  const fetchQuestionAndAnswer = async (id: number) => {
     try {
-      const questionData = await getQuestionById(questionId);
-      console.log("원본 질문 데이터:", questionData); // 디버깅용 로그
+      console.log("질문 데이터 요청 ID:", id);
+      const questionData = await getQuestionById(id);
+      console.log("원본 질문 데이터:", questionData);
 
-      // answer 필드를 배열로 변환
       const formattedQuestion = {
         ...questionData,
-        answer: questionData.answer ? [questionData.answer] : null,
+        answer: Array.isArray(questionData.answer)
+          ? questionData.answer
+          : questionData.answer
+            ? [questionData.answer]
+            : [],
       } as AllQuestionResponse;
 
-      console.log("변환된 질문 데이터:", formattedQuestion); // 디버깅용 로그
+      console.log("변환된 질문 데이터:", formattedQuestion);
       setQuestion(formattedQuestion);
       setShared(formattedQuestion.shared);
 
@@ -48,16 +49,22 @@ export default function EditAnswer() {
         setAnswer("");
       }
     } catch (error) {
-      console.error("데이터 가져오기 실패:", error);
+      console.error(`ID ${id}에 대한 데이터 가져오기 실패:`, error);
     }
   };
 
-  // const toggleHandler = () => {
-  //   setShared(!shared);
-  // };
+  // 초기 데이터 로드
+  useEffect(() => {
+    if (id) {
+      const parsedId = parseInt(id);
+      setQuestionId(parsedId);
+      fetchQuestionAndAnswer(parsedId);
+    }
+  }, [id]);
 
+  // 제출 핸들러
   const handleSubmit = async () => {
-    if (!question) {
+    if (!questionId) {
       alert("질문 정보를 불러오지 못했습니다.");
       return;
     }
@@ -66,18 +73,30 @@ export default function EditAnswer() {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
       const answerData: AnswerRequest = {
-        questionId: question.id,
+        questionId: questionId,
         content: answer.trim(),
       };
 
-      await putAnswer(question.id, answerData);
+      console.log("사용할 질문 ID:", questionId);
+      console.log("답변 내용:", answer.trim());
+
+      // 서버에 답변 업데이트 요
+      await putAnswer(questionId, answerData);
+
+      // 성공적으로 업데이트 된 후 최신 데이터를 다시 불러옴
+      await fetchQuestionAndAnswer(questionId);
+
       alert("답변이 성공적으로 수정되었습니다.");
       router.push("/my/answer");
     } catch (error) {
-      console.error("답변 수정 실패:", error);
+      console.error(`ID ${questionId} 답변 수정 실패:`, error);
       alert("답변 수정에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -118,11 +137,16 @@ export default function EditAnswer() {
             value={answer}
             placeholder="여기에 답변을 입력하세요."
             onChange={(e) => setAnswer(e.target.value)}
+            disabled={isSubmitting}
           ></ContentAnswer>
 
           <ButtonWapper>
-            <SubmitButton type="button" onClick={handleSubmit}>
-              수정
+            <SubmitButton
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "처리 중..." : "수정"}
             </SubmitButton>
           </ButtonWapper>
         </ContentBoxSmall>
