@@ -143,10 +143,13 @@ export default function Notice() {
   const calculateDDay = (date: string) => {
     const eventDate = new Date(date);
     const today = new Date();
-    const diff = Math.ceil(
+    const diff = Math.floor(
       (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
     );
-    return diff >= 0 ? `D-${diff}` : "종료됨";
+
+    if (diff===0) return "D-day";
+    if (diff<0) return "종료됨";
+    return `D-${diff}` ;
   };
 
   return (
