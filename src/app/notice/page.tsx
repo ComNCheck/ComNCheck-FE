@@ -143,7 +143,7 @@ export default function Notice() {
   const calculateDDay = (date: string) => {
     const eventDate = new Date(date);
     const today = new Date();
-    const diff = Math.floor(
+    const diff = Math.ceil(
       (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
     );
 

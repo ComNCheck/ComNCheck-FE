@@ -195,7 +195,7 @@ export default function EventDetail() {
         setDday("날짜 오류");
       } else {
         const timeDiff = eventDate.getTime() - today.getTime();
-        const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24));
+        const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
         if (daysRemaining < 0) {
           setDday("종료");
