@@ -23,5 +23,6 @@ export interface roleChangeDetailType {
   major: string;
   studentNumber: number;
   position: string;
+  requestedRole: string;
   status: string;
 }

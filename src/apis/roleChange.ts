@@ -60,3 +60,47 @@ export const getRoleChangeDetail = async (
     throw error;
   }
 };
+// MY - 과회장 학생회 등급 신청 목록 조회 - 특정 승인
+export const getRoleChangeDetailApprove = async (
+  requestId: number
+): Promise<roleChangeDetailType[]> => {
+  try {
+    const response = await instance.post<roleChangeDetailType[]>(
+      `/api/v1/role-change-requests/${requestId}/approve`
+    );
+    console.log(
+      "MY - 과회장 학생회 등급 신청 목록 조회 - 특정 승인:",
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "MY - 과회장 학생회 등급 신청 목록 조회 - 특정 승인 API 요청 실패:",
+      error
+    );
+    throw error;
+  }
+};
+
+export const updateRoleChangeStatus = async (
+  requestId: number,
+  status: string,
+  position?: string,
+  role?: string
+): Promise<void> => {
+  try {
+    const response = await instance.put(
+      `/api/v1/role-change-requests/${requestId}`,
+      {
+        status,
+        position,
+        role, // 추가된 부분
+      }
+    );
+    console.log("역할 변경 요청 상태 업데이트 응답:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("역할 변경 요청 상태 업데이트 실패:", error);
+    throw error;
+  }
+};

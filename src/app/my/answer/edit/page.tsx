@@ -11,54 +11,81 @@ import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 import { getQuestionById } from "@/apis/question";
 import { putAnswer } from "@/apis/answer";
 import { AllQuestionResponse } from "@/apis/question.type";
-import { AnswerRequest } from "@/apis/answer.type";
 
 export default function EditAnswer() {
   const [shared, setShared] = useState(true);
   const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const [answer, setAnswer] = useState("");
+  const [majorQuestionId, setMajorQuestionId] = useState<number | null>(null);
+  const [answerId, setAnswerId] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = searchParams.get("majorQuestionId");
   const router = useRouter();
 
-  useEffect(() => {
-    if (id) {
-      fetchQuestionAndAnswer(parseInt(id));
-    }
-  }, [id]);
-
-  const fetchQuestionAndAnswer = async (questionId: number) => {
+  // 질문 데이터 불러오기
+  const fetchQuestionAndAnswer = async (id: number) => {
     try {
-      const questionData = await getQuestionById(questionId);
-      console.log("원본 질문 데이터:", questionData); // 디버깅용 로그
+      console.log("질문 데이터 요청 ID:", id);
+      const questionData = await getQuestionById(id);
+      console.log("원본 질문 데이터:", questionData);
 
-      // answer 필드를 배열로 변환
       const formattedQuestion = {
         ...questionData,
-        answer: questionData.answer ? [questionData.answer] : null,
+        answer: Array.isArray(questionData.answer)
+          ? questionData.answer
+          : questionData.answer
+            ? [questionData.answer]
+            : [],
       } as AllQuestionResponse;
 
-      console.log("변환된 질문 데이터:", formattedQuestion); // 디버깅용 로그
+      console.log("변환된 질문 데이터:", formattedQuestion);
       setQuestion(formattedQuestion);
       setShared(formattedQuestion.shared);
 
       if (formattedQuestion.answer && formattedQuestion.answer.length > 0) {
         setAnswer(formattedQuestion.answer[0].content);
+
+        // as any로 타입 단언
+        const answerObj = formattedQuestion.answer[0] as any;
+
+        // 콘솔에 전체 객체 출력
+        console.log("Answer object:", answerObj);
+
+        // 안전하게 answerId 추출
+        if (answerObj && "answerId" in answerObj) {
+          setAnswerId(answerObj.answerId);
+          console.log("설정된 답변 ID:", answerObj.answerId);
+        } else {
+          console.error("답변 객체에 answerId 필드가 없습니다");
+          setAnswerId(null);
+        }
       } else {
         setAnswer("");
+        setAnswerId(null);
       }
     } catch (error) {
-      console.error("데이터 가져오기 실패:", error);
+      console.error(`ID ${id}에 대한 데이터 가져오기 실패:`, error);
     }
   };
 
-  // const toggleHandler = () => {
-  //   setShared(!shared);
-  // };
+  // 초기 데이터 로드
+  useEffect(() => {
+    if (id) {
+      const parsedId = parseInt(id);
+      setMajorQuestionId(parsedId);
+      fetchQuestionAndAnswer(parsedId);
+    }
+  }, [id]);
 
+  // 제출 핸들러
   const handleSubmit = async () => {
-    if (!question) {
+    if (!majorQuestionId) {
       alert("질문 정보를 불러오지 못했습니다.");
+      return;
+    }
+    if (!answerId) {
+      alert("답변 ID를 찾을 수 없습니다.");
       return;
     }
     if (!answer.trim()) {
@@ -66,18 +93,28 @@ export default function EditAnswer() {
       return;
     }
 
-    try {
-      const answerData: AnswerRequest = {
-        questionId: question.id,
-        content: answer.trim(),
-      };
+    setIsSubmitting(true);
 
-      await putAnswer(question.id, answerData);
+    try {
+      // JSON 문자열로 변환하여 전송
+      const answerContent = JSON.stringify({ content: answer.trim() });
+
+      console.log("사용할 답변 ID:", answerId);
+      console.log("답변 내용:", answerContent);
+
+      // 서버에 답변 업데이트 요청
+      await putAnswer(answerId, answerContent);
+
+      // 성공적으로 업데이트 된 후 최신 데이터를 다시 불러옴
+      await fetchQuestionAndAnswer(majorQuestionId);
+
       alert("답변이 성공적으로 수정되었습니다.");
       router.push("/my/answer");
     } catch (error) {
-      console.error("답변 수정 실패:", error);
+      console.error(`답변 ID ${answerId} 수정 실패:`, error);
       alert("답변 수정에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -118,11 +155,16 @@ export default function EditAnswer() {
             value={answer}
             placeholder="여기에 답변을 입력하세요."
             onChange={(e) => setAnswer(e.target.value)}
+            disabled={isSubmitting}
           ></ContentAnswer>
 
           <ButtonWapper>
-            <SubmitButton type="button" onClick={handleSubmit}>
-              수정
+            <SubmitButton
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "처리 중..." : "수정"}
             </SubmitButton>
           </ButtonWapper>
         </ContentBoxSmall>

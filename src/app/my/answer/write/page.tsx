@@ -17,7 +17,7 @@ export default function WriteAnswer() {
   const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const [answer, setAnswer] = useState("");
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = searchParams.get("majorQuestionId");
   const router = useRouter();
 
   useEffect(() => {
@@ -35,11 +35,6 @@ export default function WriteAnswer() {
       console.error("질문 데이터 가져오기 실패:", error);
     }
   };
-
-  // const toggleHandler = () => {
-  //   setShared(!shared);
-  // };
-
   const handleSubmit = async () => {
     if (!question) {
       alert("질문 정보를 불러오지 못했습니다.");
@@ -51,7 +46,7 @@ export default function WriteAnswer() {
     }
 
     const answerData = {
-      questionId: question.id,
+      majorQuestionId: question.majorQuestionId,
       content: answer,
     };
 
@@ -59,7 +54,6 @@ export default function WriteAnswer() {
       console.log("답변 요청 데이터:", answerData);
       await postAnswer(answerData);
       alert("답변이 성공적으로 등록되었습니다.");
-      // window.location.href = "/my/answer";
       router.push("/my/answer");
     } catch (error) {
       console.error("답변 등록 실패:", error);

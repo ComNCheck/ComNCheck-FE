@@ -14,7 +14,7 @@ const WrapperContainer = styled.div`
   overflow-y: auto;
   width: 100%;
   height: 80vh;
-`
+`;
 export default function Answer() {
   const [isAnswered, setIsAnswered] = useState(false);
   const router = useRouter();
@@ -41,11 +41,11 @@ export default function Answer() {
     }
   };
 
-  const handleCardClick = ($id: number, $isAnswered: boolean) => {
+  const handleCardClick = ($majorQuestionId: number, $isAnswered: boolean) => {
     if ($isAnswered) {
-      router.push(`/my/answer/edit?id=${$id}`);
+      router.push(`/my/answer/edit?majorQuestionId=${$majorQuestionId}`);
     } else {
-      router.push(`/my/answer/write?id=${$id}`);
+      router.push(`/my/answer/write?majorQuestionId=${$majorQuestionId}`);
     }
   };
 
@@ -60,15 +60,17 @@ export default function Answer() {
         return isAnswered === hasAnswer;
       })
       .map((q) => ({
-        id: q.id,
+        id: q.majorQuestionId,
         title: q.title,
         date: q.createdAt,
         isAnswered: Boolean(q.answer?.[0]?.content.trim()),
       }));
   }, [questions, isAnswered]);
 
-  const handleDelete = async ($id: number) => {
-    const question = questions.find((q) => q.id === $id);
+  const handleDelete = async ($majorQuestionId: number) => {
+    const question = questions.find(
+      (q) => q.majorQuestionId === $majorQuestionId
+    );
 
     // answer가 있고 content가 있는 경우에만 삭제 가능
     const hasValidAnswer = Boolean(question?.answer?.[0]?.content.trim());
@@ -80,8 +82,10 @@ export default function Answer() {
 
     if (window.confirm("삭제하시겠습니까?")) {
       try {
-        await deleteQuestion($id);
-        setQuestions((prev) => prev.filter((q) => q.id !== $id));
+        await deleteQuestion($majorQuestionId);
+        setQuestions((prev) =>
+          prev.filter((q) => q.majorQuestionId !== $majorQuestionId)
+        );
         alert("삭제되었습니다.");
       } catch (error) {
         console.error("질문 삭제 실패:", error);
@@ -109,12 +113,11 @@ export default function Answer() {
       />
       <WrapperContainer>
         <CommonQuestionList
-                questions={filteredQuestions}
-                onDelete={handleDelete}
-                onCardClick={handleCardClick}
-              />
+          questions={filteredQuestions}
+          onDelete={handleDelete}
+          onCardClick={handleCardClick}
+        />
       </WrapperContainer>
-      
     </ContainerWrapper>
   );
 }
