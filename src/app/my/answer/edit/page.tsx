@@ -11,7 +11,6 @@ import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 import { getQuestionById } from "@/apis/question";
 import { putAnswer } from "@/apis/answer";
 import { AllQuestionResponse } from "@/apis/question.type";
-import { AnswerParameter } from "@/apis/answer.type";
 
 export default function EditAnswer() {
   const [shared, setShared] = useState(true);

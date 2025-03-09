@@ -9,6 +9,7 @@ import RoleCheckModal from "@/components/modal/RoleCheckModal";
 import {
   getRoleChangeList,
   getRoleChangeDetail,
+  getRoleChangeDetailApprove,
 } from "../../../apis/roleChange";
 import {
   roleChangeListType,
@@ -27,14 +28,14 @@ export default function ModifyRole() {
       try {
         const roleChangeList = await getRoleChangeList();
         setRoles(roleChangeList);
-        console.error("등급 신청 목록을 불러오기 data:", roleChangeList);
+        console.log("등급 신청 목록을 불러오기 data:", roleChangeList);
       } catch (error) {
         console.error("등급 신청 목록을 불러오는 중 오류 발생:", error);
       }
     };
 
     fetchRoles();
-  }, []);
+  }, [isApply]); // isApply가 변경될 때마다 데이터 다시 불러오기
 
   const filteredRoles = useMemo(() => {
     return roles.filter((role) =>
@@ -69,15 +70,51 @@ export default function ModifyRole() {
     }
   };
 
-  const handleRoleUpdate = (updatedRole: roleChangeDetailType) => {
-    setRoles((prevRoles) =>
-      prevRoles.map((role) =>
-        role.requestId === updatedRole.requestId
-          ? { ...role, status: "APPROVED" }
-          : role
-      )
-    );
-    setSelectedRole(null);
+  const handleRoleUpdate = async (updatedRole: roleChangeDetailType) => {
+    try {
+      if (!updatedRole.requestId) {
+        console.error("요청 ID가 없습니다.");
+        return;
+      }
+
+      // API 호출
+      const approvedRoles = await getRoleChangeDetailApprove(
+        updatedRole.requestId
+      );
+
+      console.log("✅ 승인 API 응답:", approvedRoles);
+
+      if (approvedRoles.length > 0) {
+        const approvedRole = approvedRoles[0];
+
+        setRoles((prevRoles) =>
+          prevRoles.map((role) =>
+            role.requestId === approvedRole.requestId
+              ? { ...role, status: "APPROVED" }
+              : role
+          )
+        );
+
+        setSelectedRole(null);
+
+        const roleChangeList = await getRoleChangeList();
+        setRoles(roleChangeList);
+      }
+    } catch (error: any) {
+      console.error("❌ 역할 승인 중 오류 발생:", error);
+
+      // 서버 응답이 있는지 확인
+      if (error.response) {
+        console.error("📌 서버 응답 데이터:", error.response.data);
+        console.error("📌 상태 코드:", error.response.status);
+      } else if (error.request) {
+        console.error("📌 요청은 전송되었지만 응답 없음:", error.request);
+      } else {
+        console.error("📌 요청 생성 중 오류 발생:", error.message);
+      }
+
+      alert("역할 승인에 실패했습니다.");
+    }
   };
 
   return (
