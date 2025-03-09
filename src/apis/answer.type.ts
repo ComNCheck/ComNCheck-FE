@@ -3,3 +3,7 @@ export interface AnswerRequest {
   content: string;
   majorQuestionId: number;
 }
+
+export interface AnswerParameter {
+  content: string;
+}

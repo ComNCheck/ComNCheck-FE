@@ -11,16 +11,17 @@ import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 import { getQuestionById } from "@/apis/question";
 import { putAnswer } from "@/apis/answer";
 import { AllQuestionResponse } from "@/apis/question.type";
-import { AnswerRequest } from "@/apis/answer.type";
+import { AnswerParameter } from "@/apis/answer.type";
 
 export default function EditAnswer() {
   const [shared, setShared] = useState(true);
   const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const [answer, setAnswer] = useState("");
-  const [questionId, setQuestionId] = useState<number | null>(null);
+  const [majorQuestionId, setMajorQuestionId] = useState<number | null>(null);
+  const [answerId, setAnswerId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const id = searchParams.get("majorQuestionId");
   const router = useRouter();
 
   // 질문 데이터 불러오기
@@ -45,8 +46,24 @@ export default function EditAnswer() {
 
       if (formattedQuestion.answer && formattedQuestion.answer.length > 0) {
         setAnswer(formattedQuestion.answer[0].content);
+
+        // as any로 타입 단언
+        const answerObj = formattedQuestion.answer[0] as any;
+
+        // 콘솔에 전체 객체 출력
+        console.log("Answer object:", answerObj);
+
+        // 안전하게 answerId 추출
+        if (answerObj && "answerId" in answerObj) {
+          setAnswerId(answerObj.answerId);
+          console.log("설정된 답변 ID:", answerObj.answerId);
+        } else {
+          console.error("답변 객체에 answerId 필드가 없습니다");
+          setAnswerId(null);
+        }
       } else {
         setAnswer("");
+        setAnswerId(null);
       }
     } catch (error) {
       console.error(`ID ${id}에 대한 데이터 가져오기 실패:`, error);
@@ -57,15 +74,19 @@ export default function EditAnswer() {
   useEffect(() => {
     if (id) {
       const parsedId = parseInt(id);
-      setQuestionId(parsedId);
+      setMajorQuestionId(parsedId);
       fetchQuestionAndAnswer(parsedId);
     }
   }, [id]);
 
   // 제출 핸들러
   const handleSubmit = async () => {
-    if (!questionId) {
+    if (!majorQuestionId) {
       alert("질문 정보를 불러오지 못했습니다.");
+      return;
+    }
+    if (!answerId) {
+      alert("답변 ID를 찾을 수 없습니다.");
       return;
     }
     if (!answer.trim()) {
@@ -76,24 +97,22 @@ export default function EditAnswer() {
     setIsSubmitting(true);
 
     try {
-      const answerData: AnswerRequest = {
-        questionId: questionId,
-        content: answer.trim(),
-      };
+      // JSON 문자열로 변환하여 전송
+      const answerContent = JSON.stringify({ content: answer.trim() });
 
-      console.log("사용할 질문 ID:", questionId);
-      console.log("답변 내용:", answer.trim());
+      console.log("사용할 답변 ID:", answerId);
+      console.log("답변 내용:", answerContent);
 
-      // 서버에 답변 업데이트 요
-      await putAnswer(questionId, answerData);
+      // 서버에 답변 업데이트 요청
+      await putAnswer(answerId, answerContent);
 
       // 성공적으로 업데이트 된 후 최신 데이터를 다시 불러옴
-      await fetchQuestionAndAnswer(questionId);
+      await fetchQuestionAndAnswer(majorQuestionId);
 
       alert("답변이 성공적으로 수정되었습니다.");
       router.push("/my/answer");
     } catch (error) {
-      console.error(`ID ${questionId} 답변 수정 실패:`, error);
+      console.error(`답변 ID ${answerId} 수정 실패:`, error);
       alert("답변 수정에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
