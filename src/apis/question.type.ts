@@ -16,7 +16,7 @@ export interface AnswerType {
 }
 
 export interface AllQuestionResponse {
-  id: number;
+  majorQuestionId: number;
   title: string;
   content: string;
   createdAt: string;
