@@ -23,7 +23,9 @@ export default function Edit() {
   const fetchQuestion = async (questionId: number) => {
     try {
       const questions = await getQuestion();
-      const currentQuestion = questions.find((q) => q.id === questionId);
+      const currentQuestion = questions.find(
+        (q) => q.majorQuestionId === questionId
+      );
       if (currentQuestion) {
         setQuestion(currentQuestion);
       } else {
@@ -38,7 +40,7 @@ export default function Edit() {
     if (!question) return;
     try {
       await UpdateQuestion(
-        question.id,
+        question.majorQuestionId,
         questionData.shared,
         questionData.title,
         questionData.content

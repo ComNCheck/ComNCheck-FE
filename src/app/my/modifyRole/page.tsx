@@ -16,6 +16,16 @@ import {
   roleChangeDetailType,
 } from "../../../apis/roleChange.type";
 
+// API 에러를 위한 인터페이스 정의
+interface ApiErrorResponse {
+  response?: {
+    data: unknown;
+    status: number;
+  };
+  request?: unknown;
+  message?: string;
+}
+
 export default function ModifyRole() {
   const [isApply, setIsApply] = useState<boolean>(false);
   const [roles, setRoles] = useState<roleChangeListType[]>([]);
@@ -100,17 +110,20 @@ export default function ModifyRole() {
         const roleChangeList = await getRoleChangeList();
         setRoles(roleChangeList);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("❌ 역할 승인 중 오류 발생:", error);
 
+      // 타입 가드를 사용하여 에러 객체의 형태 확인
+      const errorObj = error as ApiErrorResponse;
+
       // 서버 응답이 있는지 확인
-      if (error.response) {
-        console.error("📌 서버 응답 데이터:", error.response.data);
-        console.error("📌 상태 코드:", error.response.status);
-      } else if (error.request) {
-        console.error("📌 요청은 전송되었지만 응답 없음:", error.request);
-      } else {
-        console.error("📌 요청 생성 중 오류 발생:", error.message);
+      if (errorObj.response) {
+        console.error("📌 서버 응답 데이터:", errorObj.response.data);
+        console.error("📌 상태 코드:", errorObj.response.status);
+      } else if (errorObj.request) {
+        console.error("📌 요청은 전송되었지만 응답 없음:", errorObj.request);
+      } else if (errorObj.message) {
+        console.error("📌 요청 생성 중 오류 발생:", errorObj.message);
       }
 
       alert("역할 승인에 실패했습니다.");

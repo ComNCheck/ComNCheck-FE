@@ -36,7 +36,7 @@ export default function Check() {
       console.log("변환된 질문 목록:", formattedQuestions);
 
       const currentQuestion = formattedQuestions.find(
-        (q) => q.id === questionId
+        (q) => q.majorQuestionId === questionId
       );
       if (currentQuestion) {
         setQuestion(currentQuestion);
@@ -60,7 +60,7 @@ export default function Check() {
     }
     try {
       await putQuestion(
-        question.id,
+        question.majorQuestionId,
         shared,
         question?.title,
         question?.content
