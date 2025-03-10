@@ -15,14 +15,14 @@ export default function Check() {
   const [shared, setShared] = useState(true);
   const [question, setQuestion] = useState<AllQuestionResponse | null>(null);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const majorQuestionId = searchParams.get("majorQuestionId");
   const router = useRouter();
 
   useEffect(() => {
-    if (id) {
-      fetchQuestion(parseInt(id));
+    if (majorQuestionId) {
+      fetchQuestion(parseInt(majorQuestionId));
     }
-  }, [id]);
+  }, [majorQuestionId]);
 
   const fetchQuestion = async (questionId: number) => {
     try {
