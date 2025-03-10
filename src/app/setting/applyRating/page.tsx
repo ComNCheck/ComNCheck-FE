@@ -149,9 +149,9 @@ export default function ApplyRating() {
       case "ROLE_STUDENT":
         return "학생";
       case "ROLE_MAJOR_PRESIDENT":
-        return "학생회";
-      case "ROLE_GRADUATE_STUDENT":
         return "과회장";
+      case "ROLE_STUDENT_COUNCIL":
+        return "학생회";
       default:
         return "학생"; // 기본값
     }
@@ -191,10 +191,10 @@ export default function ApplyRating() {
         roleMapping = "ROLE_STUDENT";
         break;
       case "학생회":
-        roleMapping = "ROLE_MAJOR_PRESIDENT";
+        roleMapping = "ROLE_STUDENT_COUNCIL";
         break;
       case "과회장":
-        roleMapping = "ROLE_GRADUATE_STUDENT";
+        roleMapping = "ROLE_MAJOR_PRESIDENT";
         position = "과회장";
         break;
       default:
