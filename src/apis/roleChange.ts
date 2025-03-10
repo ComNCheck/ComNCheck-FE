@@ -42,15 +42,16 @@ export const getRoleChangeList = async (): Promise<roleChangeListType[]> => {
 // MY - 과회장 학생회 등급 신청 목록 조회 - 특정
 export const getRoleChangeDetail = async (
   requestId: number
-): Promise<roleChangeDetailType[]> => {
+): Promise<roleChangeDetailType> => {
   try {
-    const response = await instance.get<roleChangeDetailType[]>(
+    const response = await instance.get<roleChangeDetailType>(
       `/api/v1/role-change-requests/${requestId}`
     );
     console.log(
       "MY - 과회장 학생회 등급 신청 목록 조회 - 특정 API 요청 응답:",
       response.data
     );
+
     return response.data;
   } catch (error) {
     console.error(
@@ -92,9 +93,9 @@ export const updateRoleChangeStatus = async (
     const response = await instance.put(
       `/api/v1/role-change-requests/${requestId}`,
       {
+        requestPosition: position,
+        requestRole: role,
         status,
-        position,
-        role, // 추가된 부분
       }
     );
     console.log("역할 변경 요청 상태 업데이트 응답:", response.data);

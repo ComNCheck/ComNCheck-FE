@@ -1,6 +1,7 @@
 import React from "react";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import FormWrapper from "@/components/container/FormWrapper";
+import styled from "styled-components";
 
 import {
   roleChangeListType,
@@ -21,22 +22,35 @@ const CommonRoleList: React.FC<CommonRoleListProps> = ({
   onCardClick,
   onUpdate,
 }) => {
+  console.log("CommonRoleList render - roles:", roles);
+
   return (
     <ContainerWrapper>
       <FormWrapper>
-        {roles.map((role, index) => (
-          <RoleCard
-            key={role.requestId}
-            role={role}
-            index={index}
-            onDelete={onDelete}
-            onCardClick={onCardClick}
-            onUpdate={onUpdate}
-          />
-        ))}
+        {roles.length > 0 ? (
+          roles.map((role, index) => (
+            <RoleCard
+              key={role.requestId}
+              role={role}
+              index={index}
+              onDelete={onDelete}
+              onCardClick={onCardClick}
+              onUpdate={onUpdate}
+            />
+          ))
+        ) : (
+          <EmptyMessage>표시할 데이터가 없습니다.</EmptyMessage>
+        )}
       </FormWrapper>
     </ContainerWrapper>
   );
 };
 
 export default CommonRoleList;
+
+const EmptyMessage = styled.div`
+  padding: 1.5rem;
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+`;

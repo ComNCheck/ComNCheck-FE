@@ -1,59 +1,75 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 import { IoMdCloseCircle, IoIosArrowDown } from "react-icons/io";
 import { roleChangeDetailType } from "../../apis/roleChange.type";
+import {
+  getRoleChangeDetail,
+  getRoleChangeDetailApprove,
+  updateRoleChangeStatus,
+} from "../../apis/roleChange";
 
 interface RoleCheckModalProps {
-  role: roleChangeDetailType[] | null;
+  requestId: number;
   onClose: () => void;
   onUpdate: (updatedRole: roleChangeDetailType) => void;
+  isApproved?: boolean;
 }
 
 const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
-  role,
+  requestId,
   onClose,
   onUpdate,
+  isApproved = false,
 }) => {
+  const [roleData, setRoleData] = useState<roleChangeDetailType | null>(null);
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedRoleCode, setSelectedRoleCode] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // 역할 데이터 로드
   useEffect(() => {
-    const memberDataStr = localStorage.getItem("memberData");
-    if (memberDataStr) {
-      try {
-        const memberData = JSON.parse(memberDataStr);
-        if (memberData.role) {
-          let roleLabel = "";
-          switch (memberData.role) {
-            case "ROLE_STUDENT":
-              roleLabel = "학생";
-              break;
-            case "ROLE_STUDENT_COUNCIL":
-              roleLabel = "학생회";
-              break;
-            case "ROLE_MAJOR_PRESIDENT":
-              roleLabel = "과회장";
-              break;
-            default:
-              roleLabel = "학생";
-          }
-          setSelectedPosition(roleLabel);
-        }
-      } catch (error) {
-        console.error("localStorage 데이터 파싱 오류:", error);
-      }
-    }
+    const loadRoleData = async () => {
+      if (requestId) {
+        try {
+          setIsLoading(true);
+          console.log("API 호출 시작:", requestId);
 
-    if (role && role.length > 0) {
-      const currentRole = role[0];
+          const detail = await getRoleChangeDetail(requestId);
+          console.log("API 응답:", detail);
+
+          // 응답이 배열인 경우 첫 번째 항목 사용
+          if (Array.isArray(detail) && detail.length > 0) {
+            setRoleData(detail[0]);
+          }
+          // 응답이 객체인 경우 그대로 사용
+          else if (detail && typeof detail === "object") {
+            setRoleData(detail as roleChangeDetailType);
+          }
+        } catch (error) {
+          console.error("API 호출 오류:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadRoleData();
+  }, [requestId]);
+
+  // 역할 데이터가 변경되면 초기값 설정
+  useEffect(() => {
+    if (roleData) {
+      console.log("역할 데이터 설정:", roleData);
 
       // requestedRole 값을 변환하여 초기값 설정
       let requestedRoleLabel = "학생"; // 기본값
       let requestedRoleCode = "ROLE_STUDENT"; // 기본값
 
-      switch (currentRole.requestedRole) {
+      switch (roleData.requestedRole) {
         case "ROLE_STUDENT":
           requestedRoleLabel = "학생";
           requestedRoleCode = "ROLE_STUDENT";
@@ -70,14 +86,7 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
       setSelectedPosition(requestedRoleLabel);
       setSelectedRoleCode(requestedRoleCode);
     }
-  }, [role]);
-
-  if (!role || role.length === 0) return null;
-
-  const currentRole = role[0];
-  if (!currentRole) return null;
-
-  console.log("currentRole:", currentRole);
+  }, [roleData]);
 
   const handlePositionChange = (newPosition: string) => {
     setSelectedPosition(newPosition);
@@ -103,28 +112,85 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
 
   const handleSubmit = async () => {
     try {
-      if (!currentRole?.requestId) {
+      if (!roleData?.requestId) {
         console.error("요청 ID가 없습니다.");
         return;
       }
 
+      // 로딩 상태 시작
+      setIsLoading(true);
+
+      if (isApproved) {
+        // 이미 승인된 상태라면 등급만 변경 (updateRoleChangeStatus 사용)
+        console.log("등급 변경 API 호출:", {
+          requestId: roleData.requestId,
+          status: "APPROVED",
+          position: selectedPosition,
+          role: selectedRoleCode,
+        });
+        await updateRoleChangeStatus(
+          roleData.requestId,
+          "APPROVED",
+          selectedPosition,
+          selectedRoleCode
+        );
+      } else {
+        // 승인되지 않은 상태라면 승인 처리 (getRoleChangeDetailApprove 사용)
+        console.log("승인 API 호출:", roleData.requestId);
+        await getRoleChangeDetailApprove(roleData.requestId);
+      }
+
       // 부모 컴포넌트에 업데이트된 역할 정보 전달
-      // API 호출은 부모 컴포넌트에서 처리
       const updatedRole = {
-        ...currentRole,
+        ...roleData,
         position: selectedPosition,
         requestedRole: selectedRoleCode,
+        status: "APPROVED",
       };
 
       onUpdate(updatedRole);
       onClose();
     } catch (error) {
       console.error("등급 승인 처리 중 오류:", error);
+      alert("등급 승인 처리 중 오류가 발생했습니다.");
+    } finally {
+      // 로딩 상태 종료
+      setIsLoading(false);
     }
   };
 
   // 고정된 드롭다운 옵션
   const roleOptions = ["학생", "학생회", "과회장"];
+
+  if (isLoading) {
+    return (
+      <ModalOverlay>
+        <ModalContent>
+          <div style={{ textAlign: "center", padding: "2rem" }}>로딩 중...</div>
+        </ModalContent>
+      </ModalOverlay>
+    );
+  }
+
+  if (!roleData) {
+    return (
+      <ModalOverlay>
+        <ModalContent>
+          <CloseButton onClick={onClose}>
+            <IoMdCloseCircle />
+          </CloseButton>
+          <div style={{ textAlign: "center", padding: "2rem" }}>
+            데이터를 불러올 수 없습니다.
+          </div>
+          <ButtonContainer>
+            <Button onClick={onClose}>닫기</Button>
+          </ButtonContainer>
+        </ModalContent>
+      </ModalOverlay>
+    );
+  }
+
+  console.log("렌더링 - roleData:", roleData);
 
   return (
     <ModalOverlay>
@@ -141,9 +207,7 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
         ].map(({ key, label }) => (
           <FormWrapper key={key}>
             <Label>{label}</Label>
-            <FixedForm>
-              {currentRole[key as keyof roleChangeDetailType]}
-            </FixedForm>
+            <FixedForm>{roleData[key as keyof roleChangeDetailType]}</FixedForm>
           </FormWrapper>
         ))}
 
@@ -170,7 +234,9 @@ const RoleCheckModal: React.FC<RoleCheckModalProps> = ({
         </FormWrapper>
 
         <ButtonContainer>
-          <Button onClick={handleSubmit}>등급 수정 완료</Button>
+          <Button onClick={handleSubmit}>
+            {isApproved ? "등급 변경하기" : "등급 승인하기"}
+          </Button>
         </ButtonContainer>
       </ModalContent>
     </ModalOverlay>
