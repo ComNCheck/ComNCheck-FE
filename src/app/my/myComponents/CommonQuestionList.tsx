@@ -4,7 +4,7 @@ import ContainerWrapper from "@/components/container/ContainerWrapper";
 import FormWrapper from "@/components/container/FormWrapper";
 
 interface Question {
-  id: number;
+  majorQuestionId: number;
   title: string;
   date: string;
   isAnswered: boolean;
@@ -12,8 +12,8 @@ interface Question {
 
 interface CommonQuestionListProps {
   questions: Question[];
-  onDelete: (id: number) => void;
-  onCardClick: (id: number, isAnswered: boolean) => void;
+  onDelete: (majorQuestionId: number) => void;
+  onCardClick: (majorQuestionId: number, isAnswered: boolean) => void;
 }
 
 const CommonQuestionList: React.FC<CommonQuestionListProps> = ({
@@ -26,7 +26,7 @@ const CommonQuestionList: React.FC<CommonQuestionListProps> = ({
       <FormWrapper>
         {questions.map((question, index) => (
           <QuestionCard
-            key={question.id}
+            key={question.majorQuestionId}
             question={question}
             index={index}
             onDelete={onDelete}

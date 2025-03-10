@@ -8,14 +8,14 @@ import CustomRow from "@/components/CustomRow";
 
 interface QuestionCardProps {
   question: {
-    id: number;
+    majorQuestionId: number;
     title: string;
     date: string;
     isAnswered: boolean;
   };
   index: number;
-  onDelete: (id: number) => void;
-  onCardClick: (id: number, isAnswered: boolean) => void;
+  onDelete: (majorQuestionId: number) => void;
+  onCardClick: (majorQuestionId: number, isAnswered: boolean) => void;
   canDelete?: boolean;
 }
 
@@ -37,7 +37,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   });
 
   const handleCardClick = () => {
-    onCardClick(question.id, question.isAnswered);
+    onCardClick(question.majorQuestionId, question.isAnswered);
   };
 
   return (
@@ -65,7 +65,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             $isSwiped={isSwiped}
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(question.id);
+              onDelete(question.majorQuestionId);
             }}
           >
             <RiDeleteBin6Fill />
