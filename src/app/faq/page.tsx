@@ -96,7 +96,7 @@ export default function FAQ() {
       <FaqContainer>
         <FAQQuestionList
           questions={questions.map((q) => ({
-            id: q.majorQuestionId,
+            majorQuestionId: q.majorQuestionId,
             title: q.title,
             date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
             answer: q.answer?.content || "",

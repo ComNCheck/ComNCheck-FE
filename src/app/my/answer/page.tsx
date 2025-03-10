@@ -60,7 +60,7 @@ export default function Answer() {
         return isAnswered === hasAnswer;
       })
       .map((q) => ({
-        id: q.majorQuestionId,
+        majorQuestionId: q.majorQuestionId,
         title: q.title,
         date: q.createdAt,
         isAnswered: Boolean(q.answer?.[0]?.content.trim()),
