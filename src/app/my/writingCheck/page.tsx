@@ -69,7 +69,7 @@ export default function WritingCheck() {
         return isAnswered === hasAnswer;
       })
       .map((q) => ({
-        id: q.majorQuestionId,
+        majorQuestionId: q.majorQuestionId,
         title: q.title,
         date: q.createdAt,
         isAnswered: q.answer !== null && q.answer.length > 0,
