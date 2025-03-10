@@ -10,7 +10,7 @@ import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 import { getQuestionById } from "@/apis/question";
 import { putAnswer } from "@/apis/answer";
-import { AllQuestionResponse } from "@/apis/question.type";
+import { AllQuestionResponse, AnswerType } from "@/apis/question.type";
 
 export default function EditAnswer() {
   const [shared, setShared] = useState(true);
@@ -29,37 +29,36 @@ export default function EditAnswer() {
       console.log("질문 데이터 요청 ID:", id);
       const questionData = await getQuestionById(id);
       console.log("원본 질문 데이터:", questionData);
-
-      const formattedQuestion = {
+  
+      // 💡 answer가 배열인지 체크하고 변환!
+      const formattedAnswer = Array.isArray(questionData.answer)
+        ? questionData.answer
+        : questionData.answer
+        ? [questionData.answer] // 객체 1개일 경우 배열로 변환
+        : []; // null일 경우 빈 배열
+  
+      // 🛠 서버 응답을 AnswerType에 맞게 변환!
+      const formattedQuestion: AllQuestionResponse = {
         ...questionData,
-        answer: Array.isArray(questionData.answer)
-          ? questionData.answer
-          : questionData.answer
-            ? [questionData.answer]
-            : [],
-      } as AllQuestionResponse;
-
+        answer: formattedAnswer.map((ans: any) => ({
+          id: ans.answerId, // ✅ answerId → id로 변경
+          content: ans.content,
+          questionId: ans.majorQuestionId, // ✅ majorQuestionId → questionId
+          writerId: ans.writerId,
+          createdAt: ans.createdAt,
+          updatedAt: ans.updatedAt,
+        })),
+      };
+  
       console.log("변환된 질문 데이터:", formattedQuestion);
       setQuestion(formattedQuestion);
       setShared(formattedQuestion.shared);
-
-      if (formattedQuestion.answer && formattedQuestion.answer.length > 0) {
-        setAnswer(formattedQuestion.answer[0].content);
-
-        // as any로 타입 단언
-        const answerObj = formattedQuestion.answer[0] as any;
-
-        // 콘솔에 전체 객체 출력
-        console.log("Answer object:", answerObj);
-
-        // 안전하게 answerId 추출
-        if (answerObj && "answerId" in answerObj) {
-          setAnswerId(answerObj.answerId);
-          console.log("설정된 답변 ID:", answerObj.answerId);
-        } else {
-          console.error("답변 객체에 answerId 필드가 없습니다");
-          setAnswerId(null);
-        }
+  
+      if (formattedQuestion.answer.length > 0) {
+        const answerObj: AnswerType = formattedQuestion.answer[0]; // ✅ 타입 매칭 완료!
+        setAnswer(answerObj.content);
+        setAnswerId(answerObj.id); // ✅ answerId → id로 변경
+        console.log("설정된 답변 ID:", answerObj.id);
       } else {
         setAnswer("");
         setAnswerId(null);

@@ -100,18 +100,18 @@ export default function ModifyRole() {
         const roleChangeList = await getRoleChangeList();
         setRoles(roleChangeList);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("❌ 역할 승인 중 오류 발생:", error);
 
       // 서버 응답이 있는지 확인
-      if (error.response) {
-        console.error("📌 서버 응답 데이터:", error.response.data);
-        console.error("📌 상태 코드:", error.response.status);
-      } else if (error.request) {
-        console.error("📌 요청은 전송되었지만 응답 없음:", error.request);
-      } else {
-        console.error("📌 요청 생성 중 오류 발생:", error.message);
-      }
+      // if (error.response) {
+      //   console.error("📌 서버 응답 데이터:", error.response.data);
+      //   console.error("📌 상태 코드:", error.response.status);
+      // } else if (error.request) {
+      //   console.error("📌 요청은 전송되었지만 응답 없음:", error.request);
+      // } else {
+      //   console.error("📌 요청 생성 중 오류 발생:", error.message);
+      // }
 
       alert("역할 승인에 실패했습니다.");
     }

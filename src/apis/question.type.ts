@@ -21,7 +21,7 @@ export interface AllQuestionResponse {
   content: string;
   createdAt: string;
   shared: boolean;
-  answer: AnswerType[] | null;
+  answer: AnswerType[];
 }
 
 export interface AllFAQQuestionResponse {
