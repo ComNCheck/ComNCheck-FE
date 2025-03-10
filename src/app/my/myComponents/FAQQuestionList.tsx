@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { theme } from "@/app/styles/theme";
 
 interface Question {
-  id: number;
+  majorQuestionId: number;
   title: string;
   date: string;
   answer: string;
@@ -30,7 +30,7 @@ const FAQQuestionList: React.FC<CommonQuestionListProps> = ({
       <FormWrapper>
         {questions.map((question, index) => (
           <QuestionCard
-            key={question.id}
+            key={question.majorQuestionId}
             question={question}
             index={index}
             onDelete={onDelete}
