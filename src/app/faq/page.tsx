@@ -75,7 +75,7 @@ export default function FAQ() {
 
   const handleDelete = (id: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      setQuestions((prev) => prev.filter((q) => q.id !== id));
+      setQuestions((prev) => prev.filter((q) => q.majorQuestionId !== id));
     }
   };
 
@@ -96,7 +96,7 @@ export default function FAQ() {
       <FaqContainer>
         <FAQQuestionList
           questions={questions.map((q) => ({
-            id: q.id,
+            id: q.majorQuestionId,
             title: q.title,
             date: new Date(q.createdAt).toLocaleDateString("ko-KR"),
             answer: q.answer?.content || "",
@@ -107,7 +107,6 @@ export default function FAQ() {
           canDelete={canDelete}
         />
       </FaqContainer>
-     
     </ContainerWrapper>
   );
 }
@@ -116,5 +115,5 @@ const FaqContainer = styled.div`
   width: 100%;
   flex: 1; /* 남은 공간을 차지하도록 설정 */
   overflow-y: auto; /* 스크롤 가능하도록 설정 */
-  //margin-bottom: 6rem; 
+  //margin-bottom: 6rem;
 `;

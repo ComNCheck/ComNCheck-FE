@@ -25,7 +25,7 @@ export interface AllQuestionResponse {
 }
 
 export interface AllFAQQuestionResponse {
-  id: number;
+  majorQuestionId: number;
   title: string;
   content: string;
   createdAt: string;
