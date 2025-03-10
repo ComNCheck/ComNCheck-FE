@@ -35,11 +35,13 @@ export default function WritingCheck() {
     fetchQuestions();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (majorQuestionId: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
       try {
-        await deleteQuestion(id);
-        setQuestions((prev) => prev.filter((q) => q.id !== id));
+        await deleteQuestion(majorQuestionId);
+        setQuestions((prev) =>
+          prev.filter((q) => q.majorQuestionId !== majorQuestionId)
+        );
         alert("질문이 성공적으로 삭제되었습니다.");
       } catch (error) {
         console.error("질문 삭제 실패:", error);
@@ -48,11 +50,11 @@ export default function WritingCheck() {
     }
   };
 
-  const handleCardClick = (id: number, isAnswered: boolean) => {
+  const handleCardClick = (majorQuestionId: number, isAnswered: boolean) => {
     if (isAnswered) {
-      router.push(`/my/writingCheck/check?id=${id}`);
+      router.push(`/my/writingCheck/check?majorQuestionId=${majorQuestionId}`);
     } else {
-      router.push(`/my/writingCheck/edit?id=${id}`);
+      router.push(`/my/writingCheck/edit?majorQuestionId=${majorQuestionId}`);
     }
   };
 
@@ -67,7 +69,7 @@ export default function WritingCheck() {
         return isAnswered === hasAnswer;
       })
       .map((q) => ({
-        id: q.id,
+        id: q.majorQuestionId,
         title: q.title,
         date: q.createdAt,
         isAnswered: q.answer !== null && q.answer.length > 0,

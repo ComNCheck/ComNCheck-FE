@@ -10,7 +10,7 @@ import TitleContainer from "@/components/setting/TitleContainer";
 import ContentBoxSmall from "@/components/container/ContentBoxSmall";
 import { getQuestionById } from "@/apis/question";
 import { putAnswer } from "@/apis/answer";
-import { AllQuestionResponse } from "@/apis/question.type";
+import { AllQuestionResponse, AnswerType } from "@/apis/question.type";
 
 export default function EditAnswer() {
   const [shared, setShared] = useState(true);
@@ -46,13 +46,10 @@ export default function EditAnswer() {
       if (formattedQuestion.answer && formattedQuestion.answer.length > 0) {
         setAnswer(formattedQuestion.answer[0].content);
 
-        // as any로 타입 단언
-        const answerObj = formattedQuestion.answer[0] as any;
+        const answerObj = formattedQuestion.answer[0] as AnswerType;
 
-        // 콘솔에 전체 객체 출력
         console.log("Answer object:", answerObj);
 
-        // 안전하게 answerId 추출
         if (answerObj && "answerId" in answerObj) {
           setAnswerId(answerObj.answerId);
           console.log("설정된 답변 ID:", answerObj.answerId);

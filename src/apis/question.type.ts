@@ -7,9 +7,9 @@ export interface QuestionRequest {
 
 // MY - 질문하기 get
 export interface AnswerType {
-  id: number;
+  answerId: number;
   content: string;
-  questionId: number;
+  majorQuestionId: number;
   writerId: number;
   createdAt: string;
   updatedAt: string;
