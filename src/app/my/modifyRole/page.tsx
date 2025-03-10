@@ -1,44 +1,32 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
 import IsAnswerToggle from "../myComponents/IsAnswerToggle";
 import CommonRoleList from "../myComponents/CommonRoleList";
 import RoleCheckModal from "@/components/modal/RoleCheckModal";
-import {
-  getRoleChangeList,
-  getRoleChangeDetail,
-  getRoleChangeDetailApprove,
-} from "../../../apis/roleChange";
+import { getRoleChangeList } from "../../../apis/roleChange";
 import {
   roleChangeListType,
   roleChangeDetailType,
 } from "../../../apis/roleChange.type";
 
-// API 에러를 위한 인터페이스 정의
-interface ApiErrorResponse {
-  response?: {
-    data: unknown;
-    status: number;
-  };
-  request?: unknown;
-  message?: string;
-}
-
 export default function ModifyRole() {
   const [isApply, setIsApply] = useState<boolean>(false);
   const [roles, setRoles] = useState<roleChangeListType[]>([]);
-  const [selectedRole, setSelectedRole] = useState<
-    roleChangeDetailType[] | null
-  >(null);
+  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
+    null
+  );
 
+  // 초기 데이터 로드
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const roleChangeList = await getRoleChangeList();
         setRoles(roleChangeList);
-        console.log("등급 신청 목록을 불러오기 data:", roleChangeList);
+        console.log("등급 신청 목록 로드 완료:", roleChangeList);
       } catch (error) {
         console.error("등급 신청 목록을 불러오는 중 오류 발생:", error);
       }
@@ -47,16 +35,19 @@ export default function ModifyRole() {
     fetchRoles();
   }, [isApply]); // isApply가 변경될 때마다 데이터 다시 불러오기
 
+  // 상태에 따라 필터링된 목록
   const filteredRoles = useMemo(() => {
     return roles.filter((role) =>
       isApply ? role.status === "APPROVED" : role.status === "PENDING"
     );
   }, [roles, isApply]);
 
+  // 토글 상태 변경
   const handleToggle = () => {
     setIsApply((prev) => !prev);
   };
 
+  // 역할 삭제
   const handleDelete = (requestId: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
       setRoles((prevRoles) =>
@@ -65,69 +56,41 @@ export default function ModifyRole() {
     }
   };
 
-  const handleCardClick = async (requestId: number) => {
-    try {
-      console.log("handleCardClick 호출됨 - requestId:", requestId);
-      const roleDetail = await getRoleChangeDetail(requestId);
-      console.log("받아온 상세 정보:", roleDetail);
-
-      if (roleDetail) {
-        const roleData = Array.isArray(roleDetail) ? roleDetail : [roleDetail];
-        setSelectedRole(roleData);
-      }
-    } catch (error) {
-      console.error("등급 신청 상세 정보를 불러오는 중 오류 발생:", error);
-    }
+  // 카드 클릭 시 모달 표시
+  const handleCardClick = (requestId: number) => {
+    console.log("카드 클릭 - requestId:", requestId);
+    setSelectedRequestId(requestId);
   };
 
-  const handleRoleUpdate = async (updatedRole: roleChangeDetailType) => {
-    try {
-      if (!updatedRole.requestId) {
-        console.error("요청 ID가 없습니다.");
-        return;
-      }
+  // 역할 업데이트 후 처리
+  const handleRoleApproved = (updatedRole: roleChangeDetailType) => {
+    console.log("역할 업데이트:", updatedRole);
 
-      // API 호출
-      const approvedRoles = await getRoleChangeDetailApprove(
-        updatedRole.requestId
-      );
+    // 모달에서 업데이트된 역할 정보를 받아서 상태 업데이트
+    setRoles((prevRoles) =>
+      prevRoles.map((role) =>
+        role.requestId === updatedRole.requestId
+          ? {
+              requestId: updatedRole.requestId,
+              name: updatedRole.name,
+              requestPosition: updatedRole.position || "",
+              status: "APPROVED",
+            }
+          : role
+      )
+    );
 
-      console.log("✅ 승인 API 응답:", approvedRoles);
+    // 모달 닫기
+    setSelectedRequestId(null);
 
-      if (approvedRoles.length > 0) {
-        const approvedRole = approvedRoles[0];
-
-        setRoles((prevRoles) =>
-          prevRoles.map((role) =>
-            role.requestId === approvedRole.requestId
-              ? { ...role, status: "APPROVED" }
-              : role
-          )
-        );
-
-        setSelectedRole(null);
-
-        const roleChangeList = await getRoleChangeList();
+    // 목록 다시 불러오기
+    getRoleChangeList()
+      .then((roleChangeList) => {
         setRoles(roleChangeList);
-      }
-    } catch (error: unknown) {
-      console.error("❌ 역할 승인 중 오류 발생:", error);
-
-      // 타입 가드를 사용하여 에러 객체의 형태 확인
-      const errorObj = error as ApiErrorResponse;
-
-      // 서버 응답이 있는지 확인
-      if (errorObj.response) {
-        console.error("📌 서버 응답 데이터:", errorObj.response.data);
-        console.error("📌 상태 코드:", errorObj.response.status);
-      } else if (errorObj.request) {
-        console.error("📌 요청은 전송되었지만 응답 없음:", errorObj.request);
-      } else if (errorObj.message) {
-        console.error("📌 요청 생성 중 오류 발생:", errorObj.message);
-      }
-
-      alert("역할 승인에 실패했습니다.");
-    }
+      })
+      .catch((error) => {
+        console.error("등급 신청 목록을 다시 불러오는 중 오류 발생:", error);
+      });
   };
 
   return (
@@ -148,20 +111,39 @@ export default function ModifyRole() {
         onToggle={handleToggle}
         labels={{ inactive: "신청 현황", active: "수정 완료" }}
       />
-      <CommonRoleList
-        roles={filteredRoles}
-        onDelete={handleDelete}
-        onCardClick={handleCardClick}
-        onUpdate={handleRoleUpdate}
-      />
 
-      {selectedRole && (
+      {filteredRoles.length > 0 ? (
+        <CommonRoleList
+          roles={filteredRoles}
+          onDelete={handleDelete}
+          onCardClick={handleCardClick}
+          onUpdate={handleRoleApproved}
+        />
+      ) : (
+        <EmptyMessage>
+          {isApply ? "수정 완료된 신청이 없습니다." : "신청 현황이 없습니다."}
+        </EmptyMessage>
+      )}
+
+      {/* 모달 컴포넌트 */}
+      {selectedRequestId !== null && (
         <RoleCheckModal
-          role={selectedRole}
-          onClose={() => setSelectedRole(null)}
-          onUpdate={handleRoleUpdate}
+          requestId={selectedRequestId}
+          onClose={() => setSelectedRequestId(null)}
+          onUpdate={handleRoleApproved}
+          isApproved={isApply}
         />
       )}
     </ContainerWrapper>
   );
 }
+
+const EmptyMessage = styled.div`
+  padding: 2rem;
+  text-align: center;
+  color: ${(props) => props.theme.colors.mutedText || "#888"};
+  font-size: 1rem;
+  background-color: ${(props) => props.theme.colors.background || "#f5f5f5"};
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+`;
