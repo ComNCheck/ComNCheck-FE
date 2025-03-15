@@ -44,11 +44,48 @@ export default function SlideHeader() {
     }
   };
 
+  // Notice 컴포넌트에서 가져온 종료 여부 체크 함수
+  const isEventExpired = (date: string): boolean => {
+    const eventDate = new Date(date);
+    const today = new Date();
+
+    // 날짜만 비교하기 위해 시간 정보 초기화
+    today.setHours(0, 0, 0, 0);
+    eventDate.setHours(0, 0, 0, 0);
+
+    return eventDate < today;
+  };
+
+  // Notice 컴포넌트에서 가져온 D-day 계산 함수
+  const calculateDDay = (date: string): string => {
+    const eventDate = new Date(date);
+    const today = new Date();
+
+    // 날짜 비교를 위해 시간 정보 초기화
+    today.setHours(0, 0, 0, 0);
+    eventDate.setHours(0, 0, 0, 0);
+
+    const diff = Math.ceil(
+      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diff === 0) return "D-day";
+    if (diff < 0) return "종료됨";
+    return `D-${diff}`;
+  };
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const data = await getMajorEvent();
-        setEventNotices(Array.isArray(data) ? data : [data]);
+        const eventsArray = Array.isArray(data) ? data : [data];
+        const activeEvents = eventsArray.filter((event) => {
+          const dateStr = String(event.date);
+          const formattedDate = dateStr.replace(/\./g, "-");
+          return !isEventExpired(formattedDate);
+        });
+
+        setEventNotices(activeEvents);
       } catch (error) {
         console.error("이벤트 데이터를 가져오는데 실패했습니다.", error);
       }
@@ -84,8 +121,14 @@ export default function SlideHeader() {
       >
         <Card>
           <CardContent>
+            <DDayLabel>
+              {calculateDDay(String(currentEvent.date).replace(/\./g, "-"))}
+            </DDayLabel>
             <EventTitle>{currentEvent.eventName}</EventTitle>
-            <EventDate>{`${currentEvent.date} ${currentEvent.time}`}</EventDate>
+            <DatePart>
+              <EventDate>{`${currentEvent.date} ${currentEvent.time}`}</EventDate>
+            </DatePart>
+
             <ApplyButton
               onClick={() => window.open(currentEvent.googleFormLink, "_blank")}
             >
@@ -175,7 +218,7 @@ const Card = styled.div`
   // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 4px 15px rgba(55, 109, 255, 0.2);
   transition: transform 0.3s ease;
-  width: 327px;
+  width: 360px;
   height: 142px;
 
   &:hover {
@@ -187,7 +230,7 @@ const Card = styled.div`
 const CardContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.3rem;
   flex: 1;
 `;
 
@@ -202,6 +245,16 @@ const EventDate = styled.p`
   color: white;
   font-size: 0.9rem;
   margin: 0;
+`;
+
+const DDayLabel = styled.div`
+  display: inline-block;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  // padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.3rem;
 `;
 
 const ApplyButton = styled.button`
@@ -260,4 +313,8 @@ const Indicator = styled.div<{ $active: boolean }>`
   &:hover {
     transform: scale(1.2);
   }
+`;
+
+const DatePart = styled.div`
+  gap: 0.3rem;
 `;
