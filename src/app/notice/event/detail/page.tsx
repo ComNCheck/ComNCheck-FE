@@ -245,9 +245,12 @@ export default function EventDetail() {
         <WritingBtn
           onClick={handleWriteClick}
           style={{
-            visibility: allowedRoles.includes(role || "")
-              ? "visible"
-              : "hidden",
+            visibility:
+              role === "ROLE_ADMIN" ||
+              role === "ROLE_MAJOR_PRESIDENT" ||
+              role === "ROLE_STUDENT_COUNCIL"
+                ? "visible"
+                : "hidden",
           }}
         >
           수정하기

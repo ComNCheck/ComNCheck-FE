@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import { theme } from "../styles/theme";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -76,11 +76,21 @@ const AskManager = styled.div`
   font-weight: 700;
   font-family: Inter;
 `;
-
+const TermContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem;
+`
+const TermLink = styled.div`
+  color: ${theme.colors.text};
+  font-size: 0.875rem;
+`
 export default function Login() {
   const [loginError, setLoginError] = useState(false);
   const searchParams = useSearchParams();
-
+  const router = useRouter();
   useEffect(() => {
     // URL에서 로그인 에러 체크
     if (searchParams.get("error")) {
@@ -99,6 +109,9 @@ export default function Login() {
   const InstaLink= ()=>{
     window.location.href="https://www.instagram.com/comncheck?igsh=dnRjOXdiaWpoN3Vo";
   }
+  const handleClick = (url: string) => {
+    router.push(url);
+  };
   return (
     <Wrapper>
       <Logo src={`/logo.png`} alt="로고" />
@@ -119,6 +132,10 @@ export default function Login() {
         <AnsAccount>아직 학교 계정이 없으신가요?</AnsAccount>
         <AskManager onClick={InstaLink}>관리자에게 문의하기</AskManager>
       </StatusContainer>
+      <TermContainer>
+        <TermLink onClick={() => handleClick("/terms-of-service.html")}>서비스 이용약관</TermLink>
+        <TermLink onClick={() => handleClick("/privacy-policy.html")}>개인정보처리방침</TermLink>
+      </TermContainer>
     </Wrapper>
   );
 }
