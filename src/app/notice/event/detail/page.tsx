@@ -80,7 +80,7 @@ const ImageContainer = styled.div`
   display: flex;
   position: relative;
   width: 600px; // 카드뉴스 사이즈에 맞춰 바꾸기
-  height: 400px; 
+  height: 400px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -139,6 +139,13 @@ const SlideButton = styled.button`
   }
 `;
 
+// 허용된 역할 배열 추가
+const allowedRoles = [
+  "ROLE_ADMIN",
+  "ROLE_MAJOR_PRESIDENT",
+  "ROLE_STUDENT_COUNCIL",
+];
+
 export default function EventDetail() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -159,13 +166,17 @@ export default function EventDetail() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ?(event.cardNewsImageUrls || []).length - 1 : prev - 1));
+    setCurrentIndex((prev) =>
+      prev === 0 ? (event.cardNewsImageUrls || []).length - 1 : prev - 1
+    );
   };
-  
+
   const handleNext = () => {
-    setCurrentIndex((prev) =>  (prev === (event.cardNewsImageUrls || []).length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) =>
+      prev === (event.cardNewsImageUrls || []).length - 1 ? 0 : prev + 1
+    );
   };
-  
+
   useEffect(() => {
     if (id) {
       inquireEvent(parseInt(id))
@@ -235,41 +246,37 @@ export default function EventDetail() {
         <WritingBtn
           onClick={handleWriteClick}
           style={{
-            visibility:
-            role === "ROLE_ADMIN" ||
-              role === "ROLE_MAJOR_PRESIDENT" ||
-              role === "ROLE_GRADUATE_STUDENT"
-                ? "visible"
-                : "hidden",
+            visibility: allowedRoles.includes(role || "")
+              ? "visible"
+              : "hidden",
           }}
         >
           수정하기
           <FaPenToSquare />
         </WritingBtn>
         <CustomFormWrapper>
-        {event?.cardNewsImageUrls && event.cardNewsImageUrls.length > 0 && (
-          <ImageSliderContainer>
-            {/* 이전 버튼 (이미지가 2장 이상일 때만 보이도록) */}
-            {event.cardNewsImageUrls.length > 1 && (
-              <SlideButton onClick={handlePrev}>〈</SlideButton>
-            )}
+          {event?.cardNewsImageUrls && event.cardNewsImageUrls.length > 0 && (
+            <ImageSliderContainer>
+              {/* 이전 버튼 (이미지가 2장 이상일 때만 보이도록) */}
+              {event.cardNewsImageUrls.length > 1 && (
+                <SlideButton onClick={handlePrev}>〈</SlideButton>
+              )}
 
-            <ImageContainer>
-              <StyledImage
-                src={event.cardNewsImageUrls[currentIndex]}
-                alt={`이벤트 이미지 ${currentIndex + 1}`}
-                width={600}
-                height={400}
-              />
-            </ImageContainer>
+              <ImageContainer>
+                <StyledImage
+                  src={event.cardNewsImageUrls[currentIndex]}
+                  alt={`이벤트 이미지 ${currentIndex + 1}`}
+                  width={600}
+                  height={400}
+                />
+              </ImageContainer>
 
-            {/* 다음 버튼 (이미지가 2장 이상일 때만 보이도록) */}
-            {event.cardNewsImageUrls.length > 1 && (
-              <SlideButton onClick={handleNext}>〉</SlideButton>
-            )}
-          </ImageSliderContainer>
-        )}
-
+              {/* 다음 버튼 (이미지가 2장 이상일 때만 보이도록) */}
+              {event.cardNewsImageUrls.length > 1 && (
+                <SlideButton onClick={handleNext}>〉</SlideButton>
+              )}
+            </ImageSliderContainer>
+          )}
 
           <EventText>{event.notice}</EventText>
         </CustomFormWrapper>
