@@ -139,7 +139,6 @@ const SlideButton = styled.button`
   }
 `;
 
-// 허용된 역할 배열 추가
 const allowedRoles = [
   "ROLE_ADMIN",
   "ROLE_MAJOR_PRESIDENT",
