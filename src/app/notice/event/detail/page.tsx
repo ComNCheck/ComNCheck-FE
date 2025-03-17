@@ -238,7 +238,7 @@ export default function EventDetail() {
             visibility:
             role === "ROLE_ADMIN" ||
               role === "ROLE_MAJOR_PRESIDENT" ||
-              role === "ROLE_GRADUATE_STUDENT"
+              role === "ROLE_STUDENT_COUNCIL"
                 ? "visible"
                 : "hidden",
           }}
