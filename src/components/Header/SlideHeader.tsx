@@ -184,6 +184,7 @@ const slideLeftAnimation = keyframes`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   align-items: center;
   gap: 1rem;
   padding: 1rem 0;
@@ -218,7 +219,7 @@ const Card = styled.div`
   // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 4px 15px rgba(55, 109, 255, 0.2);
   transition: transform 0.3s ease;
-  width: 360px;
+  width: 450px;
   height: 142px;
 
   &:hover {
