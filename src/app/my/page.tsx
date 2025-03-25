@@ -12,6 +12,7 @@ import SeminarAlert from "../../components/modal/seminarAlert";
 import { IoSettings } from "react-icons/io5";
 import { FaSignOutAlt } from "react-icons/fa";
 import { postLogout } from "@/apis/member";
+import axios from "axios";
 
 type UserRole =
   | "ROLE_ADMIN"
@@ -51,31 +52,34 @@ export default function My() {
   const [id, setId] = useState<string>("학번");
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // 로컬 스토리지에 있는 json 값 중에 role 값 불러오기
   useEffect(() => {
-    const memberData = localStorage.getItem("memberData");
-    if (memberData) {
+    const fetchMemberData = async () => {
       try {
-        const parsedData: UserInfo = JSON.parse(memberData);
-        setRole(parsedData.role as UserRole);
-        setName(parsedData.name);
-
-        // 학번이 있고 123456789가 아닌 경우에만 정상 표시
-        if (
-          parsedData.studentNumber &&
-          parsedData.studentNumber !== 123456789
-        ) {
-          setId(parsedData.studentNumber.toString());
+        const baseURL = process.env.NEXT_PUBLIC_API_URL;
+        const response = await axios.get(`${baseURL}/api/v1/member`, {
+          withCredentials: true,
+        });
+        const memberData = response.data as UserInfo;
+  
+        // 전체 회원 정보 상태 업데이트
+        setRole(memberData.role);
+        setName(memberData.name);
+        
+        // 학번 처리 로직
+        if (memberData.studentNumber && memberData.studentNumber !== 123456789) {
+          setId(memberData.studentNumber.toString());
         } else {
-          // 학번이 없거나 123456789인 경우 특별한 값 설정
           setId("학번 없음");
         }
+        localStorage.setItem("memberData", JSON.stringify(memberData));
       } catch (error) {
-        console.error("로컬 스토리지 값 안보여짐 에러 :", error);
+        console.error("데이터 불러오기 실패:", error);
       }
-    }
-  }, []);
-
+    };
+  
+    fetchMemberData();
+  }, []); // 의존성 배열 비워두면 마운트 시 1회 실행
+  
   const logoutClick = async () => {
     //로그아웃 버튼클릭시
     await postLogout();
