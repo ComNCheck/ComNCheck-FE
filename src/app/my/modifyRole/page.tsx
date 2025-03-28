@@ -7,7 +7,7 @@ import TitleContainer from "@/components/setting/TitleContainer";
 import IsAnswerToggle from "../myComponents/IsAnswerToggle";
 import CommonRoleList from "../myComponents/CommonRoleList";
 import RoleCheckModal from "@/components/modal/RoleCheckModal";
-import { getRoleChangeList } from "../../../apis/roleChange";
+import { getRoleChangeList, deleteRoleChange } from "../../../apis/roleChange";
 import {
   roleChangeListType,
   roleChangeDetailType,
@@ -48,11 +48,19 @@ export default function ModifyRole() {
   };
 
   // 역할 삭제
-  const handleDelete = (requestId: number) => {
+  const handleDelete = async (requestId: number) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      setRoles((prevRoles) =>
-        prevRoles.filter((role) => role.requestId !== requestId)
-      );
+      try {
+        await deleteRoleChange(requestId);
+        console.log("역할 변경 요청이 성공적으로 삭제되었습니다");
+        // 삭제 후 상태 업데이트
+        setRoles((prevRoles) =>
+          prevRoles.filter((role) => role.requestId !== requestId)
+        );
+      } catch (error) {
+        console.error("역할 변경 요청 삭제 중 오류 발생:", error);
+        alert("삭제 중 오류가 발생했습니다");
+      }
     }
   };
 
