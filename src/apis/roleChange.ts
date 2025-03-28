@@ -38,6 +38,19 @@ export const getRoleChangeList = async (): Promise<roleChangeListType[]> => {
     throw error;
   }
 };
+// MY - 과회장 학생회 역할 변경 요청 삭제
+export const deleteRoleChange = async (requestId: number): Promise<void> => {
+  try {
+    const response = await instance.delete(
+      `/api/v1/role-change-requests/${requestId}`
+    );
+    console.log("역할 변경 요청 삭제 응답:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("역할 변경 요청 삭제 실패:", error);
+    throw error;
+  }
+};
 
 // MY - 과회장 학생회 등급 신청 목록 조회 - 특정
 export const getRoleChangeDetail = async (
