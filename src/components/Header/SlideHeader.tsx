@@ -219,7 +219,7 @@ const Card = styled.div`
   // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   box-shadow: 0px 4px 15px rgba(55, 109, 255, 0.2);
   transition: transform 0.3s ease;
-  width: 450px;
+  width: 400px;
   height: 142px;
 
   &:hover {
