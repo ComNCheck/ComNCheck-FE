@@ -165,7 +165,7 @@ export const getAnotherMajorEvent = async (): Promise<majorEventList> => {
   }
 };
 export const inquireAnotherEvent = async (
-  //특정 과행사 게시글 조회
+  //특정 전체행사 게시글 조회
   anotherEventId: number
 ): Promise<makeEventDetail> => {
   try {
@@ -182,7 +182,7 @@ export const modifyAnotherEvent = async (
   data: FormData,
   anotherEventId: number
 ): Promise<makeEvent> => {
-  //과 행사 게시글 수정
+  //전체 행사 게시글 수정
   try {
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
     const response = await axios.put<makeEvent>(
@@ -194,6 +194,20 @@ export const modifyAnotherEvent = async (
         },
         withCredentials: true, // 쿠키 허용
       }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteAnotherEvent = async (
+  //전체 행사 게시글 삭제
+  anotherEventId: number
+): Promise<makeEvent> => {
+  try {
+    const response = await instance.delete<makeEvent>(
+      `api/v1/another-event/${anotherEventId}`
     );
     return response.data;
   } catch (error) {
