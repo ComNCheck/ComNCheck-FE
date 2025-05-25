@@ -13,6 +13,8 @@ import {
   getMajorEvent,
   getMajorNotice,
   deleteEvent,
+  getAnotherMajorEvent,
+  deleteAnotherEvent,
 } from "@/apis/notice";
 import { majorEventList, majorNoticeList } from "@/apis/notice.type";
 import axios from "axios";
@@ -36,6 +38,8 @@ interface UserInfo {
 
 export default function Notice() {
   const [eventNotices, setEventNotices] = useState<majorEventList | null>(null);
+  const [anotherEventNotices, setAnotherEventNotices] = useState<majorEventList | null>(null);
+
   const [majorNotices, setmajorNotices] = useState<majorNoticeList | null>(
     null
   );
@@ -70,8 +74,9 @@ export default function Notice() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const [majorData, employData, eventData] = await Promise.all([
+        const [majorData,anotherData, employData, eventData] = await Promise.all([
           getMajorNotice(size),
+          getAnotherMajorEvent(),
           getEmployNotice(size),
           getMajorEvent(),
         ]);
@@ -79,6 +84,7 @@ export default function Notice() {
         console.log("과행사 공지 Data:", eventData);
 
         setmajorNotices(majorData);
+        setAnotherEventNotices(anotherData);
         setemployNotices(employData);
         setEventNotices(eventData);
       } catch (error) {
@@ -123,7 +129,18 @@ export default function Notice() {
       alert("공지 삭제에 실패했습니다.");
     }
   };
+  const handleAnotherDelete = async (id: number) => {
+    try {
+      await deleteAnotherEvent(id);
 
+      if (anotherEventNotices) {
+        setAnotherEventNotices(anotherEventNotices.filter((notice) => notice.id !== id));
+      }
+    } catch (error) {
+      console.error("공지 삭제 실패:", error);
+      alert("공지 삭제에 실패했습니다.");
+    }
+  };
   const handleWriteClick = () => {
     router.push("/notice/event/enroll");
   };
@@ -132,6 +149,13 @@ export default function Notice() {
     router.push("/notice/event");
   };
 
+  const handleAnotherWriteClick = () => {
+    router.push("/notice/another-event/enroll");
+  };
+
+  const handleAnotherEventClick = () => {
+    router.push("/notice/another-event");
+  };
   const handleCollegeClick = () => {
     router.push("/notice/college");
   };
@@ -187,12 +211,51 @@ export default function Notice() {
                     ...notice,
                     dDay: calculateDDay(notice.date),
                   }}
+                  linkpath={`/notice/event/detail?id=${notice.id}`}
                   onDelete={handleDelete}
                   canDelete={canDelete}
                 />
               ))}
           </ScrollContainer>
         </ContentNoticeBox>
+        <HeaderContainer>
+          <Header>
+            <p onClick={handleAnotherEventClick}>
+              전체 공지 확인하기
+              <IoChevronForwardCircleOutline />
+            </p>
+
+            <WritingBtnWrapper>
+              {(role === "ROLE_ADMIN" ||
+                role === "ROLE_MAJOR_PRESIDENT" ||
+                role === "ROLE_STUDENT_COUNCIL") && (
+                <WritingBtn onClick={handleAnotherWriteClick}>
+                  글쓰기
+                  <FaPenToSquare />
+                </WritingBtn>
+              )}
+            </WritingBtnWrapper>
+          </Header>
+        </HeaderContainer>
+
+        <ContentNoticeBox>
+          <ScrollContainer>
+            {anotherEventNotices &&
+              anotherEventNotices.map((notice) => (
+                <NoticeCard
+                  key={notice.id}
+                  notice={{
+                    ...notice,
+                    dDay: calculateDDay(notice.date),
+                  }}
+                  linkpath={`/notice/another-event/detail?id=${notice.id}`}
+                  onDelete={handleAnotherDelete}
+                  canDelete={canDelete}
+                />
+              ))}
+          </ScrollContainer>
+        </ContentNoticeBox>
+
         <HeaderContainer>
           <Header onClick={handleCollegeClick}>
             학부 공지 확인하기

@@ -12,11 +12,12 @@ interface NoticeCardProps {
   notice: majorEventItem & {
     dDay: string;
   };
+  linkpath: string;
   onDelete?: (id: number) => void;
   canDelete: boolean;
 }
 
-const NoticeCard = ({ notice, onDelete, canDelete }: NoticeCardProps) => {
+const NoticeCard = ({ notice,linkpath, onDelete, canDelete }: NoticeCardProps) => {
   const router = useRouter();
   const [isSwiped, setIsSwiped] = useState(false);
 
@@ -37,7 +38,7 @@ const NoticeCard = ({ notice, onDelete, canDelete }: NoticeCardProps) => {
   };
 
   const handleCardClick = () => {
-    router.push(`/notice/event/detail?id=${notice.id}`);
+    router.push(linkpath);
   };
 
   const handleDelete = (e: React.MouseEvent) => {

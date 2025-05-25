@@ -5,7 +5,7 @@ import styled from "styled-components";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import NoticeCard from "../Component/NoticeCard";
 import { useEffect, useState } from "react";
-import { getMajorEvent, deleteEvent } from "@/apis/notice";
+import { deleteEvent, getAnotherMajorEvent } from "@/apis/notice";
 import { majorEventList } from "@/apis/notice.type";
 import ToggleBtn from "@/components/button/toggleBtn";
 
@@ -72,7 +72,7 @@ const Header = styled.div`
   width: 100%;
 `;
 
-export default function Event() {
+export default function AnotherEvent() {
   const [notices, setNotices] = useState<majorEventList>([]);
   const [canDelete, setCanDelete] = useState<boolean>(false);
 
@@ -97,7 +97,7 @@ export default function Event() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const data = await getMajorEvent();
+        const data = await getAnotherMajorEvent();
         setNotices(data);
       } catch (error) {
         console.log("과행사 공지 에러: ", error);
@@ -133,7 +133,7 @@ export default function Event() {
     <ContainerWrapper>
       <ContentContainer>
         <Header>
-          과행사 공지 확인하기{" "}
+          전체 공지 확인하기{" "}
           <ToggleBtn keyName="alarmMajorEvent" initialState={false} />
         </Header>
 
@@ -148,7 +148,7 @@ export default function Event() {
                     ...notice,
                     dDay,
                   }}
-                  linkpath={`/notice/event/detail?id=${notice.id}`}
+                  linkpath={`/notice/another-event/detail?id=${notice.id}`}
                   onDelete={handleDelete}
                   canDelete={canDelete}
                 />

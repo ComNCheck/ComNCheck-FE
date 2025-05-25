@@ -131,3 +131,86 @@ export const deleteEvent = async (
     throw error;
   }
 };
+
+//another api 추가
+export const writeAnotherEvent = async (data: FormData): Promise<makeEvent> => {
+  //전체 행사 및 공지 게시글 작성
+  try {
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await axios.post<makeEvent>(
+      `${baseURL}/api/v1/another-event`,
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // FormData에 맞는 Content-Type 설정
+        },
+        withCredentials: true, // 쿠키 허용
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAnotherMajorEvent = async (): Promise<majorEventList> => {
+  //과행사 게시글 목록 조회 api
+  try {
+    const response = await instance.get<majorEventList>(`/api/v1/another-event`);
+    console.log("과행사 게시글 목록 조회 api 요청 성공", response);
+    return response.data;
+  } catch (error) {
+    console.error("과행사 게시글 목록 조회 api 요청 실패:", error);
+    throw error;
+  }
+};
+export const inquireAnotherEvent = async (
+  //특정 전체행사 게시글 조회
+  anotherEventId: number
+): Promise<makeEventDetail> => {
+  try {
+    const response = await instance.get<makeEventDetail>(
+      `api/v1/another-event/${anotherEventId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const modifyAnotherEvent = async (
+  data: FormData,
+  anotherEventId: number
+): Promise<makeEvent> => {
+  //전체 행사 게시글 수정
+  try {
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await axios.put<makeEvent>(
+      `${baseURL}/api/v1/another-event/${anotherEventId}`,
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // FormData에 맞는 Content-Type 설정
+        },
+        withCredentials: true, // 쿠키 허용
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteAnotherEvent = async (
+  //전체 행사 게시글 삭제
+  anotherEventId: number
+): Promise<makeEvent> => {
+  try {
+    const response = await instance.delete<makeEvent>(
+      `api/v1/another-event/${anotherEventId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
