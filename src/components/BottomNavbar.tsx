@@ -156,7 +156,7 @@ export default function BottomNavbar() {
         <IconWrapper isActive={pathname.startsWith("/seminarRoom")}>
           {getIcon("/seminarRoom", pathname.startsWith("/seminarRoom"))}
         </IconWrapper>
-        세미나실 예약
+        전체 행사
       </NavItem>
       <NavItem
         isActive={pathname.startsWith("/my")}
