@@ -81,15 +81,15 @@ const getIcon = (path: string, isActive: boolean) => {
   if (path.startsWith("/seminarRoom")) {
     return isActive ? (
       <Image
-        src="/icons/seminar-full.svg"
-        alt="seminar icon"
+        src="/icons/calender-full.svg"
+        alt="calender icon"
         width={30}
         height={30}
       />
     ) : (
       <Image
-        src="/icons/seminar-outline.svg"
-        alt="seminar icon"
+        src="/icons/calender-outline.svg"
+        alt="calender icon"
         width={30}
         height={30}
       />
