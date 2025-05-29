@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   background-color: ${theme.colors.background};
   position: relative;
   overflow-y: auto;
-  overflow: hidden;
+  overflow: auto;
 `;
 
 export default function ContainerWrapper({
