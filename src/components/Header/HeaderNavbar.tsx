@@ -34,6 +34,9 @@ export default function HeaderNavbar() {
     if (path.startsWith("/seminarRoom")) {
       return "세미나실 예약";
     }
+    if (path.startsWith("/calendar")) {
+      return "캘린더";
+    }
     if (path.startsWith("/my")) {
       return "MY";
     }
