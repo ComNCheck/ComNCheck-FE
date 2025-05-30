@@ -78,18 +78,18 @@ const getIcon = (path: string, isActive: boolean) => {
       />
     );
   }
-  if (path.startsWith("/seminarRoom")) {
+  if (path.startsWith("/calendar")) {
     return isActive ? (
       <Image
-        src="/icons/calender-full.svg"
-        alt="calender icon"
+        src="/icons/calendar-full.svg"
+        alt="calendar icon"
         width={30}
         height={30}
       />
     ) : (
       <Image
-        src="/icons/calender-outline.svg"
-        alt="calender icon"
+        src="/icons/calendar-outline.svg"
+        alt="calendar icon"
         width={30}
         height={30}
       />
@@ -149,7 +149,7 @@ export default function BottomNavbar() {
         </IconWrapper>
         공지
       </NavItem>
-      <NavItem
+      {/* <NavItem
         isActive={pathname.startsWith("/seminarRoom")}
         onClick={() => handleClick("/seminarRoom")}
       >
@@ -157,6 +157,15 @@ export default function BottomNavbar() {
           {getIcon("/seminarRoom", pathname.startsWith("/seminarRoom"))}
         </IconWrapper>
         세미나실 예약
+      </NavItem> */}
+      <NavItem
+        isActive={pathname.startsWith("/calendar")}
+        onClick={() => handleClick("/calendar")}
+      >
+        <IconWrapper isActive={pathname.startsWith("/calendar")}>
+          {getIcon("/calendar", pathname.startsWith("/calendar"))}
+        </IconWrapper>
+        캘린더
       </NavItem>
       <NavItem
         isActive={pathname.startsWith("/my")}
