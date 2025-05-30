@@ -1,49 +1,71 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContainerWrapper from "@/components/container/ContainerWrapper";
 import TitleContainer from "@/components/setting/TitleContainer";
-import { Calendar } from "@/components/ui/calendar"; // shadcn Calendar
+import { Calendar } from "@/components/ui/calendar";
 import styled from "styled-components";
 import EventCard from "./EventCard";
+import { getMajorEvent, getAnotherMajorEvent } from "@/apis/notice";
 
-// 행사 데이터 (날짜는 Date 객체로 관리)
-const events = [
-  {
-    id: 1,
-    title: "2025학년도 1학기 개강총회",
-    date: new Date(2025, 8, 10), // 2025-09-10 (월은 0부터 시작)
-    location: "[미쳐버린 파닭]에서 만나요",
-    buttonText: "신청하기",
-  },
-  {
-    id: 2,
-    title: "5월 행사 예시",
-    date: new Date(2025, 4, 11), // 2025-05-11
-    location: "온라인",
-    buttonText: "신청하기",
-  },
-];
+interface CalendarEvent {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+  buttonText: string;
+}
 
 export default function CalendarPage() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
+  // 데이터 불러오기
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const [majorEvents, anotherEvents] = await Promise.all([
+          getMajorEvent(),
+          getAnotherMajorEvent(),
+        ]);
+
+        const parseEvent = (item: any): CalendarEvent => ({
+          id: item.id,
+          title: item.eventName || item.title || "행사",
+          date: item.date, // string 그대로 저장
+          location: item.location || item.place || "",
+          buttonText: "신청하기",
+        });
+
+        const allEvents: CalendarEvent[] = [
+          ...(majorEvents || []).map(parseEvent),
+          ...(anotherEvents || []).map(parseEvent),
+        ];
+
+        setEvents(allEvents);
+      } catch (e) {
+        console.error("행사 데이터 불러오기 실패", e);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   // 해당 날짜에 행사가 있는지 확인
   const eventOnSelectedDate = events.find(
     (e) =>
       selectedDate &&
-      e.date.getFullYear() === selectedDate.getFullYear() &&
-      e.date.getMonth() === selectedDate.getMonth() &&
-      e.date.getDate() === selectedDate.getDate()
+      new Date(e.date).getFullYear() === selectedDate.getFullYear() &&
+      new Date(e.date).getMonth() === selectedDate.getMonth() &&
+      new Date(e.date).getDate() === selectedDate.getDate()
   );
 
   // 캘린더에 표시할 날짜에 행사 있는지 확인
   function isEventDay(date: Date) {
     return events.some(
       (e) =>
-        e.date.getFullYear() === date.getFullYear() &&
-        e.date.getMonth() === date.getMonth() &&
-        e.date.getDate() === date.getDate()
+        new Date(e.date).getFullYear() === date.getFullYear() &&
+        new Date(e.date).getMonth() === date.getMonth() &&
+        new Date(e.date).getDate() === date.getDate()
     );
   }
 
@@ -58,7 +80,7 @@ export default function CalendarPage() {
           mode="single"
           selected={selectedDate}
           onSelect={setSelectedDate}
-          month={new Date(2025, 4, 1)} // 2025년 5월
+          month={new Date(2025, 4, 1)}
           modifiers={{
             event: isEventDay,
           }}
@@ -68,19 +90,7 @@ export default function CalendarPage() {
         />
       </StyledCalendarWrap>
       <Divider />
-      {eventOnSelectedDate && (
-        <EventCard
-          title={eventOnSelectedDate.title}
-          date={eventOnSelectedDate.date.toLocaleDateString("ko-KR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            weekday: "short",
-          })}
-          location={eventOnSelectedDate.location}
-          buttonText={eventOnSelectedDate.buttonText}
-        />
-      )}
+      {eventOnSelectedDate && <EventCard event={eventOnSelectedDate} />}
       <CalendarStyle />
     </ContainerWrapper>
   );
@@ -88,12 +98,20 @@ export default function CalendarPage() {
 
 // 캘린더 스타일 커스텀(행사날짜 파란색)
 const CalendarStyle = styled.style`
+  /* 행사 있는 날짜만 파란 배경 */
   .event-day {
     background: #e6f0ff !important;
     color: #357ae1 !important;
     border-radius: 50% !important;
     font-weight: 700;
   }
+  /* 행사 없는 날짜는 흰 배경 */
+  .rdp-day {
+    background: #fff !important;
+    color: #222 !important;
+    border-radius: 50% !important;
+  }
+  /* 선택된 날짜는 파란 테두리 */
   .rdp-day_selected {
     border: 2px solid #357ae1 !important;
     background: #fff !important;

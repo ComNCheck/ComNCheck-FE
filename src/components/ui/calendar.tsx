@@ -97,24 +97,28 @@ export function Calendar({
                           <DayEmpty />
                         </td>
                       );
-                    // modifiers 적용
-                    let classNames = "";
+
+                    // modifiers 적용 (행사가 있는 날인지 확인)
+                    let hasEvent = false;
                     if (modifiers && modifiersClassNames) {
                       Object.entries(modifiers).forEach(([key, fn]) => {
-                        if (fn(cell))
-                          classNames += " " + (modifiersClassNames[key] ?? "");
+                        if (fn(cell) && key === "event") {
+                          hasEvent = true;
+                        }
                       });
                     }
+
                     const isSelected =
                       date &&
                       cell.getFullYear() === date.getFullYear() &&
                       cell.getMonth() === date.getMonth() &&
                       cell.getDate() === date.getDate();
+
                     return (
                       <td key={i}>
                         <DayCircle
-                          className={classNames}
                           $isSelected={isSelected}
+                          $hasEvent={hasEvent}
                           onClick={() => handleDayClick(cell)}
                         >
                           {cell.getDate()}
@@ -173,25 +177,40 @@ const CalTable = styled.table`
   }
 `;
 
-const DayCircle = styled.div<{ $isSelected?: boolean }>`
+const DayCircle = styled.div<{ $isSelected?: boolean; $hasEvent?: boolean }>`
   width: 48px;
   height: 48px;
   margin: 0 auto;
   border-radius: 50%;
-  background: #e6f0ff;
-  color: #2d3a3a;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 1.1rem;
   cursor: pointer;
+
+  /* 기본 스타일: 흰 배경 */
+  background: #fff;
+  color: #2d3a3a;
+  border: 1px solid transparent;
+
+  /* 행사가 있는 날: 파란 배경 */
+  ${({ $hasEvent }) =>
+    $hasEvent &&
+    css`
+      background: #e6f0ff;
+      color: #357ae1;
+      font-weight: 700;
+    `}
+
+  /* 선택된 날: 항상 흰 배경 + 파란 테두리 */
   ${({ $isSelected }) =>
     $isSelected &&
     css`
-      border: 2px solid #357ae1;
       background: #fff !important;
       color: #357ae1 !important;
+      border: 2px solid #357ae1 !important;
+      font-weight: 700;
     `}
 `;
 
