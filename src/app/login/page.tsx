@@ -104,7 +104,7 @@ export default function Login() {
   const handleLogin = () => {
     console.log("Google 로그인 시도 중...");
     const baseURL = process.env.NEXT_PUBLIC_API_URL;
-    window.location.href = `${baseURL}/oauth2/authorize/google`;
+    window.location.href = `${baseURL}/oauth2/authorization/google`;
   };
   const InstaLink= ()=>{
     window.location.href="https://www.instagram.com/comncheck?igsh=dnRjOXdiaWpoN3Vo";
