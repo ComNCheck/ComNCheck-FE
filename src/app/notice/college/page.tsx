@@ -129,14 +129,18 @@ export default function College() {
     const buttons = [];
     const maxVisiblePages = 3; // 한 번에 보이는 페이지 버튼 수를 3개로 제한
 
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    const startPage = Math.max(
+      1,
+      currentPage - Math.floor(maxVisiblePages / 2)
+    );
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
+    const adjustedStartPage =
+      endPage - startPage + 1 < maxVisiblePages
+        ? Math.max(1, endPage - maxVisiblePages + 1)
+        : startPage;
 
-    for (let i = startPage; i <= endPage; i++) {
+    for (let i = adjustedStartPage; i <= endPage; i++) {
       buttons.push(
         <PageButton
           key={i}

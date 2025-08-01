@@ -7,6 +7,7 @@ import { Calendar } from "@/components/ui/calendar";
 import styled from "styled-components";
 import EventCard from "./EventCard";
 import { getMajorEvent, getAnotherMajorEvent } from "@/apis/notice";
+import { majorEventItem } from "@/apis/notice.type";
 
 interface CalendarEvent {
   id: number;
@@ -29,11 +30,11 @@ export default function CalendarPage() {
           getAnotherMajorEvent(),
         ]);
 
-        const parseEvent = (item: any): CalendarEvent => ({
+        const parseEvent = (item: majorEventItem): CalendarEvent => ({
           id: item.id,
-          title: item.eventName || item.title || "행사",
+          title: item.eventName,
           date: item.date, // string 그대로 저장
-          location: item.location || item.place || "",
+          location: "",
           buttonText: "신청하기",
         });
 
