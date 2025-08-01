@@ -99,14 +99,12 @@ export function Calendar({
                       );
 
                     // modifiers 적용 (행사가 있는 날인지 확인)
-                    let hasEvent = false;
-                    if (modifiers && modifiersClassNames) {
-                      Object.entries(modifiers).forEach(([key, fn]) => {
-                        if (fn(cell) && key === "event") {
-                          hasEvent = true;
-                        }
-                      });
-                    }
+                    const hasEvent =
+                      modifiers && modifiersClassNames
+                        ? Object.entries(modifiers).some(
+                            ([key, fn]) => fn(cell) && key === "event"
+                          )
+                        : false;
 
                     const isSelected =
                       date &&
